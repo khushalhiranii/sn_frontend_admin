@@ -1,0 +1,14 @@
+/* App.css */
+
+.navlink2 {
+    background-color: white;
+    font-size: large;
+    text-decoration: none; /* Removes the underline */
+    color: black; /* Your custom color */
+    padding-bottom: 2px; /* Add padding to create space for the underline */
+}
+
+.navlink2.active {
+    border-bottom: 3px solid #7433ff; /* Add underline when active */
+    color: #7433ff;
+}
