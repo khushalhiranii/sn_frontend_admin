@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SavingCard from './saving-card';
-import axios from 'axios';
+import axios from 'redaxios';
 
 function CompletedKyc() {
   const [users, setUsers] = useState([]);
