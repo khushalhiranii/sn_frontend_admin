@@ -11,7 +11,7 @@ const Header = () => {
           className="h-[3rem] w-[4rem] relative object-cover"
           loading="lazy"
           alt="Subandhan nidhi"
-          src="/src/assets/sn.png"
+          src="/sn.png"
         />
         <a className="[text-decoration:none] relative font-medium text-[inherit] whitespace-nowrap">
           Subandhan nidhi
