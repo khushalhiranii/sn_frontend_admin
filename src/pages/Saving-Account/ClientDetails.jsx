@@ -25,7 +25,7 @@ function ClientDetails() {
   
   async function approve(){
     try {
-      const res = await axios.post(`https://sn-backend.vercel.app/api/v1/admin/user/account/requests/${userId}`);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/admin/user/account/requests/${userId}`);
       const user = res.data.data;
       console.log(user);
     } catch (error) {
@@ -36,7 +36,7 @@ function ClientDetails() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`https://sn-backend.vercel.app/api/v1/admin/user/account/requests/${userId}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/admin/user/account/requests/${userId}`);
         const user = res.data.data;
         setUser(user);
         console.log(user);

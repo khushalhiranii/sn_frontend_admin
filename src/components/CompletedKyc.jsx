@@ -10,7 +10,7 @@ function CompletedKyc() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get('https://sn-backend.vercel.app/api/v1/admin/user/account/requests?status=Pending');
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/admin/user/account/requests?status=Pending`);
         const users = res.data.data;
         setUsers(users);
         console.log(users);

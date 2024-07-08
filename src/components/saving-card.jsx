@@ -27,7 +27,7 @@ const SavingCard = ({
 
   async function approve(){
     try {
-      const res = await axios.post(`https://sn-backend.vercel.app/api/v1/admin/user/account/requests/${key1}`);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/admin/user/account/requests/${key1}`);
       const user = res.data.data;
       console.log(user);
     } catch (error) {
