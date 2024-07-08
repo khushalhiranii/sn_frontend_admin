@@ -3,7 +3,7 @@ import SavingCard from '../../components/saving-card';
 // import Bell from '../../assets/bell';
 
 function SchemeRequest() {
-  const [selectedLoanType, setSelectedLoanType] = useState('');
+  const [selectedLoanType, setSelectedLoanType] = useState('Property Loan');
 
   const handleButtonClick = (loanType) => {
     setSelectedLoanType(loanType);
