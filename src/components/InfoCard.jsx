@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
 const Card1 = ({ className = "", ellipse245 }) => {
+  const navigate = useNavigate();
   return (
     <div
       className={`w-[20.25rem] rounded-lg bg-white box-border flex flex-col items-start justify-start pt-[0rem] px-[0rem] pb-[0.75rem] relative gap-[5rem] max-w-full text-left text-[0.875rem] text-black1 font-roboto border-[1px] border-solid border-foundation-white-normal-hover mq450:gap-[2.5rem] ${className}`}
@@ -45,7 +47,7 @@ const Card1 = ({ className = "", ellipse245 }) => {
               <span>*****</span>
             </div>
           </div>
-          <div className="self-stretch rounded flex flex-row items-start justify-center py-[0.375rem] px-[1.25rem] whitespace-nowrap text-[1rem] text-foundation-red-normal border-[1px] border-solid border-foundation-red-normal">
+          <div onClick={()=>navigate('/loanDetail')} className="self-stretch rounded flex flex-row items-start justify-center py-[0.375rem] px-[1.25rem] whitespace-nowrap text-[1rem] text-foundation-red-normal border-[1px] border-solid border-foundation-red-normal">
             <div className="relative capitalize font-medium">
               View Full Details
             </div>
