@@ -24,7 +24,7 @@ function Kycprocess() {
           </div>
         </div>
         <div className="self-stretch rounded-xl bg-white box-border flex flex-col items-start justify-start pt-[0rem] px-[1rem] pb-[1rem] gap-[1rem] max-w-full shrink-0 z-[1] text-[1rem] text-foundation-blue-normal font-roboto border-[1px] border-solid border-foundation-white-normal-hover">
-          <div className="w-[52.25rem] flex flex-row flex-wrap items-start justify-start max-w-full [row-gap:20px]">
+          <div className="w-[52.25rem] flex flex-row flex-wrap items-center justify-center max-w-full [row-gap:20px]">
             <div className="h-[3.188rem] flex-1 overflow-hidden flex flex-col items-start justify-start p-[1rem] box-border gap-[0.812rem] min-w-[10.5rem]">
               <img
                 className="w-[1rem] h-[1rem] relative overflow-hidden shrink-0 hidden"
@@ -35,7 +35,7 @@ function Kycprocess() {
                 to="completed"
                 className={({ isActive }) => isActive ? "navlink2 active" : "navlink2"}
               >
-                Completed KYC Process
+                Approval Request
               </NavLink>
               {/* <div className="self-stretch h-[0.375rem] relative rounded-[100px] bg-foundation-blue-normal shrink-0" /> */}
             </div>

@@ -1,15 +1,17 @@
+// CompletedKyc.jsx
 import React, { useState, useEffect } from 'react';
 import SavingCard from './saving-card';
-// import axios from 'redaxios';
+import useAxios from '../axiosSetup';
 
 function CompletedKyc() {
   const [users, setUsers] = useState([]);
+  const axios = useAxios();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get('https://sn-backend.vercel.app/api/v1/admin/users');
-        const users = res.data.data.filter(user => user.account);
+        const res = await axios.get('https://sn-backend.vercel.app/api/v1/admin/user/account/requests?status=Pending');
+        const users = res.data.data;
         setUsers(users);
         console.log(users);
       } catch (error) {
