@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React, { useState, useEffect } from "react";
 // import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "./admin/context/AuthContext";
 
 const App = ({ className = "" }) => {
   const [userId, setUserId] = useState('');
@@ -27,7 +27,7 @@ const App = ({ className = "" }) => {
       }
 
       login(response.data.data.accessToken);
-      navigate('/dashboard');
+      navigate('/admin/dashboard');
     } catch (error) {
       console.error('Error:', error);
       setErrorMessage('Invalid credentials. Please try again.');

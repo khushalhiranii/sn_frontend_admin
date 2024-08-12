@@ -1,0 +1,138 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 0;
+    max-width: calc(100% - 344px);
+    box-sizing: border-box;
+    text-align: left;
+    color: white;
+    font-size: 1rem;
+  }
+  
+  .dashboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.937rem;
+    max-width: 100%;
+  }
+  
+  .task-header {
+    display: flex;
+    position: relative;
+    width: 17.25rem;
+    font-size: 0.813rem;
+    font-family: Inter, sans-serif;
+  }
+  
+  .user-icon {
+    height: 1.5rem;
+    width: 1.5rem;
+    position: absolute;
+    top: 1.188rem;
+    right: -0.25rem;
+    overflow: hidden;
+  }
+  
+  .task-info {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    gap: 0.5rem;
+    background-color: #ff0000; /* foundation-red-normal */
+    border-radius: 0.25rem;
+    z-index: 1;
+  }
+  
+  .date {
+    font-weight: 500;
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  .task-title {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.25rem;
+    font-family: Roboto, sans-serif;
+  }
+  
+  .task-text {
+    font-weight: 500;
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  .task-icon {
+    height: 1.5rem;
+    width: 1.5rem;
+    background-color: #dcdcdc; /* gainsboro */
+  }
+  
+  .loan-requests {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    color: #000000; /* black1 */
+  }
+  
+  .loan-types {
+    display: flex;
+    flex-direction: column;
+    width: 76rem;
+    max-width: 100%;
+    padding-top: 1rem;
+    gap: 2rem;
+  }
+  
+  .loan-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+  }
+  
+  .navlink2 {
+    padding: 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  
+  .navlink2.active {
+    font-weight: bold;
+    color: #0000ff; /* Add active styles */
+  }
+  
+  .loan-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    min-height: 44.75rem;
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-container {
+      max-width: 100%;
+    }
+  
+    .navbar-toggle-button {
+      display: block;
+    }
+  
+    .sidebar {
+      width: 100%;
+      height: 100%;
+      transform: translateX(-100%);
+    }
+  
+    .sidebar.open {
+      transform: translateX(0);
+    }
+  }
+  

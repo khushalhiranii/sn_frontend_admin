@@ -1,0 +1,11 @@
+/* Customize the progress bar color */
+#nprogress .bar {
+    background: #29d;
+  }
+  
+  /* Customize the spinner */
+  #nprogress .spinner-icon {
+    border-top-color: #29d;
+    border-left-color: #29d;
+  }
+  

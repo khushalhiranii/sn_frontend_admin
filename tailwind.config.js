@@ -5,7 +5,9 @@ module.exports = {
       colors: {
         white: "#fff",
         "foundation-white-normal-hover": "#e6e6e6",
+        "foundation-white-normal-active": "#CACACA",
         "foundation-red-normal": "#aa0542",
+        "foundation-Violet-violet-100": "#C0BFC3",
         mediumvioletred: {
           "100": "#d12b69",
           "200": "rgba(209, 43, 105, 0.09)",
@@ -67,6 +69,18 @@ module.exports = {
       mq450: {
         raw: "screen and (max-width: 450px)",
       },
+      mq1275: {
+        raw: "screen and (max-width: 1275px)",
+      },
+      mq1100: {
+        raw: "screen and (max-width: 1100px)",
+      },
+      mq750: {
+        raw: "screen and (max-width: 750px)",
+      },
+      mq450: {
+        raw: "screen and (max-width: 450px)",
+      }
     },
   },
   corePlugins: {
