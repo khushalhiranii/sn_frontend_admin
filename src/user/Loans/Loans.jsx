@@ -24,7 +24,7 @@ function Loans() {
         <img className='w-full' src='/loans.png' alt="Schemes"/>
       </div>
       <div className='flex flex-col'>
-      <div className='flex flex-row p-[64px] justify-around'>
+      <div className='flex flex-row p-[64px] justify-between'>
       <NavLink 
         to="/loanApplication" 
         className="no-underline text-black" 
@@ -40,7 +40,7 @@ function Loans() {
           {imgWithLabel("/PrL.png", "Property Loan")}
         </NavLink>
         </div>
-        <div className='flex flex-row p-[64px] justify-around'>
+        <div className='flex flex-row p-[64px] justify-evenly'>
         <NavLink to="/loanApplication" className="no-underline text-black"  onClick={() => setSelectedScheme('Fixed Deposit')}>
           {imgWithLabel("/BL.png", "Business Loan")}
         </NavLink>
