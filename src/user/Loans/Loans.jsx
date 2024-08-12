@@ -42,10 +42,10 @@ function Loans() {
         </div>
         <div className='flex flex-row p-[64px] justify-around'>
         <NavLink to="/loanApplication" className="no-underline text-black"  onClick={() => setSelectedScheme('Fixed Deposit')}>
-          {imgWithLabel("public/BL.png", "Business Loan")}
+          {imgWithLabel("/BL.png", "Business Loan")}
         </NavLink>
         <NavLink to="/loanApplication" className="no-underline text-black"  onClick={() => setSelectedScheme('Fixed Deposit')}>
-          {imgWithLabel("public/MFL.png", "Micro Finance Loan")}
+          {imgWithLabel("/MFL.png", "Micro Finance Loan")}
         </NavLink>
         </div>
       </div>
