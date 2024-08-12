@@ -1,6 +1,6 @@
 // contexts/UserDataContext.js
 import React, { createContext, useContext, useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 // import { useNavigate } from 'react-router-dom';
 
 // Create context
