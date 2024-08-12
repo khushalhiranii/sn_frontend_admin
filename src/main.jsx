@@ -35,6 +35,7 @@ import DepositProvider from './user/context/SchemeContext.jsx';
 import { Login } from './user/Login/Login.jsx';
 import LoadingIndicator from './admin/components/LoadingIndicator.jsx';
 import PvtRtUserLogin from './user/SavingAccount/Registration/routes/PvtRtUserLogin.jsx';
+import Loans from './user/Loans/Loans.jsx';
 
 const AppRouter = () => (
   <Router>
@@ -44,6 +45,7 @@ const AppRouter = () => (
       <Route index element={<Home/>}/>
       {/* <Route path="schemes" element={<PvtRtUserLogin component={Schemes}/>}/> */}
       <Route path="schemes" element={<Schemes/>}/>
+      <Route path="loans" element={<Loans/>}/>
       {/* <Route path="schemeApplication" element={<PvtRtUserLogin component={SchemePage}/>}/> */}
       <Route path="schemeApplication" element={<SchemePage/>}/>      
     </Route>
