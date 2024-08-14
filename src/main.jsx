@@ -36,6 +36,13 @@ import { Login } from './user/Login/Login.jsx';
 import LoadingIndicator from './admin/components/LoadingIndicator.jsx';
 import PvtRtUserLogin from './user/SavingAccount/Registration/routes/PvtRtUserLogin.jsx';
 import Loans from './user/Loans/Loans.jsx';
+import LoanPage from './user/Loans/LoanPage.jsx';
+import LoanProvider from './user/context/LoanContext.jsx';
+import AccountAction from './user/SavingAccount/Registration/pages/AccountAction.jsx';
+import AccountDetails from './user/SavingAccount/Registration/pages/AccountDetails.jsx';
+import AccountStatement from './user/SavingAccount/Registration/pages/AccountStatement.jsx';
+import AccountUpdate from './user/SavingAccount/Registration/pages/AccountUpdate.jsx';
+import PhoneUpdate from './user/SavingAccount/Registration/pages/PhoneUpdate.jsx';
 
 const AppRouter = () => (
   <Router>
@@ -47,7 +54,16 @@ const AppRouter = () => (
       <Route path="schemes" element={<Schemes/>}/>
       <Route path="loans" element={<Loans/>}/>
       {/* <Route path="schemeApplication" element={<PvtRtUserLogin component={SchemePage}/>}/> */}
-      <Route path="schemeApplication" element={<SchemePage/>}/>      
+      <Route path="schemeApplication" element={<SchemePage/>}/>
+      <Route path="loanApplication" element={<LoanPage/>}/>
+      <Route path='saving-account' element={<AccountAction/>}/>
+      <Route path='saving-account/info' element={<AccountDetails/>}/>
+      <Route path='saving-account/statement' element={<AccountStatement/>}/>
+      <Route path='saving-account/update/' element={<AccountUpdate/>}>
+      <Route path='phone' element={<PhoneUpdate/>}/>
+      </Route>
+      
+      
     </Route>
     <Route path='/register' element={<Registration/>}>
       <Route index element={<Inputbar/>}/>
@@ -97,7 +113,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <UserDataProvider>
         <StepContext>
           <DepositProvider>
+            <LoanProvider>
           <AppRouter />
+          </LoanProvider>
           </DepositProvider>
         </StepContext>
       </UserDataProvider>

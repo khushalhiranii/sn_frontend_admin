@@ -8,6 +8,7 @@ module.exports = {
         "foundation-white-normal-active": "#CACACA",
         "foundation-red-normal": "#aa0542",
         "foundation-Violet-violet-100": "#C0BFC3",
+        'custom-blue': 'rgba(230, 240, 252, 0.60)',
         mediumvioletred: {
           "100": "#d12b69",
           "200": "rgba(209, 43, 105, 0.09)",
