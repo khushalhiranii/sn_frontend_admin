@@ -1,14 +1,64 @@
-/* App.css */
-
 .navlink2 {
+    width: 100%;
+    gap: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     background-color: white;
     font-size: large;
     text-decoration: none; /* Removes the underline */
     color: black; /* Your custom color */
-    padding-bottom: 2px; /* Add padding to create space for the underline */
+    padding: 16px; /* Add padding to create space for the underline */
+    position: relative; /* Position relative to place the pseudo-element */
 }
 
 .navlink2.active {
-    border-bottom: 3px solid #7433ff; /* Add underline when active */
-    color: #7433ff;
+    color: #7433ff; /* Text color when active */
 }
+
+.navlink2:hover {
+    color: #7433ff; /* Text color on hover */
+}
+
+.navlink2.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0; /* Position it at the bottom of the element */
+    left: 50%;
+    transform: translateX(-50%); /* Center the pseudo-element */
+    width: 226px; /* Fixed width for the border */
+    height: 3px; /* Thickness of the border */
+    background-color: #7433ff; /* Border color */
+    border-top-left-radius: 100px; /* Rounded top left corner */
+    border-top-right-radius: 100px; /* Rounded top right corner */
+}
+
+.loan-component {
+    position: relative;
+    transition: padding-left 0.3s ease;
+  }
+  
+  .loan-component::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px; /* Width of the red bar */
+    height: 100%;
+    background-color: #AA0542; /* Color of the bar */
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+    /* transform-origin: center; */
+    border-top-left-radius : 0.25rem;
+    border-bottom-left-radius : 0.25rem;
+  }
+  
+  .loan-component:hover {
+    padding-left: 16px; /* Shift the content to the right */
+    
+  }
+  
+  .loan-component:hover::before {
+    transform: scaleY(1);
+  }
+  

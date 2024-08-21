@@ -43,6 +43,7 @@ import AccountDetails from './user/SavingAccount/Registration/pages/AccountDetai
 import AccountStatement from './user/SavingAccount/Registration/pages/AccountStatement.jsx';
 import AccountUpdate from './user/SavingAccount/Registration/pages/AccountUpdate.jsx';
 import PhoneUpdate from './user/SavingAccount/Registration/pages/PhoneUpdate.jsx';
+import Notifications from './admin/pages/Notifications.jsx';
 
 const AppRouter = () => (
   <Router>
@@ -80,12 +81,20 @@ const AppRouter = () => (
     <Route path='otpverified' element={<OtpVerified/>}/>
     </Route>
     <Route path="/admin" element={<App />} />
-    <Route
+    {/* <Route
       path="/admin/*"
       element={
         <PrivateRoute>
           <Layout />
         </PrivateRoute>
+      }
+    > */}
+    <Route
+      path="/admin/*"
+      element={
+        // <PrivateRoute>
+          <Layout />
+        // </PrivateRoute>
       }
     >
       <Route path="dashboard" element={<Dashboard />} />
@@ -99,6 +108,7 @@ const AppRouter = () => (
         <Route path="completed" element={<CompletedKyc />} />
         <Route path="pending" element={<PendingKYC />} />
       </Route>
+      <Route path="notifications" element={<Notifications />} />
       <Route path="client/:userId" element={<ClientDetails />} />
       <Route path="loanDetail" element={<LoanDetails />} />
       <Route path="*" element={<Navigate to="/admin" replace />} />

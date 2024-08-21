@@ -47,7 +47,10 @@ const Card1 = ({ className = "", ellipse245 }) => {
               <span>*****</span>
             </div>
           </div>
-          <div onClick={()=>navigate('/admin/loanDetail')} className="self-stretch rounded flex flex-row items-start justify-center py-[0.375rem] px-[1.25rem] whitespace-nowrap text-[1rem] text-foundation-red-normal border-[1px] border-solid border-foundation-red-normal">
+          <div
+            onClick={() => navigate('/admin/loanDetail')}
+            className="self-stretch rounded flex flex-row items-start justify-center py-[0.375rem] px-[1.25rem] whitespace-nowrap text-[1rem] text-foundation-red-normal border-[1px] border-solid border-foundation-red-normal cursor-pointer hover:bg-foundation-red-normal hover:text-white transition-transform ease-in-out"
+          >
             <div className="relative capitalize font-medium">
               View Full Details
             </div>

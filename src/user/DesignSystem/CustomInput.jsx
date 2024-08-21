@@ -10,7 +10,7 @@ const CustomInput = ({ placeholder, iconSrc, className = '', ...props }) => {
       />
       <input
         type="text"
-        className="cursor-pointer bg-[transparent] text-[1.125rem] font-roboto placeholder:text-foundation-blue-normal text-foundation-blue-normal text-left focus:outline-none"
+        className="bg-[transparent] text-[1.125rem] font-roboto placeholder:text-foundation-blue-normal text-foundation-blue-normal text-left focus:outline-none"
         placeholder={placeholder}
         {...props}
       />

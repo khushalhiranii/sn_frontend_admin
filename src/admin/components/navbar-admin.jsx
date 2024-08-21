@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
-import IconHome from '../assets/home-1.jsx'; // Assuming IconHome is a React component defined in this file
+import IconHome from '../assets/home-1.jsx';
 import Loan from "../assets/loan.jsx";
 import Scheme from "../assets/scheme.jsx";
 import Disloan from "../assets/dis-loan.jsx";
@@ -14,75 +14,43 @@ import Signout from "../assets/signout.jsx";
 import './navbar.css';
 import { useAuth } from "../context/AuthContext.jsx";
 
+
+const NavLinkItem = ({ to, icon: Icon, label }) => (
+  <NavLink
+    to={to}
+    className={({ isActive }) => isActive ? "navlink active-navlink" : "navlink"}
+  >
+    <Icon />
+    {label}
+  </NavLink>
+);
+
+NavLinkItem.propTypes = {
+  to: PropTypes.string.isRequired,
+  icon: PropTypes.elementType.isRequired,
+  label: PropTypes.string.isRequired,
+};
+
 const NavbarAdmin = () => {
   const { logout } = useAuth();
-  
-  return (
-    <div className="flex flex-col w-72 !sticky overflow-auto top-16 left-0 h-full bg-white items-start justify-start pb-12 py-4 pr-0 pl-16 gap-2 text-left text-[1.125rem] text-black font-roboto mq450:pl-5 mq450:box-border mq675:pt-5 mq675:pb-5 mq675:box-border">
-      <NavLink to="/admin/dashboard" className={({ isActive }) => isActive ? "navlink active-navlink" : "navlink"}>
-        <IconHome className="h-[1rem] w-[1rem] relative shrink-0" />
-          Dashboard
-      </NavLink>
-      <NavLink to="/admin/loanRequest" className={({ isActive }) => isActive ? "navlink active-navlink" : "navlink"}>
-        <Loan />
-        {/* <div className="relative font-medium inline-block min-w-[6.938rem]"> */}
-          Loan Request
-        {/* </div> */}
-      </NavLink>
-      <NavLink to="/admin/scheme" className={({ isActive }) => isActive ? "navlink active-navlink" : "navlink"}>
-        <Scheme />
-        {/* <div className="relative font-medium"> */}
-          Scheme Request
-          {/* </div> */}
-      </NavLink>
-      <NavLink to="/admin/loanInfo" className={({ isActive }) => isActive ? "navlink active-navlink" : "navlink"}>
-        <Disloan />
-        {/* <div className="relative font-medium inline-block min-w-[7.875rem]"> */}
-          Loan Info
-        {/* </div> */}
-      </NavLink>
-      <NavLink to="/admin/schemeInfo" className={({ isActive }) => isActive ? "navlink active-navlink" : "navlink"}>
-        <Dueloan />
-        {/* <div className="relative font-medium inline-block min-w-[4.75rem]"> */}
-          Scheme Info
-        {/* </div> */}
-      </NavLink>
-      <NavLink to="/admin/savingAccount" className={({ isActive }) => isActive ? "navlink active-navlink" : "navlink"}>
-        <Savacc />
-        {/* <div className="relative text-[1.125rem] font-medium font-roboto text-foundation-blue-normal text-left inline-block min-w-[7.875rem]"> */}
-          Saving Account
-        {/* </div> */}
-      </NavLink>
-      <NavLink to='/admin/cusmgmt' className={({ isActive }) => isActive ? "navlink active-navlink" : "navlink"}>
-        <Cusmng />
-        {/* <div className="relative font-medium"> */}
-        Customer Management
-        {/* </div> */}
-      </NavLink>
-      <NavLink to='/admin/agmgmt' className={({ isActive }) => isActive ? "navlink active-navlink" : "navlink"}>
-        <Agmng />
-        {/* <div className="relative font-medium"> */}
-          Agent Management
-          {/* </div> */}
-      </NavLink>
-      <NavLink to='/admin/repogen' className={({ isActive }) => isActive ? "navlink active-navlink" : "navlink"}>
-        <Repogen />
-        {/* <div className="relative font-medium"> */}
-          Report Generation
-          {/* </div> */}
-      </NavLink>
-      
 
-      <div className="self-stretch flex flex-col items- justify-start py-[2rem] px-[0rem]">
-        <div onClick={logout} className="rounded-tl rounded-tr-none rounded-br-none rounded-bl bg-darkslategray-200 flex flex-row items-center justify-start py-[0.718rem] pr-[8.687rem] pl-[0.75rem] gap-[0.75rem] whitespace-nowrap">
-          <Signout />
-          <div className="relative font-medium inline-block min-w-[4.313rem]">
-            Sign Out
-          </div>
-        </div>
+  return (
+    <div className="flex flex-col w-[20%] h-[944px] border-solid border-[#E6E6E6] border-r-[1px] !sticky top-16 left-0 bg-white items-start justify-between pb-12 py-[32px] pr-0 pl-16 gap-[16px] text-left text-[14px] font-medium text-black font-roboto mq450:pl-5 mq450:box-border mq675:pt-5 mq675:pb-5 mq675:box-border">
+      <div className="flex flex-col items-start justify-start w-full gap-[16px] text-left text-[1.125rem] text-black font-roboto mq450:pl-5 mq450:box-border mq675:pt-5 mq675:pb-5 mq675:box-border">
+        <NavLinkItem to="/admin/dashboard" icon={IconHome} label="Dashboard" />
+        <NavLinkItem to="/admin/loanRequest" icon={Loan} label="Loan Request" />
+        <NavLinkItem to="/admin/scheme" icon={Scheme} label="Scheme Request" />
+        <NavLinkItem to="/admin/loanInfo" icon={Disloan} label="Loan Info" />
+        <NavLinkItem to="/admin/schemeInfo" icon={Dueloan} label="Scheme Info" />
+        <NavLinkItem to="/admin/savingAccount" icon={Savacc} label="Saving Account" />
+        <NavLinkItem to="/admin/cusmgmt" icon={Cusmng} label="Customer Management" />
+        <NavLinkItem to="/admin/agmgmt" icon={Agmng} label="Agent Management" />
+        <NavLinkItem to="/admin/repogen" icon={Repogen} label="Report Generation" />
+      </div>
+      <div className="flex flex-col items-start justify-start w-full gap-[16px] text-left text-[1.125rem] text-black font-roboto">
+        <NavLinkItem to="/logout" icon={Signout} label="Sign Out" />
       </div>
     </div>
-    
   );
 };
 

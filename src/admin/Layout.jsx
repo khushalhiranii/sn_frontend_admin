@@ -7,7 +7,7 @@ const Layout = () => {
   return (
     <div className="flex flex-col">
       <Header />
-      <div className="flex w-[70%]">
+      <div className="flex flex-row gap-[16px] pr-[48px] font-roboto">
         <NavbarAdmin/>
         <Outlet/>
           {/* <NavbarAdmin /> */}

@@ -2,29 +2,32 @@
 .navlink {
   display: flex;
   flex-direction: row;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: flex-start;
-  padding: 0.718rem 1rem;
+  padding: 12px 12px;
   gap: 0.75rem;
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-  width: 85%;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  width: 91%;
   color: inherit;
   text-decoration: none;
   transition: background-color 0.3s ease;
   border-right: 0 solid transparent; /* Initialize border-left */
 }
 
-.navlink:hover,
+.navlink:hover{
+  color: rgb(69, 69, 231);
+}
 .navlink:focus {
-  background-color: #ceeaf7; /* Hover background color */
+  background-color: rgba(1, 102, 228, 0.05); /* Hover background color */
   border-right-color: rgb(69, 69, 231);
   border-right-width: 4px; /* Use px instead of rem for border width */
   color: rgb(69, 69, 231);
 }
 
 .active-navlink {
-  background-color: #ceeaf7; /* Active (current) background color */
+  background-color: rgba(1, 102, 228, 0.05); /* Active (current) background color */
   border-right-color: rgb(69, 69, 231);
   border-right-width: 4px; /* Use px instead of rem for border width */
   color: rgb(69, 69, 231);
