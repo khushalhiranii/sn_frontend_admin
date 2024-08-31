@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 import CryptoJS from 'crypto-js';
 
 const SECRET = import.meta.env.VITE_SECRET;
