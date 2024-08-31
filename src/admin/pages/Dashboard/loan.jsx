@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-const Loan = ({ className = "", home22, loanRequests }) => {
+const Loan = ({ className = "", home22, loanRequests, count }) => {
   return (
     <div
       className={`loan-component w-full rounded bg-off-white flex flex-row justify-between p-[12px] box-border min-w-[9.5rem] text-left text-[1rem] text-black1 font-roboto ${className}`}
@@ -11,7 +11,7 @@ const Loan = ({ className = "", home22, loanRequests }) => {
             {loanRequests}
           </div>
           <div className="relative text-[1.313rem] font-medium inline-block min-w-[0.75rem] mq450:text-[1.063rem]">
-            8
+            {count}
           </div>
         </div>
       </div>

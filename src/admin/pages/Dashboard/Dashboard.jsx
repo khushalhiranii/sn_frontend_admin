@@ -5,14 +5,68 @@ import Time from '../../assets/time';
 import Hr from '../../assets/hr-person';
 import Briefcase from '../../assets/briefcase';
 import Apartment from '../../assets/apartment';
+import { useAdminSocket } from '../../context/AdminSocketContext';
+import LoanInfoCard from '../../components/LoanInfoCard';
 
 function Dashboard() {
   // Set the default state to 'Property Loan'
-  const [selectedLoanType, setSelectedLoanType] = useState('Property Loan');
+  const [selectedLoanType, setSelectedLoanType] = useState('Property'); // Default type
+  const { users, userData, loans, schemes, accounts } = useAdminSocket();
 
   const handleButtonClick = (loanType) => {
     setSelectedLoanType(loanType);
   };
+
+  const usersArray = Object.values(users);
+  const userDataArray = Object.values(userData);
+  const loansArray = Object.values(loans);
+  const schemesArray = Object.values(schemes);
+  const accountsArray = Object.values(accounts);
+
+  const filteredLoansLength = loansArray.filter(
+    (loan) => loan.Status === 'Pending').length;
+
+  const filteredDueLoansLength = loansArray.filter(
+    (loan) => loan.Status === 'Active').length;
+
+  const filteredSchemesLength = schemesArray.filter(
+    (loan) => loan.Status === 'Pending').length;
+
+  const filteredAccountsLength = accountsArray.filter(
+    (loan) => loan.Status != 'Pending').length;
+
+
+  const getMergedData = () => {
+    
+
+    // Filter loans by status and selectedLoanType
+    const filteredLoans = loansArray.filter(
+      (loan) => loan.Status != 'Pending' && loan.Type === selectedLoanType
+    );
+
+    // Merge the data based on the "Identifier"
+    const mergedData = filteredLoans.map((loan) => {
+      const user = usersArray.find((u) => u.Identifier === loan.Identifier);
+      const data = userDataArray.find((d) => d.Identifier === loan.Identifier);
+
+      // Merge addresses if there are multiple entries
+      const mergedAddress = data ? Object.values(data.Address.Address).join(', ') : '';
+
+      return {
+        ...loan, // Include loan details
+        Name: user?.Name,
+        Number: user?.Number,
+        Address: mergedAddress,
+        Photo: data?.Photo,
+      };
+    });
+
+    return mergedData;
+  };
+
+  // Get filtered and merged data
+  const mergedAccounts = getMergedData();
+  console.log(mergedAccounts)
 
   return (
     <div className="flex-1 flex flex-col items-start justify-start pt-[2rem] px-[0rem] pb-[0rem] box-border max-w-[calc(100%_-_344px)] text-[1rem] text-white mq850:h-auto mq850:max-w-full">
@@ -38,10 +92,10 @@ function Dashboard() {
           </div>
         </div>
         <div className="self-stretch flex flex-row items-start justify-between gap-[2rem] shrink-0 text-black1 mq675:gap-[1rem] mq675:flex-wrap">
-          <Loan home22="/loan.svg" loanRequests="Loan Requests" />
-          <Loan home22="/schemes.svg" loanRequests="Scheme Request" />
-          <Loan home22="/due-loan.svg" loanRequests="Due Loans" />
-          <Loan home22="/sav-acc.svg" loanRequests="Saving Account" />
+          <Loan home22="/loan.svg" loanRequests="Loan Requests" count={filteredLoansLength} />
+          <Loan home22="/schemes.svg" loanRequests="Scheme Request" count={filteredSchemesLength}/>
+          <Loan home22="/due-loan.svg" loanRequests="Due Loans" count={filteredDueLoansLength} />
+          <Loan home22="/sav-acc.svg" loanRequests="Saving Account" count={filteredAccountsLength} />
         </div>
       </div>
       <div className="flex flex-col w-full items-start justify-start pt-[1rem] gap-[2rem] mq675:gap-[1rem]">
@@ -50,8 +104,8 @@ function Dashboard() {
             <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border text-[16px] font-normal gap-[0.5rem] w-full text-black">
               
               <button 
-                onClick={() => handleButtonClick('Property Loan')}
-                className={`navlink2 ${selectedLoanType === 'Property Loan' ? 'active' : ''}`}
+                onClick={() => handleButtonClick('Property')}
+                className={`navlink2 ${selectedLoanType === 'Property' ? 'active' : ''}`}
               >
                 <Apartment/>
                 Property Loan
@@ -60,8 +114,8 @@ function Dashboard() {
             <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border gap-[0.5rem] w-full text-black">
               
               <button
-                onClick={() => handleButtonClick('Instant Loan')}
-                className={`navlink2 ${selectedLoanType === 'Instant Loan' ? 'active' : ''}`}
+                onClick={() => handleButtonClick('Instant')}
+                className={`navlink2 ${selectedLoanType === 'Instant' ? 'active' : ''}`}
               >
                 <Time/>
                 Instant Loan
@@ -70,8 +124,8 @@ function Dashboard() {
             <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border gap-[0.5rem] w-full text-black">
               
               <button
-                onClick={() => handleButtonClick('Personal Loan')}
-                className={`navlink2 ${selectedLoanType === 'Personal Loan' ? 'active' : ''}`}
+                onClick={() => handleButtonClick('Personal')}
+                className={`navlink2 ${selectedLoanType === 'Personal' ? 'active' : ''}`}
               >
                 <Hr/>
                 Personal Loan
@@ -80,8 +134,8 @@ function Dashboard() {
             <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border gap-[0.5rem] w-full text-black">
               
               <button
-                onClick={() => handleButtonClick('Business Loan')}
-                className={`navlink2 ${selectedLoanType === 'Business Loan' ? 'active' : ''}`}
+                onClick={() => handleButtonClick('Business')}
+                className={`navlink2 ${selectedLoanType === 'Business' ? 'active' : ''}`}
               >
                 <Briefcase/>
                 Business Loan
@@ -89,17 +143,21 @@ function Dashboard() {
             </div>
           </div>
           
-            
-              {/* <div className="flex flex-row flex-wrap items-start justify-between gap-[16px] px-[16px]">
-                
-                <Card1 cardAvatars="/ellipse-245@2x.png" />
-                <Card1 cardAvatars="/ellipse-245-1@2x.png" />
-                <Card1 cardAvatars="/ellipse-245-1@2x.png" />
-                <Card1 cardAvatars="/ellipse-245-2@2x.png" />
-                
-              </div>
-             */}
-          
+          <div className="w-full flex flex-row flex-wrap gap-[16px] items-center justify-between px-[16px] box-border">
+          {mergedAccounts.map((account, index) => (
+              <LoanInfoCard
+                key={index}
+                phoneno={account.Number}
+                fullname={account.Name}
+                address={account.Address}
+                profilePicture={account.Photo}
+                key1={account.Identifier}
+                id={account._id}
+                amount={account.Amount}
+                {...account}
+              />
+            ))}
+            </div>
         </div>
       </div>
     </div>
