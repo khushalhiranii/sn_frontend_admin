@@ -15,9 +15,10 @@ import './navbar.css';
 import { useAuth } from "../context/AuthContext.jsx";
 
 
-const NavLinkItem = ({ to, icon: Icon, label }) => (
+const NavLinkItem = ({ to, icon: Icon, label, onClick }) => (
   <NavLink
     to={to}
+    onClick={onClick}
     className={({ isActive }) => isActive ? "navlink active-navlink" : "navlink"}
   >
     <Icon />
@@ -48,7 +49,7 @@ const NavbarAdmin = () => {
         <NavLinkItem to="/admin/repogen" icon={Repogen} label="Report Generation" />
       </div>
       <div className="flex flex-col items-start justify-start w-full gap-[16px] text-left text-[1.125rem] text-black font-roboto">
-        <NavLinkItem to="/logout" icon={Signout} label="Sign Out" />
+        <NavLinkItem to="/admin" icon={Signout} label="Sign Out" onClick={()=> sessionStorage.clear()} />
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 // contexts/UserDataContext.js
 import React, { createContext, useContext, useState } from 'react';
+import axiosInstance from '../../../../../axios.utils';
 // import axios from 'axios';
 // import { useNavigate } from 'react-router-dom';
 
@@ -22,21 +23,28 @@ export const UserDataProvider = ({ children }) => {
   // Function to send user data and handle response
   const sendUserData = async (fullname, email, dob, phoneno) => {
     try {
-      const response = await axios.post('https://sn-backend.vercel.app/api/v1/user/register',{
-        
-        fullname,
-        email,
-        dob,
-        phoneno,
-        
-      });
+      const response = await axiosInstance.post(
+        '/client/classic/Create',
+        {
+          "data":{
+            "Name": fullname,
+            "Mail": email,
+            "Birth": dob,
+            "Number": phoneno,
+            "Password": "0000",
+            "Pin": "0000"
+          }
+        }
+      );
+      console.log(response)
+      
       // Assuming the response includes a phone number for verification
-      setPhoneNumber(response.data.data);
-      setUserId(response.data.data.userId);
+      // setPhoneNumber(response.data.data);
+      // setUserId(response.data.data.userId);
       // Set userData and verificationStatus based on API response
       setUserData({ fullname, email, dob, phoneno });
-      setVerificationStatus(true); // Proceed to OTP verification
-      console.log(response.data.data.userId)
+      // setVerificationStatus(true); // Proceed to OTP verification
+      // console.log(response.data.data.userId)
       
     } catch (error) {
       console.error('Error sending user data:', error);
@@ -47,17 +55,20 @@ export const UserDataProvider = ({ children }) => {
 
   const userLogin = async(phoneno) => {
     try {
-      const response = await axios.post('https://sn-backend.vercel.app/api/v1/user/login',{
-        phoneno
-      });
+      const response = await axiosInstance.post('/client/classic/Code',{
+        "data": {
+            "Number": phoneno
+        }
+    });
       // Assuming the response includes a phone number for verification
-      // setPhoneNumber(response.data.data);
-      setUserId(response.data.data.userId);
       console.log(response)
+      // setPhoneNumber(phoneno);
+      setUserData({ phoneno });
+      
       // Set userData and verificationStatus based on API response
       // setUserData({ fullname, email, dob, phoneno });
       setVerificationStatus(true); // Proceed to OTP verification
-      console.log(response.data.data.userId)
+      // console.log(response.data.data.userId)
       
     } catch (error) {
       console.error('Error sending user data:', error);
@@ -66,15 +77,59 @@ export const UserDataProvider = ({ children }) => {
     }
   }
 
+  const requestOTP = async () => {
+    try {
+      console.log(userData.phoneno)
+      const response = await axiosInstance.post('/client/classic/Code',
+        {
+          "data": {
+              "Number": userData.phoneno
+          }
+      }
+       )
+       console.log(response);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
   // Function to send OTP and handle verification
   const sendOTP = async (otp) => {
     try {
-      const response = await axios.post('https://sn-backend.vercel.app/api/v1/user/verifyotp', {
-        otp,
-        userId
-      });
+      const response = await axiosInstance.post('/client/classic/Verify', {
+        "data": {
+            "Number": userData.phoneno,
+            "Code": otp,
+            "Verify": true
+        }
+    });
       console.log(response);
-      sessionStorage.setItem('accesstoken', response.data.data.accesstoken)
+      // sessionStorage.setItem('accesstoken', response.data.data.accesstoken)
+      setOtpVerificationStatus(true);
+      return response;
+      // if(response.data.accesstoken){
+      //   setOtpVerificationStatus(true); // OTP verification successful
+      //   // navigate('/otpverified')
+      //   return response.data.accesstoken
+      // };
+      
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+      // Handle error (e.g., show error message)
+      throw new Error('Failed to verify OTP');
+    }
+  };
+
+  const sendLoginOTP = async (otp) => {
+    try {
+      const response = await axiosInstance.post('/client/classic/Verify', {
+        "data": {
+            "Number": userData.phoneno,
+            "Code": otp
+        }
+    });
+      console.log(response);
+      // sessionStorage.setItem('accesstoken', response.data.data.accesstoken)
       setOtpVerificationStatus(true);
       return response;
       // if(response.data.accesstoken){
@@ -96,7 +151,9 @@ export const UserDataProvider = ({ children }) => {
     verificationStatus,
     otpVerificationStatus,
     sendUserData,
+    requestOTP,
     sendOTP,
+    sendLoginOTP,
     userLogin
   };
 

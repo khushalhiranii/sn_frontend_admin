@@ -21,7 +21,7 @@ export const Login = ()=> {
       // Proceed to OTP verification step
       // Implement your logic here (e.g., navigate to OTP verification screen)
     } catch (error) {
-      console.error('Failed to send user data:', error.message);
+      console.error('Failed to send user data:', error);
       // Handle error (e.g., show error message to user)
     //   setError("User already exists")
     }

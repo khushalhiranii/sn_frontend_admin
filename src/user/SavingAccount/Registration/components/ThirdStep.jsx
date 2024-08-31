@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect, useRef } from 'react';
 import { multiStepContext } from '../context/StepContext';
 import InputReg from '../../../DesignSystem/InputReg';
 import RedButton from '../../../DesignSystem/RedButton';
+import axiosInstance from '../../../../../axios.utils';
 
 const ThirdStep = () => {
   const [panNumber, setPanNumber] = useState('');
@@ -27,10 +28,16 @@ const ThirdStep = () => {
     }
   }, [panNumber, aadharNumber, aadharCardFile, panCardFile, userPhotoFile, signatureFile]);
 
-  const handleFileChange = (event, setFile, field) => {
+  const handleFileChange = async (event, setFile, field) => {
     const file = event.target.files[0];
     setFile(file);
-    setUserData({ ...userData, [field]: file });
+    const Identifier = sessionStorage.getItem('Identifier')
+    try {
+      const response = await axiosInstance.post(`client/classic/Docs?Identifier=${Identifier}&Field=${field}`, file)
+      console.log(response)
+    } catch (error) {
+      console.error(error)
+    }
   };
 
   const handleRemoveFile = (setFile) => {
@@ -150,22 +157,22 @@ const ThirdStep = () => {
           {renderUploadSection(
             "Pan Card",
             "Enter Your Pan Number",
-            panNumber,
-            (e) => setPanNumber(e.target.value),
+            userData['panNo'] || '',
+            (e)=>setUserData({...userData, "panNo": e.target.value}),
             panCardFile,
             setPanCardFile,
             panCardInputRef,
-            "pan"
+            "Pan"
           )}
           {renderUploadSection(
             "Aadhar Card",
             "Enter Your Aadhar Number",
-            aadharNumber,
-            (e) => setAadharNumber(e.target.value),
+            userData['aadharNo'] || '',
+            (e)=>setUserData({...userData, "aadharNo": e.target.value}),
             aadharCardFile,
             setAadharCardFile,
             aadharCardInputRef,
-            "aadhar"
+            "Aadhar"
           )}
           <div className={`flex ${!userPhotoFile || !signatureFile ? 'flex-row' : 'flex-col'} gap-[16px]`}>
   <div className={`${!userPhotoFile ? 'w-[50%]' : 'w-full'}`}>
@@ -177,7 +184,7 @@ const ThirdStep = () => {
       userPhotoFile,
       setUserPhotoFile,
       userPhotoInputRef,
-      "photo"
+      "Photo"
     )}
   </div>
   <div className={`${!signatureFile ? 'w-[50%]' : 'w-full'}`}>
@@ -189,7 +196,7 @@ const ThirdStep = () => {
       signatureFile,
       setSignatureFile,
       signatureInputRef,
-      "signature"
+      "Signature"
     )}
   </div>
 </div>

@@ -44,10 +44,38 @@ import AccountStatement from './user/SavingAccount/Registration/pages/AccountSta
 import AccountUpdate from './user/SavingAccount/Registration/pages/AccountUpdate.jsx';
 import PhoneUpdate from './user/SavingAccount/Registration/pages/PhoneUpdate.jsx';
 import Notifications from './admin/pages/Notifications.jsx';
+import AgentLogin from './agent/pages/AgentLogin.jsx';
+import LayoutAgent from './agent/components/LayoutAgent.jsx';;
+import HomeAgent from './agent/pages/HomeAgent.jsx';
+import Due from './agent/pages/Due.jsx';
+import PendingAgent from './agent/pages/PendingAgent.jsx';
+import HistoryAgent from './agent/pages/HistoryAgent.jsx';
+import ProfileAgent from './agent/pages/ProfileAgent.jsx';
+import { SocketProvider, useAdminSocket } from './admin/context/AdminSocketContext.jsx';
+import SchemeDetails from './admin/pages/Scheme-Request/SchemeDetails.jsx';
+import SchemeDetails1 from './admin/pages/Scheme-Info/SchemeDetails1.jsx';
+import { LoadingProvider } from './LoadingIndicator/LoadingContext.jsx'
 
-const AppRouter = () => (
+const AppRouter = () => {
+
+  const role = sessionStorage.getItem('role')
+
+  const renderSocketProvider = (children) => {
+    switch (role) {
+      // case 'user':
+      //   return <UserSocketProvider>{children}</UserSocketProvider>;
+      // case 'agent':
+      //   return <AgentSocketProvider>{children}</AgentSocketProvider>;
+      case 'admin':
+        return <SocketProvider>{children}</SocketProvider>;
+      default:
+        return children;  // No socket provider for unauthenticated routes
+    }
+  };
+  return(
   <Router>
     <LoadingIndicator/>
+    {renderSocketProvider(
     <Routes>
     <Route path="/" element={<Landing/>}>
       <Route index element={<Home/>}/>
@@ -80,6 +108,29 @@ const AppRouter = () => (
     <Route path='otp' element={<Otp/>}/>
     <Route path='otpverified' element={<OtpVerified/>}/>
     </Route>
+    <Route path="/agent" element={<AgentLogin />} />
+    {/* <Route
+      path="/admin/*"
+      element={
+        <PrivateRoute>
+          <Layout />
+        </PrivateRoute>
+      }
+    > */}
+    <Route
+      path="/agent/*"
+      element={
+        // <PrivateRoute>
+          <LayoutAgent />
+        // </PrivateRoute>
+      }
+    >
+      <Route path="home" element={<HomeAgent />} />
+      <Route path="due" element={<Due />} />
+      <Route path="pending" element={<PendingAgent/>} />
+      <Route path="history" element={<HistoryAgent/>} />
+      <Route path="profile" element={<ProfileAgent/>} />
+    </Route>
     <Route path="/admin" element={<App />} />
     {/* <Route
       path="/admin/*"
@@ -92,9 +143,9 @@ const AppRouter = () => (
     <Route
       path="/admin/*"
       element={
-        // <PrivateRoute>
+        <PrivateRoute>
           <Layout />
-        // </PrivateRoute>
+        </PrivateRoute>
       }
     >
       <Route path="dashboard" element={<Dashboard />} />
@@ -109,13 +160,16 @@ const AppRouter = () => (
         <Route path="pending" element={<PendingKYC />} />
       </Route>
       <Route path="notifications" element={<Notifications />} />
-      <Route path="client/:userId" element={<ClientDetails />} />
-      <Route path="loanDetail" element={<LoanDetails />} />
+      <Route path="savingAccount/:userId" element={<ClientDetails />} />
+      <Route path="loanRequest/:userId/:loanId" element={<LoanDetails />} />
+      <Route path="scheme/:userId/:schemeId" element={<SchemeDetails />} />
+      <Route path="schemeInfo/:userId/:schemeId" element={<SchemeDetails1 />} />
       <Route path="*" element={<Navigate to="/admin" replace />} />
     </Route>
     </Routes>
-  </Router>
-);
+    )}
+  </Router>)
+};
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -124,8 +178,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <StepContext>
           <DepositProvider>
             <LoanProvider>
-          <AppRouter />
-          </LoanProvider>
+              <LoadingProvider>
+              {/* <SocketProvider> */}
+                <AppRouter />
+                {/* </SocketProvider> */}
+              </LoadingProvider>
+            </LoanProvider>
           </DepositProvider>
         </StepContext>
       </UserDataProvider>

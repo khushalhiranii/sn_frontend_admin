@@ -16,12 +16,14 @@
     "@mui/material": "^5.16.7",
     "@mui/styled-engine": "^5.16.1",
     "antd": "^5.20.0",
+    "crypto-js": "^4.2.0",
     "nprogress": "^0.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.24.1",
     "react-svg": "^16.1.34",
-    "redaxios": "^0.5.1"
+    "redaxios": "^0.5.1",
+    "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

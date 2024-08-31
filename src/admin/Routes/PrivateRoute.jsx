@@ -7,7 +7,7 @@ const PrivateRoute = ({ children }) => {
   console.log(isAuthenticated);
 
   return (
-    sessionStorage.getItem('accessToken') ? (
+    sessionStorage.getItem('access') ? (
       children
     ) : (
       <Navigate to="/admin" replace />

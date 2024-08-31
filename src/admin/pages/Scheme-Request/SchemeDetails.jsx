@@ -6,9 +6,9 @@ import RedButton from '../../../user/DesignSystem/RedButton';
 import OutlinedButton from '../../components/OutlinedButton';
 import { useAdminSocket } from '../../context/AdminSocketContext';
 
-function LoanDetails() {
-  const { userId, loanId } = useParams(); // Get the userId from the URL
-  const { users, userData, loans, accounts } = useAdminSocket();
+function SchemeDetails() {
+  const { userId, schemeId } = useParams(); // Get the userId from the URL
+  const { users, userData, schemes, accounts } = useAdminSocket();
 
   console.log(users)
   console.log(userData)
@@ -18,7 +18,7 @@ function LoanDetails() {
   const getMergedData = () => {
     const usersArray = Object.values(users);
     const userDataArray = Object.values(userData);
-    const loansArray = Object.values(loans);
+    const schemesArray = Object.values(schemes);
     const accountsArray = Object.values(accounts);
 
     console.log(usersArray)
@@ -29,14 +29,14 @@ function LoanDetails() {
     // Find the user and userData by userId
     const filteredUser = usersArray.find((user) => user.Identifier === userId);
     const filteredUserData = userDataArray.find((data) => data.Identifier === userId);
-    const filteredLoanData = loansArray.find((loan)=> loan.Identifier === userId && loan._id === loanId)
+    const filteredSchemeData = schemesArray.find((scheme)=> scheme.Identifier === userId && scheme._id === schemeId)
     const filteredAccountData = accountsArray.find((account) => account.Identifier === userId);
     // Combine the data if both are available
-    const mergedData = filteredUser && filteredUserData && filteredLoanData ? {
+    const mergedData = filteredUser && filteredUserData && filteredSchemeData ? {
       ...filteredUser,
       ...filteredUserData,
       ...filteredAccountData,
-      loanInfo:{...filteredLoanData} // This merges all properties from filteredUserData
+      schemeInfo:{...filteredSchemeData} // This merges all properties from filteredUserData
     } : null;
 
     return mergedData;
@@ -128,43 +128,20 @@ function LoanDetails() {
             <InputComponent label={"Company Name"}/>
             <InputComponent label={"Employee ID"}/>
             </div>
+            <div className="flex flex-row w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+            <InputComponent label={"Income"} value={data.Salary}/>
+            </div>
           </div>
           <div className="flex flex-col items-start justify-start gap-2 w-full">
-            <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">Applied Loan Details</div>
+            <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">Applied Scheme Details</div>
             <div className="flex flex-row w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
-            <InputComponent label={"Loan Type"}  value={data.loanInfo.Type}/>
-            <InputComponent label={"Applied Loan"} value={data.loanInfo.Amount}/>
-            <InputComponent label={"Purpose of Loan"} value={data.loanInfo.Purpose}/>
+            <InputComponent label={"Scheme Type"}  value={data.schemeInfo.Type}/>
+            <InputComponent label={"Applied Scheme"} value={data.schemeInfo.Income}/>
+            <InputComponent label={"Deposit Amount"} value={data.schemeInfo.Amount}/>
             </div>
             
           
         </div>
-        {data.loanInfo.Type === "Property" && (
-  <div className="flex flex-col items-start justify-start gap-2 w-full">
-    {/* Header for Property Details */}
-    <div className="tracking-tight leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap mq450:text-[1rem] text-[20px] mq450:leading-[1.5rem]">
-      Property Details
-    </div>
-    
-    {/* Inputs for Property Information */}
-    <div className="flex flex-row w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
-      <InputComponent label="Property Type" value={data.loanInfo.Nature} />
-      <InputComponent label="Property Address" value={data.loanInfo.Address} />
-      <InputComponent label="Property Value (On purchase)" value={data.loanInfo.Value}/>
-    </div>
-
-    {/* Inputs for Purchase Information */}
-    <div className="flex flex-row w-full items-start justify-self-start gap-4 text-[1rem] text-gray-400 font-roboto">
-      <InputComponent label="Date of Purchase" />
-      <InputComponent label="Document of Purchase" />
-    </div>
-  </div>
-)}
-
-        
-            
-            
-          
         
         <div className="flex flex-col items-start justify-start gap-2 w-full">
             <div className="tracking-tight text-[20px] leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">Bank Details</div>
@@ -177,7 +154,7 @@ function LoanDetails() {
           
         </div>
         <div className="flex flex-col items-start justify-start gap-2 w-full">
-            <div className="tracking-tight leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap text-[20px] mq450:text-[1rem] mq450:leading-[1.5rem]">Guarantor Details</div>
+            <div className="tracking-tight leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap text-[20px] mq450:text-[1rem] mq450:leading-[1.5rem]">Nominee Details</div>
             <div className="flex flex-row w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
             <InputComponent label={"Name"}/>
             <InputComponent label={"Account No(in Subandhan Nidhi)"}/>
@@ -200,4 +177,4 @@ function LoanDetails() {
   );
 }
 
-export default LoanDetails;
+export default SchemeDetails;

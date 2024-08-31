@@ -5,11 +5,11 @@ import InputReg from '../../../DesignSystem/InputReg';
 import RedButton from '../../../DesignSystem/RedButton';
 
 export const Inputbar = () => {
-  const { sendUserData } = useUserData();
+  const { sendUserData, requestOTP } = useUserData();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [dob, setDob] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phoneno, setPhone] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -17,8 +17,9 @@ export const Inputbar = () => {
     e.preventDefault();
     try {
       // Call sendUserData function from context
-      await sendUserData(name, email, dob, phone);
-      navigate('/otp'); // Proceed to OTP verification step
+      await sendUserData(name, email, dob, phoneno);
+      requestOTP();
+      navigate('/register/otp'); // Proceed to OTP verification step
     } catch (error) {
       console.error('Failed to send user data:', error.message);
       setError('User already exists');

@@ -1,4 +1,5 @@
 import React, { createContext, useState } from 'react';
+import axiosInstance from '../../../../../axios.utils';
 // import axios from 'axios';
 
 export const multiStepContext = createContext();
@@ -11,12 +12,28 @@ const StepContext = ({children}) => {
     async function submitData() {
         console.log(userData);
         try {
-          const response = await axios.post('https://sn-backend.vercel.app/api/v1/user/account', userData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${sessionStorage.getItem(accessToken)}`
+          const response = await axiosInstance.post('/client/classic/Datas', {
+            "data" : {
+              "Identifier" : sessionStorage.getItem('Identifier'),
+              "Keys" : ["Aadhar_Number","Pan_Number","Salary","Employment","Address"],
+              "Values" : [
+                  userData.aadharNo,
+                  userData.panNo,
+                  userData.income,
+                  userData.emp_type,
+                  {
+                      "Address" : {
+                          "1" : userData.address1,
+                          "2" : userData.address2
+                      },
+                      "City" : userData.city,
+                      "Zip" : userData.zip,
+                      "State" : userData.state
+                  }
+                ]
+              }
             }
-          });
+          );
           console.log(response.data); // Assuming you want to log the response data
         } catch (error) {
           console.error('Error submitting data:', error);

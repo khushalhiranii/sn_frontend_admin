@@ -8,7 +8,7 @@ function InputReg({ label, type, placeholder, onChange, id, className = '', valu
       </label>
       <input
         id={id}
-        className={`w-full h-[48px] rounded-lg border border-solid border-foundation-white-normal-active outline-none focus:outline-none placeholder:text-[17px] placeholder:font-medium placeholder:text-foundation-white-normal-hover placeholder:flex placeholder:flex-col placeholder:items-center box-border ${className}`}
+        className={`w-full h-[48px] rounded-lg border text-[17px] font-medium border-solid border-foundation-white-normal-active outline-none focus:outline-none placeholder:text-[17px] placeholder:font-medium placeholder:text-foundation-white-normal-hover placeholder:flex placeholder:flex-col placeholder:items-center box-border ${className}`}
         type={type}
         placeholder={placeholder}
         onChange={onChange}

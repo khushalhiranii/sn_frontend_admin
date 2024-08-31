@@ -1,7 +1,18 @@
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
-const Card1 = ({ className = "", ellipse245 }) => {
+const Card1 = ({
+  className='',
+  phoneno,
+  fullname,
+  address,
+  profilePicture,
+  key1,
+  id,
+  amount,
+  tenure,
+  plan
+}) => {
   const navigate = useNavigate();
   return (
     <div
@@ -11,14 +22,14 @@ const Card1 = ({ className = "", ellipse245 }) => {
       <img
         className="w-[7.5rem] h-[7.5rem] absolute !m-[0] top-[1.5rem] left-[6.331rem] rounded-[50%] object-cover z-[1]"
         alt=""
-        src={ellipse245}
+        src={profilePicture}
       />
       <div className="self-stretch flex flex-row items-start justify-start py-[0rem] pr-[0.812rem] pl-[0.687rem]">
         <div className="flex-1 flex flex-col items-start justify-start gap-[1rem]">
           <div className="self-stretch flex flex-col items-start justify-start gap-[0.75rem]">
             <div className="relative">
               <span className="font-medium">{`Name : `}</span>
-              <span className="text-gray-100">Subandhan Nidhi</span>
+              <span className="text-gray-100">{fullname}</span>
             </div>
             <div className="relative text-gray-100">
               <span className="font-medium">
@@ -26,7 +37,7 @@ const Card1 = ({ className = "", ellipse245 }) => {
                 <span>{` `}</span>
               </span>
               <span>
-                <span>9191919919</span>
+                <span>{phoneno}</span>
               </span>
             </div>
             <div className="relative">
@@ -35,20 +46,24 @@ const Card1 = ({ className = "", ellipse245 }) => {
               </span>
               <span className="text-gray-100">
                 <span>{` `}</span>
-                <span>1-4 Mudhole , Nirmal Telangana</span>
+                <span>{address}</span>
               </span>
             </div>
             <div className="relative inline-block min-w-[7.5rem]">
-              <span className="font-medium">Applied Plan :</span>
+              <span className="font-medium">Applied Scheme :</span>
               <span> *****</span>
             </div>
             <div className="relative">
-              <span className="font-medium">{`Property Address : `}</span>
-              <span>*****</span>
+              <span className="font-medium">Invested Amount :</span>
+              <span>{amount}</span>
+            </div>
+            <div className="relative">
+              <span className="font-medium">Tenure :</span>
+              <span>{tenure}</span>
             </div>
           </div>
           <div
-            onClick={() => navigate('/admin/loanDetail')}
+            onClick={() => navigate(`/admin/schemeInfo/${key1}/${id}`)}
             className="self-stretch rounded flex flex-row items-start justify-center py-[0.375rem] px-[1.25rem] whitespace-nowrap text-[1rem] text-foundation-red-normal border-[1px] border-solid border-foundation-red-normal cursor-pointer hover:bg-foundation-red-normal hover:text-white transition-transform ease-in-out"
           >
             <div className="relative capitalize font-medium">

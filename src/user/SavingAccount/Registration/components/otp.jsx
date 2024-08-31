@@ -16,11 +16,20 @@ export const Otp = ({ length = 4
 		new Array(length).fill(""));
 	const inputRefs = useRef([]);
 
+	const { sendOTP, sendLoginOTP } = useUserData()
+
 	useEffect(() => {
 		if (inputRefs.current[0]) {
 			inputRefs.current[0].focus();
 		}
+		
 	}, []);
+
+	const currentPath = window.location.pathname;
+
+  // Check if the path contains the word "login"
+  	const hasLoginInPath = currentPath.includes('login');
+
 
 	const handleChange = (index, e) => {
 		const value = e.target.value;
@@ -67,29 +76,40 @@ export const Otp = ({ length = 4
 		}
 	};
 
-
-  const { sendOTP } = useUserData()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      // Call sendUserData function from context
-      console.log(finalOtp)
-      const response = await sendOTP(finalOtp);
-      console.log(response)
-      if(response){
-        navigate('/login/otpverified')
-      }
-      
-      
-      // Proceed to OTP verification step
-      // Implement your logic here (e.g., navigate to OTP verification screen)
-    } catch (error) {
-      console.error('Failed to send user data:', error.message);
-      // Handle error (e.g., show error message to user)
-    }
+	e.preventDefault(); // Prevent the default form submission behavior
+  
+	try {
+	  // Check if 'finalOtp' is available
+	  console.log(finalOtp);
+  
+	  let response;
+	  if (hasLoginInPath) {
+		// If the URL contains "login", call sendLoginOTP
+		response = await sendLoginOTP(finalOtp);
+	  } else {
+		// Otherwise, call sendOTP
+		response = await sendOTP(finalOtp);
+	  }
+  
+	  console.log(response);
+  
+	  // Check if the response is successful and navigate accordingly
+	  if (response) {
+		navigate('/register/otpverified');
+	  }
+  
+	  // Implement additional logic here if needed
+	} catch (error) {
+	  console.error('Failed to send user data:', error.message);
+  
+	  // Handle error (e.g., show error message to user)
+	  // You can use a state to display an error message in the UI
+	}
   };
+  
 
   return (
     

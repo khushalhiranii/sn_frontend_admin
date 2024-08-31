@@ -1,48 +1,40 @@
 import PropTypes from "prop-types";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from "./admin/context/AuthContext";
-import InputReg from "./user/DesignSystem/InputReg";
-import RedButton from "./user/DesignSystem/RedButton";
-import axiosInstance from "../axios.utils";
-import { useLoading } from "./LoadingIndicator/LoadingContext";
+import InputReg from "../../user/DesignSystem/InputReg";
+// import { useAuth } from "./admin/context/AuthContext";
 
-const App = ({ className = "" }) => {
+const AgentLogin = ({ className = "" }) => {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const navigate = useNavigate();
-  const { login } = useAuth();
-  const { startLoading, stopLoading } = useLoading();
+//   const { login } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const credentials = { userId, password };
 
     try {
-      startLoading();
       setIsButtonDisabled(true);
-      const url = `${import.meta.env.VITE_API_URL}/admin/classic/Login`;
-      const response = await axiosInstance.post('/admin/classic/Login', {
-        "data":{
-          "Identifier" : userId,
-          "Password" : password}
+      const url = `${import.meta.env.VITE_API_URL}/admin/login`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
       });
-      stopLoading();
-      // const data = await response.json();
+      const data = await response.json();
 
-      // if (response.status !== 200) {
-      //   throw new Error(data.message || 'Network response was not ok');
-      // }
+      if (response.status !== 200) {
+        throw new Error(data.message || 'Network response was not ok');
+      }
 
-      // login(data.data.accessToken);
-      // sessionStorage.setItem('access', response.data.credentials.access)
-      sessionStorage.setItem('role', 'admin')
-      console.log(response);
+    //   login(data.data.accessToken);
       navigate('/admin/dashboard');
     } catch (error) {
-      stopLoading();
       console.error('Error:', error);
       setErrorMessage('Invalid credentials. Please try again.');
       setIsButtonDisabled(false);
@@ -103,9 +95,9 @@ const App = ({ className = "" }) => {
         >
           <div className="flex flex-col items-start justify-start pt-[0rem] px-[0rem] pb-[1rem]">
             <div className="relative text-[2.25rem] font-medium text-black text-left inline-block min-w-[6.188rem] mq450:text-[1.375rem] mq925:text-[1.813rem]">
-              Hello Admin!
+              Hello Agent!
             </div>
-            <div className="text-sm font-medium text-[#666666]">Track volunteer participation, and oversee all activities.</div>
+            <div className="text-sm font-medium text-[#666666]">Welcome back to your volunteer portal.</div>
           </div>
           {errorMessage && (
             <div className="self-stretch flex flex-row items-center justify-center text-red-600 mb-4">
@@ -148,8 +140,8 @@ const App = ({ className = "" }) => {
   );
 };
 
-App.propTypes = {
+AgentLogin.propTypes = {
   className: PropTypes.string,
 };
 
-export default App;
+export default AgentLogin;

@@ -44,8 +44,8 @@ function Dashboard() {
           <Loan home22="/sav-acc.svg" loanRequests="Saving Account" />
         </div>
       </div>
-      <div className="flex flex-col max-w-full items-start justify-start pt-[1rem] gap-[2rem] mq675:gap-[1rem]">
-        <div className="self-stretch rounded-xl bg-white box-border flex flex-col items-start justify-start pt-[0rem] pb-[1rem] gap-[1rem] max-w-full shrink-0 z-[1] text-[1rem] text-foundation-blue-normal font-roboto border-[1px] border-solid border-foundation-white-normal-hover">
+      <div className="flex flex-col w-full items-start justify-start pt-[1rem] gap-[2rem] mq675:gap-[1rem]">
+        <div className="self-stretch rounded-xl bg-white box-border flex flex-col items-start justify-start pt-[0rem] pb-[1rem] gap-[1rem] w-full shrink-0 z-[1] text-[1rem] text-foundation-blue-normal font-roboto border-[1px] border-solid border-foundation-white-normal-hover">
           <div className="w-full flex flex-row items-center justify-between max-w-full [row-gap:20px] border-solid border-b-[1px] border-[#E6E6E6]">
             <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border text-[16px] font-normal gap-[0.5rem] w-full text-black">
               
@@ -89,16 +89,16 @@ function Dashboard() {
             </div>
           </div>
           
-            {/* {selectedLoanType && ( */}
-              <div className="flex flex-row flex-wrap items-start justify-between gap-[16px] px-[16px]">
-                {/* {selectedLoanType} Content */}
+            
+              {/* <div className="flex flex-row flex-wrap items-start justify-between gap-[16px] px-[16px]">
+                
                 <Card1 cardAvatars="/ellipse-245@2x.png" />
                 <Card1 cardAvatars="/ellipse-245-1@2x.png" />
                 <Card1 cardAvatars="/ellipse-245-1@2x.png" />
                 <Card1 cardAvatars="/ellipse-245-2@2x.png" />
                 
               </div>
-            {/* )} */}
+             */}
           
         </div>
       </div>

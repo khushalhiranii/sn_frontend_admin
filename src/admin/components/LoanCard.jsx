@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import useAxios from "../axiosSetup";
 
-const SavingCard = ({
+const LoanCard = ({
   className = "",
   propLeft,
   propRight,
@@ -11,7 +11,9 @@ const SavingCard = ({
   phoneno,
   fullname,
   address,
-  key1
+  amount,
+  key1,
+  id
 }) => {
   const navigate = useNavigate();
   const axios = useAxios();
@@ -23,9 +25,10 @@ const SavingCard = ({
   }, [propLeft, propRight]);
 
   
-  const viewDetails = (key1) => {
+  const viewDetails = (key1, id) => {
     const userId = key1;
-    navigate(`/admin/savingAccount/${userId}`);
+    const loanId = id
+    navigate(`/admin/loanRequest/${userId}/${loanId}`);
   };
 
   async function approve(){
@@ -76,9 +79,14 @@ const SavingCard = ({
                 <span>{address}</span>
               </span>
             </div>
-            <div className="w-[7.5rem] relative hidden">
-              <span className="font-medium">Applied Plan :</span>
-              <span> *****</span>
+            <div className="relative">
+              <span>
+                <span className="font-medium">Applied Plan :</span>
+              </span>
+              <span className="text-gray-100">
+                <span>{` `}</span>
+                <span>{amount}</span>
+              </span>
             </div>
             <div className="w-[9.375rem] relative hidden">
               <span className="font-medium">{`Property Address : `}</span>
@@ -99,7 +107,7 @@ const SavingCard = ({
           </div>
           <button 
             className="cursor-pointer py-[0.375rem] px-[1.25rem] bg-[transparent] self-stretch rounded flex flex-row items-start justify-center whitespace-nowrap border-[1px] border-solid border-foundation-red-normal hover:bg-mediumvioletred-200 hover:box-border hover:border-[1px] hover:border-solid hover:border-mediumvioletred-100"
-            onClick={() => viewDetails(key1)}
+            onClick={() => viewDetails(key1, id)}
           >
             <div className="relative text-[1rem] capitalize font-medium font-roboto text-foundation-red-normal text-left inline-block min-w-[7.438rem]">
               View Full Details
@@ -111,7 +119,7 @@ const SavingCard = ({
   );
 };
 
-SavingCard.propTypes = {
+LoanCard.propTypes = {
   className: PropTypes.string,
   profilePicture: PropTypes.string,
   propLeft: PropTypes.any,
@@ -122,4 +130,4 @@ SavingCard.propTypes = {
   // key: PropTypes.string.isRequired,
 };
 
-export default SavingCard;
+export default LoanCard;

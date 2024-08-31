@@ -1,25 +1,65 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useAxios from '../../axiosSetup';
+import { useAdminSocket } from '../../context/AdminSocketContext';
 
 function ClientDetails() {
   const { userId } = useParams(); // Get the userId from the URL
-  const [user, setUser] = useState(null); // Initial state should be null or an empty object
-  const axios = useAxios();
+  const { users, userData } = useAdminSocket();
 
+  console.log(users)
+  console.log(userData)
+  
+
+  // Function to get and merge data
+  const getMergedData = () => {
+    const usersArray = Object.values(users);
+    const userDataArray = Object.values(userData);
+
+    console.log(usersArray)
+
+    // Ensure userId is defined and valid
+    if (!userId) return null;
+
+    // Find the user and userData by userId
+    const filteredUser = usersArray.find((user) => user.Identifier === userId);
+    const filteredUserData = userDataArray.find((data) => data.Identifier === userId);
+
+    // Combine the data if both are available
+    const mergedData = filteredUser && filteredUserData ? {
+      ...filteredUser,
+      ...filteredUserData // This merges all properties from filteredUserData
+    } : null;
+
+    return mergedData;
+  };
+
+  // Call the function to get the merged data
+  let data;
+  if(users){
+    data = getMergedData();
+  }
+  
+  console.log(data);
   function calculateAge(dobString) {
+    // Parse the date string into a Date object
     const dob = new Date(dobString);
     const now = new Date();
-  
+    
+    // Check if the date string is valid
+    if (isNaN(dob.getTime())) {
+      throw new Error('Invalid date format');
+    }
+    
     let age = now.getFullYear() - dob.getFullYear();
     const monthDifference = now.getMonth() - dob.getMonth();
     const dayDifference = now.getDate() - dob.getDate();
-  
+    
     // Adjust the age if the current date is before the birthday in the current year
     if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
       age--;
     }
-  
+    
     return age;
   }
   
@@ -33,45 +73,32 @@ function ClientDetails() {
     }
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/admin/user/account/requests/${userId}`);
-        const user = res.data.data;
-        setUser(user);
-        console.log(user);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  
 
-    fetchData();
-  }, [userId]); // Re-run the effect if userId changes
-
-  if (!user) {
+  if (!data) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="overflow-y-auto flex flex-col items-start justify-start p-4 max-w-[calc(100%_-_344px)] text-left text-white font-inter mq850:max-w-full">
+    <div className="overflow-y-auto flex flex-col items-start justify-start p-4 max-w-[calc(100%_-_444px)] text-left font-inter mq850:max-w-full">
       <div className="flex flex-col items-center justify-center gap-6 w-full">
         <div className="flex flex-col items-start justify-start gap-4 w-full">
-          <a className="font-semibold text-inherit inline-block min-w-[7.313rem] mq450:text-[1rem]">
+        <div className="font-semibold text-inherit text-black inline-block min-w-[7.313rem] mq450:text-[1rem]">
             Client Details
-          </a>
-          <div className="flex flex-row flex-wrap items-center justify-start py-4 pr-[49.312rem] pl-4 gap-4 bg-foundation-yellow-light rounded-lg text-black font-roboto mq450:pr-5 mq725:pr-[12.313rem] mq1025:pr-[24.625rem]">
+          </div>
+          <div className="flex flex-row flex-wrap items-center justify-start py-4 w-full pl-4 gap-4 bg-foundation-yellow-light rounded-lg text-black font-roboto mq450:pr-5 mq725:pr-[12.313rem] mq1025:pr-[24.625rem]">
             <img
               className="h-[5rem] w-[5rem] rounded-lg object-cover"
               loading="lazy"
               alt=""
-              src={user?.account?.photo || '/default-profile.png'} // Provide a fallback image
+              src={data?.Photo || '/default-profile.png'} // Provide a fallback image
             />
             <div className="flex-1 flex flex-col items-start justify-start gap-2 min-w-[5.063rem]">
               <div className="font-medium min-w-[6.5rem] mq450:text-[1rem]">
-                {user.fullname} | {calculateAge(user.dob)}
+                {data.Name} | {calculateAge(data.Birth)}
               </div>
               <div className="text-[1rem] font-medium min-w-[7.813rem]">
-                {user.phoneno} | {user.email}
+                {data.Number} | {data.Mail}
               </div>
             </div>
           </div>
@@ -88,7 +115,7 @@ function ClientDetails() {
                 </div>
                 <input disabled
                   className="w-full border-none outline-none bg-transparent h-[1.875rem] text-[1.25rem] text-dimgray font-medium"
-                  placeholder={user?.account?.address1 || ''}
+                  placeholder={data?.Address?.Address?.[1] || ''}
                   type="text"
                 />
               </div>
@@ -98,7 +125,7 @@ function ClientDetails() {
                 </div>
                 <input disabled
                   className="w-full border-none outline-none bg-transparent h-[1.875rem] text-[1.25rem] text-dimgray font-medium"
-                  placeholder={user?.account?.address2 || ''}
+                  placeholder={data?.Address?.Address?.[2] || ''}
                   type="text"
                 />
               </div>
@@ -108,7 +135,7 @@ function ClientDetails() {
                 </div>
                 <input disabled
                   className="w-full border-none outline-none bg-transparent h-[1.875rem] text-[1.25rem] text-dimgray font-medium"
-                  placeholder={user?.account?.state || ''}
+                  placeholder={data?.Address?.State || ''}
                   type="text"
                 />
               </div>
@@ -118,7 +145,7 @@ function ClientDetails() {
                   </div>
                   <input disabled
                     className="w-full border-none outline-none bg-transparent h-[1.875rem] text-[1.25rem] text-dimgray font-medium"
-                    placeholder={user?.account?.city || ''}
+                    placeholder={data?.Address?.City || ''}
                     type="text"
                   />
                 </div>
@@ -128,7 +155,7 @@ function ClientDetails() {
                   </div>
                   <input disabled
                     className="w-full border-none outline-none bg-transparent h-[1.875rem] text-[1.25rem] text-dimgray font-medium"
-                    placeholder={user?.account?.zip || ''}
+                    placeholder={data?.Address?.Zip || ''}
                     type="text"
                   />
                 </div>
@@ -144,7 +171,7 @@ function ClientDetails() {
                 </div>
                 <input disabled
                   className="w-full border-none outline-none bg-transparent h-[1.875rem] text-[1.25rem] text-dimgray font-medium"
-                  placeholder={user?.account?.emp_type || ''}
+                  placeholder={data?.Employment || ''}
                   type="text"
                 />
               </div>
@@ -154,7 +181,7 @@ function ClientDetails() {
                 </div>
                 <input disabled
                   className="w-full border-none outline-none bg-transparent h-[1.875rem] text-[1.25rem] text-dimgray font-medium"
-                  placeholder={user?.account?.income || ''}
+                  placeholder={data?.Salary || ''}
                   type="text"
                 />
               </div>
@@ -174,13 +201,13 @@ function ClientDetails() {
               className="h-[1.5rem] w-[1.5rem] relative overflow-hidden shrink-0 min-h-[1.5rem]"
               loading="lazy"
               alt=""
-              src={user?.account?.pandetail?.url ? '/checkcircle-1.svg' : ''}
+              src='/checkcircle-1.svg'
             />
           </div>
           <div className="self-stretch flex-1 flex flex-col items-start justify-start gap-[0.5rem] text-[1.125rem] text-gray-100">
             <div className="self-stretch flex flex-row items-center justify-start pt-[0.468rem] px-[0.25rem] pb-[0.375rem] border-b-[0.5px] border-solid border-darkslategray-100">
               <div className="relative tracking-[0.05em] inline-block min-w-[7.313rem]">
-                {user?.account?.pandetail?.docno || ''}
+                {data?.Pan_Number || ''}
               </div>
             </div>
             <div className="self-stretch relative flex-1 rounded overflow-hidden">
@@ -188,7 +215,7 @@ function ClientDetails() {
       className="w-full h-full object-contain"
       loading="lazy"
       alt=""
-      src={user?.account?.pandetail?.url || ''}
+      src={data?.Pan || ''}
       style={{ maxWidth: '80%', maxHeight: '80%' }}
     />
   </div>
@@ -211,7 +238,7 @@ function ClientDetails() {
           <div className="self-stretch relative flex-1 flex flex-col items-start justify-start gap-[0.5rem] text-[1.125rem] text-gray-100">
   <div className="self-stretch flex flex-row items-center justify-start pt-[0.468rem] px-[0.25rem] pb-[0.375rem] border-b-[0.5px] border-solid border-darkslategray-100">
     <div className="relative tracking-[0.05em] inline-block min-w-[7.313rem]">
-      {user?.account?.aadhardetail?.docno || ''}
+      {data?.Aadhar_Number || ''}
     </div>
   </div>
   <div className="self-stretch relative flex-1 rounded overflow-hidden">
@@ -219,7 +246,7 @@ function ClientDetails() {
       className="w-full h-full object-contain"
       loading="lazy"
       alt=""
-      src={user?.account?.aadhardetail?.url || ''}
+      src={data?.Aadhar || ''}
       style={{ maxWidth: '80%', maxHeight: '80%' }}
     />
   </div>
@@ -240,7 +267,7 @@ function ClientDetails() {
               className="h-[1.5rem] w-[1.5rem] relative overflow-hidden shrink-0 min-h-[1.5rem]"
               loading="lazy"
               alt=""
-              src={user?.account?.photo ? '/checkcircle-1.svg' : ''}
+              src='/checkcircle-1.svg'
             />
           </div>
           <div className="self-stretch relative flex-1 rounded overflow-hidden">
@@ -248,7 +275,7 @@ function ClientDetails() {
       className="w-full h-full object-contain"
       loading="lazy"
       alt=""
-      src={user?.account?.photo || ''}
+      src={data?.Photo || ''}
       style={{ maxWidth: '100%', maxHeight: '100%' }}
     />
   </div>
@@ -265,7 +292,7 @@ function ClientDetails() {
               className="h-[1.5rem] w-[1.5rem] relative overflow-hidden shrink-0 min-h-[1.5rem]"
               loading="lazy"
               alt=""
-              src={user?.account?.signature ? '/checkcircle-1.svg' : ''}
+              src='/checkcircle-1.svg'
             />
           </div>
           <div className="self-stretch relative flex-1 rounded overflow-hidden">
@@ -273,20 +300,20 @@ function ClientDetails() {
       className="w-full h-full object-contain"
       loading="lazy"
       alt=""
-      src={user?.account?.signature || ''}
+      src={data?.Signature || ''}
       style={{ maxWidth: '100%', maxHeight: '100%' }}
     />
   </div>
         </div>
       </div>
     </div>
-        <div className="flex flex-row items-center justify-center gap-6 text-[1rem] text-foundation-red-normal font-roboto">
-          <div className="h-[3rem] flex-[0.8333] flex items-center justify-center py-[0.906rem] px-6 border border-foundation-red-normal rounded">
+        <div className="flex flex-row items-center justify-center gap-6 text-[1rem] text-foundation-red-normal font-roboto ">
+          <div className="flex-[0.8333] flex items-center justify-center py-[0.906rem] px-6 border border-solid border-foundation-red-normal rounded cursor-pointer">
             <div className="font-medium">
               Cancel
             </div>
           </div>
-          <div onClick={approve} className="h-[3rem] flex-1 flex items-center justify-center py-[0.906rem] px-5 bg-foundation-red-normal text-white rounded">
+          <div onClick={approve} className=" flex-1 flex items-center justify-center py-[0.906rem] px-5 bg-foundation-red-normal text-white rounded cursor-pointer">
             <div className="font-medium">
               Approve
             </div>
