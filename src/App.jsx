@@ -127,17 +127,19 @@ const App = ({ className = "" }) => {
           <div className="self-stretch flex flex-row items-center justify-center py-[1.25rem] pr-[0rem] pl-[0.062rem]">
             <button
               type="submit"
-              className={`cursor-pointer [border:none] py-[0.625rem] px-[4.937rem] bg-foundation-red-normal rounded flex flex-row items-center justify-center whitespace-nowrap hover:bg-mediumvioletred ${isButtonDisabled && 'opacity-50 cursor-not-allowed'}`}
+              className={`cursor-pointer [border:none] py-[0.625rem] px-[4.937rem] bg-foundation-red-normal rounded flex flex-row items-center justify-center whitespace-nowrap w-[217px] h-[48px] hover:bg-mediumvioletred ${isButtonDisabled && 'opacity-50 cursor-not-allowed'}`}
               disabled={isButtonDisabled}
             >
               {isLoading ? (
-                <div className="spinner-border animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full" role="status">
-                  <span className="sr-only">Loading...</span>
-                </div>
+                <div className="spinner-border animate-spin inline-block w-4 h-4 border-2 border-solid border-white border-t-transparent rounded-full" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+                
               ) : (
+                
                 <span className="[text-decoration:none] relative text-[1.25rem] font-medium font-inter text-white text-left inline-block min-w-[3.625rem]">
-                  Log in
-                </span>
+                Log in
+              </span>
               )}
             </button>
           </div>
