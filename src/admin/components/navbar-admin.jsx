@@ -48,7 +48,7 @@ const NavbarAdmin = () => {
         <NavLinkItem to="/admin/agmgmt" icon={Agmng} label="Agent Management" />
         <NavLinkItem to="/admin/repogen" icon={Repogen} label="Report Generation" />
       </div>
-      <div className="flex flex-col items-start justify-start w-full gap-[16px] text-left text-[1.125rem] text-black font-roboto">
+      <div className="flex flex-col items-start justify-start w-[110%] gap-[16px] text-left text-[1.125rem] text-black font-roboto">
         <NavLinkItem to="/admin" icon={Signout} label="Sign Out" onClick={()=> sessionStorage.clear()} />
       </div>
     </div>
