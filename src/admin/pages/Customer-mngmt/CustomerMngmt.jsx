@@ -17,18 +17,22 @@ function CustomerMngmt() {
           <div className="w-full flex flex-row items-center justify-between max-w-full [row-gap:20px] border-solid border-b-[1px] border-[#E6E6E6]">
             {/* Loan type buttons */}
             <div className="flex-auto flex flex-row items-center justify-center text-[16px] font-normal gap-[0.5rem] w-full text-black">
-              <button onClick={() => handleButtonClick('Property')} className={`navlink2 ${selectedLoanType === 'Property' ? 'active' : ''}`}>
-                <Agmng /> List of Clients
-              </button>
+              <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border text-[16px] font-normal gap-[0.5rem] w-full text-black">
+                <button onClick={() => handleButtonClick('Property')} className={`navlink2 ${selectedLoanType === 'Property' ? 'active' : ''}`}>
+                  <Agmng /> List of Clients
+                </button>
+              </div>
               <button onClick={() => handleButtonClick('Instant')} className={`navlink2 ${selectedLoanType === 'Instant' ? 'active' : ''}`}>
                 <Time /> Overdue Clients
               </button>
               <button onClick={() => handleButtonClick('Personal')} className={`navlink2 ${selectedLoanType === 'Personal' ? 'active' : ''}`}>
                 <Hr /> Loan Applications
               </button>
-              <button onClick={() => handleButtonClick('Business')} className={`navlink2 ${selectedLoanType === 'Business' ? 'active' : ''}`}>
-                <Briefcase /> Scheme Applications
-              </button>
+              <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border text-[16px] font-normal gap-[0.5rem] w-full text-black">
+                <button onClick={() => handleButtonClick('Business')} className={`navlink2 ${selectedLoanType === 'Business' ? 'active' : ''}`}>
+                  <Briefcase /> Scheme Applications
+                </button>
+              </div>
             </div>
           </div>
           {/* Display filtered and merged data */}

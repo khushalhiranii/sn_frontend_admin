@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import App from './App.jsx';
 import './index.css';
 import Layout from './admin/Layout.jsx';
@@ -8,8 +8,6 @@ import Dashboard from './admin/pages/Dashboard/Dashboard.jsx';
 import LoanRequest from './admin/pages/Loan-Request/LoanRequest.jsx';
 import SchemeRequest from './admin/pages/Scheme-Request/SchemeRequest.jsx';
 import Kycprocess from './admin/components/kyc-process.jsx';
-import PendingKYC from './admin/components/PendingKYC.jsx';
-import CompletedKyc from './admin/components/CompletedKyc.jsx';
 import ClientDetails from './admin/pages/Saving-Account/ClientDetails.jsx';
 import LoanInfo from './admin/pages/Loan-Info/LoanInfo.jsx';
 import SchemeInfo from './admin/pages/Scheme-Info/SchemeInfo.jsx';
@@ -55,27 +53,45 @@ import { SocketProvider, useAdminSocket } from './admin/context/AdminSocketConte
 import SchemeDetails from './admin/pages/Scheme-Request/SchemeDetails.jsx';
 import SchemeDetails1 from './admin/pages/Scheme-Info/SchemeDetails1.jsx';
 import { LoadingProvider } from './LoadingIndicator/LoadingContext.jsx'
+import LoanInfoProvider from './admin/pages/Loan-Info/LoanInfoContext.jsx';
+import ScrollToTop from './user/ScrollToTop.jsx';
+import Repogen from './admin/assets/repo-gen.jsx';
+import RepoGen from './admin/pages/Repo-Gen/RepoGen.jsx';
+import { SchemeProvider } from './admin/pages/Scheme-Request/SchemeContext.jsx';
+import ApprovedLoans from './admin/pages/Loan-Info/ApprovedLoans.jsx';
 
-const AppRouter = () => {
-
+const RenderSocketProvider = ({ children }) => {
+  const location = useLocation();
+  
   const role = sessionStorage.getItem('role')
-
-  const renderSocketProvider = (children) => {
+  
+  const provider = useMemo(() => {
     switch (role) {
-      // case 'user':
-      //   return <UserSocketProvider>{children}</UserSocketProvider>;
-      // case 'agent':
-      //   return <AgentSocketProvider>{children}</AgentSocketProvider>;
       case 'admin':
-        return <SocketProvider>{children}</SocketProvider>;
+        return (
+          <SocketProvider>
+            <LoanInfoProvider>
+              <SchemeProvider>
+              {children}
+              </SchemeProvider>
+            </LoanInfoProvider>
+          </SocketProvider>
+        );
       default:
         return children;  // No socket provider for unauthenticated routes
     }
-  };
+  }, [role, location.pathname]); // Recompute whenever role or path changes
+
+  return provider;
+};
+
+const AppRouter = () => {
   return(
   <Router>
+    <ScrollToTop/>
     <LoadingIndicator/>
-    {renderSocketProvider(
+    <RenderSocketProvider>
+      
     <Routes>
     <Route path="/" element={<Landing/>}>
       <Route index element={<Home/>}/>
@@ -155,19 +171,19 @@ const AppRouter = () => {
       <Route path="schemeInfo" element={<SchemeInfo />} />
       <Route path="cusmgmt" element={<CustomerMngmt />} />
       <Route path="agmgmt" element={<AgentMngmt />} />
-      <Route path="savingAccount" element={<Kycprocess />}>
-        <Route path="completed" element={<CompletedKyc />} />
-        <Route path="pending" element={<PendingKYC />} />
-      </Route>
+      <Route path="savingAccount" element={<Kycprocess />}/>
+      <Route path="repogen" element={<RepoGen />}/>
       <Route path="notifications" element={<Notifications />} />
       <Route path="savingAccount/:userId" element={<ClientDetails />} />
       <Route path="loanRequest/:userId/:loanId" element={<LoanDetails />} />
       <Route path="scheme/:userId/:schemeId" element={<SchemeDetails />} />
       <Route path="schemeInfo/:userId/:schemeId" element={<SchemeDetails1 />} />
+      <Route path='loanInfo/ApprovedLoans' element={<ApprovedLoans/>} />
       <Route path="*" element={<Navigate to="/admin" replace />} />
     </Route>
     </Routes>
-    )}
+    
+    </RenderSocketProvider>
   </Router>)
 };
 
@@ -179,9 +195,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <DepositProvider>
             <LoanProvider>
               <LoadingProvider>
+                
               {/* <SocketProvider> */}
                 <AppRouter />
                 {/* </SocketProvider> */}
+                
               </LoadingProvider>
             </LoanProvider>
           </DepositProvider>

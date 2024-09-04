@@ -5,46 +5,39 @@ import { useAuth } from "./admin/context/AuthContext";
 import InputReg from "./user/DesignSystem/InputReg";
 import RedButton from "./user/DesignSystem/RedButton";
 import axiosInstance from "../axios.utils";
-import { useLoading } from "./LoadingIndicator/LoadingContext";
 
 const App = ({ className = "" }) => {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Loading state for spinner
   const navigate = useNavigate();
   const { login } = useAuth();
-  const { startLoading, stopLoading } = useLoading();
-
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     const credentials = { userId, password };
 
     try {
-      startLoading();
+      setIsLoading(true); // Set loading to true when submit is clicked
       setIsButtonDisabled(true);
       const url = `${import.meta.env.VITE_API_URL}/admin/classic/Login`;
       const response = await axiosInstance.post('/admin/classic/Login', {
-        "data":{
-          "Identifier" : userId,
-          "Password" : password}
+        "data": {
+          "Identifier": userId,
+          "Password": password
+        }
       });
-      stopLoading();
-      // const data = await response.json();
-
-      // if (response.status !== 200) {
-      //   throw new Error(data.message || 'Network response was not ok');
-      // }
-
-      // login(data.data.accessToken);
-      // sessionStorage.setItem('access', response.data.credentials.access)
-      sessionStorage.setItem('role', 'admin')
+      
+      sessionStorage.setItem('role', 'admin');
       console.log(response);
       navigate('/admin/dashboard');
     } catch (error) {
-      stopLoading();
       console.error('Error:', error);
       setErrorMessage('Invalid credentials. Please try again.');
+    } finally {
+      setIsLoading(false); // Stop the spinner when response is received
       setIsButtonDisabled(false);
     }
   };
@@ -137,9 +130,15 @@ const App = ({ className = "" }) => {
               className={`cursor-pointer [border:none] py-[0.625rem] px-[4.937rem] bg-foundation-red-normal rounded flex flex-row items-center justify-center whitespace-nowrap hover:bg-mediumvioletred ${isButtonDisabled && 'opacity-50 cursor-not-allowed'}`}
               disabled={isButtonDisabled}
             >
-              <span className="[text-decoration:none] relative text-[1.25rem] font-medium font-inter text-white text-left inline-block min-w-[3.625rem]">
-                Log in
-              </span>
+              {isLoading ? (
+                <div className="spinner-border animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              ) : (
+                <span className="[text-decoration:none] relative text-[1.25rem] font-medium font-inter text-white text-left inline-block min-w-[3.625rem]">
+                  Log in
+                </span>
+              )}
             </button>
           </div>
         </form>

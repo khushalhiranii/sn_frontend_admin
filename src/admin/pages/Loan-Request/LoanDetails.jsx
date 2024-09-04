@@ -29,7 +29,7 @@ function LoanDetails() {
     // Find the user and userData by userId
     const filteredUser = usersArray.find((user) => user.Identifier === userId);
     const filteredUserData = userDataArray.find((data) => data.Identifier === userId);
-    const filteredLoanData = loansArray.find((loan)=> loan.Identifier === userId && loan._id === loanId)
+    const filteredLoanData = loansArray.find((loan)=> loan.Identifier === userId && loan.Loan === loanId)
     const filteredAccountData = accountsArray.find((account) => account.Identifier === userId);
     // Combine the data if both are available
     const mergedData = filteredUser && filteredUserData && filteredLoanData ? {

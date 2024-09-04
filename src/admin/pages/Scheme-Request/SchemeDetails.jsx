@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useAxios from '../../axiosSetup';
 import InputComponent from '../../components/InputComponent';
 import RedButton from '../../../user/DesignSystem/RedButton';
 import OutlinedButton from '../../components/OutlinedButton';
 import { useAdminSocket } from '../../context/AdminSocketContext';
+import axiosInstance from '../../../../axios.utils';
+import { getFullUrl } from '../../utils';
 
 function SchemeDetails() {
   const { userId, schemeId } = useParams(); // Get the userId from the URL
   const { users, userData, schemes, accounts } = useAdminSocket();
-
+    const navigate = useNavigate();
   console.log(users)
   console.log(userData)
   
@@ -29,7 +31,7 @@ function SchemeDetails() {
     // Find the user and userData by userId
     const filteredUser = usersArray.find((user) => user.Identifier === userId);
     const filteredUserData = userDataArray.find((data) => data.Identifier === userId);
-    const filteredSchemeData = schemesArray.find((scheme)=> scheme.Identifier === userId && scheme._id === schemeId)
+    const filteredSchemeData = schemesArray.find((scheme)=> scheme.Identifier === userId && scheme.Scheme === schemeId)
     const filteredAccountData = accountsArray.find((account) => account.Identifier === userId);
     // Combine the data if both are available
     const mergedData = filteredUser && filteredUserData && filteredSchemeData ? {
@@ -71,15 +73,23 @@ function SchemeDetails() {
     return age;
   }
   
-  // async function approve(){
-  //   try {
-  //     const res = await axios.post(`${import.meta.env.VITE_API_URL}/admin/user/account/requests/${userId}`);
-  //     const user = res.data.data;
-  //     console.log(user);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+  async function approve(status){
+    try {
+      const res = await axiosInstance.put('admin/classic/Scheme', {
+          "data" : {
+              "Status" : {status},
+              "Scheme" : `${schemeId}`
+            }
+        })
+      
+    
+      
+      console.log(res);
+      navigate('/admin/scheme')
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   
 
@@ -96,7 +106,7 @@ function SchemeDetails() {
               className="h-[5rem] w-[5rem] rounded-lg object-cover"
               loading="lazy"
               alt=""
-              src={data.Photo} // Provide a fallback image
+              src={getFullUrl(data.Photo)} // Provide a fallback image
             />
             <div className="flex-1 flex flex-col items-start justify-start gap-2 min-w-[5.063rem]">
               <div className="font-medium min-w-[6.5rem] mq450:text-[1rem]">
@@ -169,8 +179,8 @@ function SchemeDetails() {
         </div>
         
         <div className="flex flex-row w-full items-end justify-end gap-6 text-[1rem] text-foundation-red-normal font-roboto">
-        <OutlinedButton label={"Cancel"} />
-          <RedButton label={"Approve"}/>
+        <OutlinedButton label={"Cancel"} onClick={approve("Rejected")} />
+          <RedButton label={"Approve"} onClick={approve("Active")}/>
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import useAxios from "../axiosSetup";
+import { getFullUrl } from "../utils";
 
 const LoanCard = ({
   className = "",
@@ -51,7 +52,7 @@ const LoanCard = ({
         className="w-[7.5rem] h-[7.5rem] absolute !m-[0] top-[1.5rem] left-[6.331rem] rounded-[50%] object-cover z-[1]"
         loading="lazy"
         alt=""
-        src={profilePicture}
+        src={getFullUrl(profilePicture)}
         style={profilePictureIconStyle}
       />
       <div className="self-stretch flex flex-row items-start justify-start py-[0rem] pr-[0.812rem] pl-[0.687rem]">

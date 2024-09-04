@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import { getFullUrl } from "../utils";
 
 const LoanInfoCard = ({
   className='',
@@ -22,7 +23,7 @@ const LoanInfoCard = ({
       <img
         className="w-[7.5rem] h-[7.5rem] absolute !m-[0] top-[1.5rem] left-[6.331rem] rounded-[50%] object-cover z-[1]"
         alt=""
-        src={profilePicture}
+        src={getFullUrl(profilePicture)}
       />
       <div className="self-stretch flex flex-row items-start justify-start py-[0rem] pr-[0.812rem] pl-[0.687rem]">
         <div className="flex-1 flex flex-col items-start justify-start gap-[1rem]">

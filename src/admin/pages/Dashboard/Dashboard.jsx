@@ -33,7 +33,17 @@ function Dashboard() {
     (loan) => loan.Status === 'Pending').length;
 
   const filteredAccountsLength = accountsArray.filter(
-    (loan) => loan.Status != 'Pending').length;
+    (loan) => loan.Status != 'Pending' && loan.Status != 'Rejected').length;
+
+  const getCurrentDate = () => {
+    const date = new Date();
+      
+    const day = String(date.getDate()).padStart(2, '0'); // Get day and pad with leading zero if necessary
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Get month (0-based index) and pad with leading zero
+    const year = String(date.getFullYear()).slice(-2); // Get the last two digits of the year
+    
+    return `${day}/${month}/${year}`; // Combine day, month, and year
+  };
 
 
   const getMergedData = () => {
@@ -41,7 +51,7 @@ function Dashboard() {
 
     // Filter loans by status and selectedLoanType
     const filteredLoans = loansArray.filter(
-      (loan) => loan.Status != 'Pending' && loan.Type === selectedLoanType
+      (loan) => loan.Status != 'Pending' && loan.Status != 'Rejected' && loan.Type === selectedLoanType
     );
 
     // Merge the data based on the "Identifier"
@@ -68,18 +78,19 @@ function Dashboard() {
   const mergedAccounts = getMergedData();
   console.log(mergedAccounts)
 
+  if(!users){
+    return(
+      <div>Loading</div>
+    )
+  }
+
   return (
     <div className="flex-1 flex flex-col items-start justify-start pt-[2rem] px-[0rem] pb-[0rem] box-border max-w-[calc(100%_-_344px)] text-[1rem] text-white mq850:h-auto mq850:max-w-full">
       <div className="self-stretch flex flex-col items-start justify-start gap-[1.937rem] max-w-full shrink-0 mq675:gap-[0.938rem]">
         <div className="w-[17.25rem] flex flex-row items-start justify-start relative shrink-0 text-[0.813rem] font-inter">
-          <img
-            className="h-[1.5rem] w-[1.5rem] absolute !m-[0] top-[1.188rem] right-[-0.25rem] overflow-hidden shrink-0"
-            alt=""
-            src="/user-1.svg"
-          />
           <div className="flex-1 rounded bg-foundation-red-normal flex flex-col items-start justify-start p-[0.5rem] gap-[0.5rem] z-[1]">
             <a className="[text-decoration:none] relative font-medium text-[inherit] inline-block min-w-[3.688rem]">
-              28/04/24
+              {getCurrentDate()}
             </a>
             <div className="self-stretch flex flex-row items-start justify-between gap-[1.25rem] text-[1.25rem] font-roboto">
               <div className="flex flex-col items-start justify-start pt-[0.062rem] px-[0rem] pb-[0rem]">
@@ -152,7 +163,7 @@ function Dashboard() {
                 address={account.Address}
                 profilePicture={account.Photo}
                 key1={account.Identifier}
-                id={account._id}
+                id={account.Loan}
                 amount={account.Amount}
                 {...account}
               />

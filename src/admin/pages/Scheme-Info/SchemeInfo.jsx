@@ -21,7 +21,7 @@ function SchemeInfo() {
 
     // Filter loans by status and selectedLoanType
     const filteredSchemes = schemesArray.filter(
-      (scheme) => scheme.Status != 'Pending' && scheme.Type === selectedLoanType
+      (scheme) => scheme.Status != 'Pending' && scheme.Status != 'Rejected' && scheme.Type === selectedLoanType
     );
 
     // Merge the data based on the "Identifier"
@@ -95,22 +95,23 @@ function SchemeInfo() {
               </button>
             </div>
           </div>
-          {/* <div className="flex flex-row flex-wrap w-full items-start justify-between gap-[16px] px-[16px]"> */}
-          {mergedAccounts.map((account, index) => (
-              <Card1
-                key={index}
-                phoneno={account.Number}
-                fullname={account.Name}
-                address={account.Address}
-                profilePicture={account.Photo}
-                key1={account.Scheme.Identifier}
-                id={account.Scheme._id}
-                amount={account.Scheme.Amount}
-                plan={account.Scheme.Income}
-                tenure={account.Scheme.Tenure}
-                {...account}
-              />
-            ))}
+          <div className="flex flex-row flex-wrap w-full items-start justify-between gap-[16px] px-[16px] box-border">
+            {mergedAccounts.map((account, index) => (
+                <Card1
+                  key={index}
+                  phoneno={account.Number}
+                  fullname={account.Name}
+                  address={account.Address}
+                  profilePicture={account.Photo}
+                  key1={account.Scheme.Identifier}
+                  id={account.Scheme.Scheme}
+                  amount={account.Scheme.Amount}
+                  plan={account.Scheme.Income}
+                  tenure={account.Scheme.Tenure}
+                  {...account}
+                />
+              ))}
+            </div>
         </div>
       </div>
     </div>

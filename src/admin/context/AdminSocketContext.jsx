@@ -45,35 +45,33 @@ export const SocketProvider = ({ children }) => {
   const [state, dispatch] = useReducer(socketReducer, initialState);
 
   // Define socket event handlers
-  const handleUserEvent = (data) => dispatch({ type: 'SET_USERS', payload: data.data.details.users });
-  const handleUserDataEvent = (data) => dispatch({ type: 'SET_USER_DATA', payload: data.data.details.data });
-  const handleAccountsEvent = (data) => dispatch({ type: 'SET_ACCOUNTS', payload: data.data.details.accounts });
-  const handleTransactionsEvent = (data) => dispatch({ type: 'SET_TRANSACTIONS', payload: data.data.details.transactions });
-  const handleLoansEvent = (data) => dispatch({ type: 'SET_LOANS', payload: data.data.details.loans });
-  const handleSchemesEvent = (data) => dispatch({ type: 'SET_SCHEMES', payload: data.data.details.schemes });
-  const handleNotificationsEvent = (data) => dispatch({ type: 'SET_NOTIFICATIONS', payload: data.data.details.notifications });
+  const handleUserEvent = useCallback((data) => dispatch({ type: 'SET_USERS', payload: data.data.details.users }), []);
+  const handleUserDataEvent = useCallback((data) => dispatch({ type: 'SET_USER_DATA', payload: data.data.details.data }), []);
+  const handleAccountsEvent = useCallback((data) => dispatch({ type: 'SET_ACCOUNTS', payload: data.data.details.accounts }), []);
+  const handleTransactionsEvent = useCallback((data) => dispatch({ type: 'SET_TRANSACTIONS', payload: data.data.details.transactions }), []);
+  const handleLoansEvent = useCallback((data) => dispatch({ type: 'SET_LOANS', payload: data.data.details.loans }), []);
+  const handleSchemesEvent = useCallback((data) => dispatch({ type: 'SET_SCHEMES', payload: data.data.details.schemes }), []);
+  const handleNotificationsEvent = useCallback((data) => dispatch({ type: 'SET_NOTIFICATIONS', payload: data.data.details.notifications }), []);
 
   useEffect(() => {
     // Attach event listeners
     socket.on('60B7B5144444BDE4E0142BF0A4ED9839', handleUserEvent);
     socket.on('2E9ECBE30C6B14D8F4849DF1F4F7DCE2', handleUserDataEvent);
     socket.on('B0D448107911CFA3DB034F04F007C513', handleAccountsEvent);
-    // socket.on('0D605480AEFF39353E45CE39C9A7ED2D', handleTransactionsEvent);
     socket.on('7712D5ECDA9F00F842E470D02D381F9A', handleLoansEvent);
     socket.on('B23CD2AE771A705F2F5EF60173743B5B', handleSchemesEvent);
-    // socket.on('09BAE709245B6148A2EC9215735DAE33', handleNotificationsEvent);
-    console.log(state)
+    socket.on('09BAE709245B6148A2EC9215735DAE33', handleNotificationsEvent);
+
     // Cleanup event listeners when the component unmounts
     return () => {
       socket.off('60B7B5144444BDE4E0142BF0A4ED9839', handleUserEvent);
       socket.off('2E9ECBE30C6B14D8F4849DF1F4F7DCE2', handleUserDataEvent);
       socket.off('B0D448107911CFA3DB034F04F007C513', handleAccountsEvent);
-      socket.off('0D605480AEFF39353E45CE39C9A7ED2D', handleTransactionsEvent);
       socket.off('7712D5ECDA9F00F842E470D02D381F9A', handleLoansEvent);
       socket.off('B23CD2AE771A705F2F5EF60173743B5B', handleSchemesEvent);
       socket.off('09BAE709245B6148A2EC9215735DAE33', handleNotificationsEvent);
     };
-  }, [socket]);
+  }, [socket, handleUserEvent, handleUserDataEvent, handleAccountsEvent, handleLoansEvent, handleSchemesEvent, handleNotificationsEvent]);
 
   // Subscribe to an event dynamically
   const subscribeToEvent = useCallback((eventName, callback) => {
@@ -83,6 +81,8 @@ export const SocketProvider = ({ children }) => {
       socket.off(eventName, callback);
     };
   }, [socket]);
+
+  console.log(state)
 
   const value = useMemo(
     () => ({ subscribeToEvent, ...state }),

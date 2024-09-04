@@ -88,24 +88,37 @@ axiosInstance.interceptors.request.use(
 
 // Response interceptor
 axiosInstance.interceptors.response.use(
-  async response => {
+  async (response) => {
     try {
       if (response.data) {
         const extractedData = await Packet.extract(response.data.data);
         response.data = extractedData;
       }
-      if(response.data.credentials.access){
-        sessionStorage.setItem('access', response.data.credentials.access)
+
+      // Check if credentials exist before accessing
+      const credentials = response.data?.credentials;
+
+      if (credentials) {
+        const accessToken = credentials.access;
+        if (accessToken) {
+          sessionStorage.setItem('access', accessToken);
+        }
+
+        const identifier = credentials.Identifier;
+        if (identifier) {
+          sessionStorage.setItem('Identifier', identifier);
+        }
+      } else {
+        console.warn('Credentials are missing in the response data.');
       }
-      if(response.data.credentials.Identifier){
-        sessionStorage.setItem('Identifier', response.data.credentials.Identifier)
-      }
+
       return response;
     } catch (error) {
       return Promise.reject(error);
     }
   },
-  error => Promise.reject(error),
+  (error) => Promise.reject(error)
 );
+
 
 export default axiosInstance;

@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useAxios from '../../axiosSetup';
 import { useAdminSocket } from '../../context/AdminSocketContext';
+import { getFullUrl } from '../../utils';
 
 function ClientDetails() {
   const { userId } = useParams(); // Get the userId from the URL
   const { users, userData } = useAdminSocket();
+  const { status, setStatus} = useState();
 
   console.log(users)
   console.log(userData)
@@ -15,6 +17,7 @@ function ClientDetails() {
   const getMergedData = () => {
     const usersArray = Object.values(users);
     const userDataArray = Object.values(userData);
+    const accountArray = Object.values(accounts);
 
     console.log(usersArray)
 
@@ -24,11 +27,18 @@ function ClientDetails() {
     // Find the user and userData by userId
     const filteredUser = usersArray.find((user) => user.Identifier === userId);
     const filteredUserData = userDataArray.find((data) => data.Identifier === userId);
+    const account = accountArray.find((a) => a.Identifier === userId);
 
+    if(filteredUserData.Verification && !account.Status){
+      setStatus(true);
+    }else{
+      setStatus(false);
+    }
     // Combine the data if both are available
     const mergedData = filteredUser && filteredUserData ? {
       ...filteredUser,
-      ...filteredUserData // This merges all properties from filteredUserData
+      ...filteredUserData, // This merges all properties from filteredUserData
+      Account:{...account}
     } : null;
 
     return mergedData;
@@ -63,11 +73,27 @@ function ClientDetails() {
     return age;
   }
   
-  async function approve(){
+  async function approve(verify){
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/admin/user/account/requests/${userId}`);
-      const user = res.data.data;
-      console.log(user);
+      let res;
+      if(status){ 
+        res = await axiosInstance.put('admin/classic/Saving', {
+          "data" : {
+              "Status" : {verify},
+              "Account" : `${data.Account.Account}`
+            }
+        })
+      }else{
+      res = await axiosInstance.put('admin/classic/Data', {
+        "data" : {
+            "Verification" : {verify},
+            "Identifier" : `${userId}`
+          }
+      })
+    }
+    
+      
+      console.log(res);
     } catch (error) {
       console.error(error);
     }
@@ -91,7 +117,7 @@ function ClientDetails() {
               className="h-[5rem] w-[5rem] rounded-lg object-cover"
               loading="lazy"
               alt=""
-              src={data?.Photo || '/default-profile.png'} // Provide a fallback image
+              src={getFullUrl(data?.Photo) || '/default-profile.png'} // Provide a fallback image
             />
             <div className="flex-1 flex flex-col items-start justify-start gap-2 min-w-[5.063rem]">
               <div className="font-medium min-w-[6.5rem] mq450:text-[1rem]">
@@ -201,7 +227,7 @@ function ClientDetails() {
               className="h-[1.5rem] w-[1.5rem] relative overflow-hidden shrink-0 min-h-[1.5rem]"
               loading="lazy"
               alt=""
-              src='/checkcircle-1.svg'
+              src='/check.png'
             />
           </div>
           <div className="self-stretch flex-1 flex flex-col items-start justify-start gap-[0.5rem] text-[1.125rem] text-gray-100">
@@ -215,7 +241,7 @@ function ClientDetails() {
       className="w-full h-full object-contain"
       loading="lazy"
       alt=""
-      src={data?.Pan || ''}
+      src={getFullUrl(data?.Pan) || ''}
       style={{ maxWidth: '80%', maxHeight: '80%' }}
     />
   </div>
@@ -232,7 +258,7 @@ function ClientDetails() {
               className="h-[1.5rem] w-[1.5rem] relative overflow-hidden shrink-0 min-h-[1.5rem]"
               loading="lazy"
               alt=""
-              src='/checkcircle-1.svg'
+              src='/check.png'
             />
           </div>
           <div className="self-stretch relative flex-1 flex flex-col items-start justify-start gap-[0.5rem] text-[1.125rem] text-gray-100">
@@ -246,7 +272,7 @@ function ClientDetails() {
       className="w-full h-full object-contain"
       loading="lazy"
       alt=""
-      src={data?.Aadhar || ''}
+      src={getFullUrl(data?.Aadhar) || ''}
       style={{ maxWidth: '80%', maxHeight: '80%' }}
     />
   </div>
@@ -267,7 +293,7 @@ function ClientDetails() {
               className="h-[1.5rem] w-[1.5rem] relative overflow-hidden shrink-0 min-h-[1.5rem]"
               loading="lazy"
               alt=""
-              src='/checkcircle-1.svg'
+              src='/check.png'
             />
           </div>
           <div className="self-stretch relative flex-1 rounded overflow-hidden">
@@ -275,7 +301,7 @@ function ClientDetails() {
       className="w-full h-full object-contain"
       loading="lazy"
       alt=""
-      src={data?.Photo || ''}
+      src={getFullUrl(data?.Photo) || ''}
       style={{ maxWidth: '100%', maxHeight: '100%' }}
     />
   </div>
@@ -292,7 +318,7 @@ function ClientDetails() {
               className="h-[1.5rem] w-[1.5rem] relative overflow-hidden shrink-0 min-h-[1.5rem]"
               loading="lazy"
               alt=""
-              src='/checkcircle-1.svg'
+              src='/check.png'
             />
           </div>
           <div className="self-stretch relative flex-1 rounded overflow-hidden">
@@ -300,7 +326,7 @@ function ClientDetails() {
       className="w-full h-full object-contain"
       loading="lazy"
       alt=""
-      src={data?.Signature || ''}
+      src={getFullUrl(data?.Signature) || ''}
       style={{ maxWidth: '100%', maxHeight: '100%' }}
     />
   </div>
@@ -308,12 +334,12 @@ function ClientDetails() {
       </div>
     </div>
         <div className="flex flex-row items-center justify-center gap-6 text-[1rem] text-foundation-red-normal font-roboto ">
-          <div className="flex-[0.8333] flex items-center justify-center py-[0.906rem] px-6 border border-solid border-foundation-red-normal rounded cursor-pointer">
+          <div onClick={approve("Rejected")} className="flex-[0.8333] flex items-center justify-center py-[0.906rem] px-6 border border-solid border-foundation-red-normal rounded cursor-pointer">
             <div className="font-medium">
               Cancel
             </div>
           </div>
-          <div onClick={approve} className=" flex-1 flex items-center justify-center py-[0.906rem] px-5 bg-foundation-red-normal text-white rounded cursor-pointer">
+          <div onClick={approve("Verified")} className=" flex-1 flex items-center justify-center py-[0.906rem] px-5 bg-foundation-red-normal text-white rounded cursor-pointer">
             <div className="font-medium">
               Approve
             </div>

@@ -2,6 +2,8 @@ import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import useAxios from "../axiosSetup";
+import { getFullUrl } from "../utils";
+import axiosInstance from "../../../axios.utils";
 
 const SchemeCard = ({
   className = "",
@@ -32,15 +34,23 @@ const SchemeCard = ({
     navigate(`/admin/scheme/${userId}/${schemeId}`);
   };
 
-  async function approve(){
+  async function approve(status){
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/admin/user/account/requests/${key1}`);
-      const user = res.data.data;
-      console.log(user);
+      const res = await axiosInstance.put('admin/classic/Scheme', {
+          "data" : {
+              "Status" : {status},
+              "Scheme" : `${id}`
+            }
+        })
+      
+    
+      
+      console.log(res);
     } catch (error) {
       console.error(error);
     }
   }
+
   
 
   return (
@@ -52,7 +62,7 @@ const SchemeCard = ({
         className="w-[7.5rem] h-[7.5rem] absolute !m-[0] top-[1.5rem] left-[6.331rem] rounded-[50%] object-cover z-[1]"
         loading="lazy"
         alt=""
-        src={profilePicture}
+        src={getFullUrl(profilePicture)}
         style={profilePictureIconStyle}
       />
       <div className="self-stretch flex flex-row items-start justify-start py-[0rem] pr-[0.812rem] pl-[0.687rem]">
@@ -100,13 +110,13 @@ const SchemeCard = ({
             </div>
           </div>
           <div className="self-stretch flex flex-row items-start justify-start gap-[0.75rem] mq450:flex-wrap">
-            <button onClick={approve} className="cursor-pointer [border:none] py-[0.5rem] px-[2.562rem] bg-foundation-red-normal rounded flex flex-row items-start justify-start hover:bg-mediumvioletred-100">
+            <button onClick={()=>approve("Active")} className="cursor-pointer [border:none] py-[0.5rem] px-[2.562rem] bg-foundation-red-normal rounded flex flex-row items-start justify-start hover:bg-mediumvioletred-100">
               <div className="relative text-[1rem] capitalize font-medium font-roboto text-white text-left inline-block min-w-[3.75rem]">
                 Approve
               </div>
             </button>
             <button className="cursor-pointer py-[0.375rem] pr-[3.25rem] pl-[3.312rem] bg-[transparent] rounded flex flex-row items-start justify-start border-[1px] border-solid border-foundation-red-normal hover:bg-mediumvioletred-200 hover:box-border hover:border-[1px] hover:border-solid hover:border-mediumvioletred-100">
-              <div className="relative text-[1rem] capitalize font-medium font-roboto text-foundation-red-normal text-left inline-block min-w-[2.25rem]">
+              <div onClick={()=>approve("Rejected")} className="relative text-[1rem] capitalize font-medium font-roboto text-foundation-red-normal text-left inline-block min-w-[2.25rem]">
                 Deny
               </div>
             </button>
