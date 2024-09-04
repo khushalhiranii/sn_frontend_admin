@@ -102,7 +102,7 @@ function Dashboard() {
             </div>
           </div>
         </div>
-        <div className="self-stretch flex flex-row items-start justify-between gap-[2rem] shrink-0 text-black1 mq675:gap-[1rem] mq675:flex-wrap">
+        <div className="self-stretch flex flex-row items-start justify-between gap-[2rem] shrink-0 text-black1 mq675:gap-[1rem] mq750:flex-wrap">
           <Loan home22="/loan.svg" loanRequests="Loan Requests" count={filteredLoansLength} />
           <Loan home22="/schemes.svg" loanRequests="Scheme Request" count={filteredSchemesLength}/>
           <Loan home22="/due-loan.svg" loanRequests="Due Loans" count={filteredDueLoansLength} />
