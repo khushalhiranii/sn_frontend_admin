@@ -31,9 +31,9 @@ function Kycprocess() {
       );
       // Check if the userData has the required Verification status, user Saving is false, and account Status is false
       return (
-        data?.Verification == "Pending" && // Match the verification status in userData
+        data?.Verification == status && // Match the verification status in userData
         user?.Saving == true && // Ensure Saving is false in users
-        account?.Status == status // Ensure account status is false
+        account?.Status == "Pending" // Ensure account status is false
       );
     });
     // Merge the filtered data based on the "Identifier"

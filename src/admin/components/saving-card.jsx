@@ -33,8 +33,7 @@ const SavingCard = ({
     const userId = key1;
     try {
       let res;
-      console.log(status);
-      if (!status) {
+      if (status) {
         res = await axiosInstance.put("admin/classic/Saving", {
           data: {
             Status: verify,
@@ -44,8 +43,8 @@ const SavingCard = ({
       } else {
         res = await axiosInstance.put("admin/classic/Data", {
           data: {
-            Verification: { verify },
-            Identifier: `${userId}`,
+            Verification: verify,
+            Identifier: userId,
           },
         });
       }
