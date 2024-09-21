@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useAxios from '../../axiosSetup';
 import InputComponent from '../../components/InputComponent';
 import RedButton from '../../../user/DesignSystem/RedButton';
@@ -12,6 +12,7 @@ function LoanDetails() {
   const { userId, loanId } = useParams(); // Get the userId from the URL
   const { users, userData, loans, accounts } = useAdminSocket();
   const [approvedDetails, setApprovedDetails] = useState({"Loan": loanId});
+  const navigate = useNavigate();
 
   const appendApprovedDetails = (key, value) => {
     setApprovedDetails({
@@ -44,6 +45,8 @@ function LoanDetails() {
         }
       })
       console.log(response)
+      alert("Loan Approved")
+      navigate('/admin/loanRequest')
     } catch (error) {
       console.error(error)
     }
@@ -301,7 +304,7 @@ function LoanDetails() {
         </div>
         
         <div className="flex flex-row w-full items-end justify-end gap-6 text-[1rem] text-foundation-red-normal font-roboto">
-        <OutlinedButton label="Cancel" onClick={()=>approve("Rejected")} />
+        <OutlinedButton label="Cancel" onClick={()=>navigate('/admin/loanRequest')} />
         
           <RedButton label="Approve" onClick={()=>approve("Active")} />
         </div>
