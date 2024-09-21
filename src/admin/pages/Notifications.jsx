@@ -3,7 +3,9 @@ import { useAdminSocket } from '../context/AdminSocketContext'
 
 function Notifications() {
   const { notifications } = useAdminSocket();
+  console.log(notifications)
   const notificationArray = Object.values(notifications)
+  console.log(notificationArray)
   const filteredNotifications = notificationArray.filter((notification) => notification.categoty === "Admin")
   console.log(filteredNotifications)
   return (

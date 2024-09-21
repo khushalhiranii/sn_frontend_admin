@@ -63,14 +63,14 @@ export const SocketProvider = ({ children }) => {
     socket.on('09BAE709245B6148A2EC9215735DAE33', handleNotificationsEvent);
 
     // Cleanup event listeners when the component unmounts
-    return () => {
-      socket.off('60B7B5144444BDE4E0142BF0A4ED9839', handleUserEvent);
-      socket.off('2E9ECBE30C6B14D8F4849DF1F4F7DCE2', handleUserDataEvent);
-      socket.off('B0D448107911CFA3DB034F04F007C513', handleAccountsEvent);
-      socket.off('7712D5ECDA9F00F842E470D02D381F9A', handleLoansEvent);
-      socket.off('B23CD2AE771A705F2F5EF60173743B5B', handleSchemesEvent);
-      socket.off('09BAE709245B6148A2EC9215735DAE33', handleNotificationsEvent);
-    };
+    // return () => {
+    //   socket.off('60B7B5144444BDE4E0142BF0A4ED9839', handleUserEvent);
+    //   socket.off('2E9ECBE30C6B14D8F4849DF1F4F7DCE2', handleUserDataEvent);
+    //   socket.off('B0D448107911CFA3DB034F04F007C513', handleAccountsEvent);
+    //   socket.off('7712D5ECDA9F00F842E470D02D381F9A', handleLoansEvent);
+    //   socket.off('B23CD2AE771A705F2F5EF60173743B5B', handleSchemesEvent);
+    //   socket.off('09BAE709245B6148A2EC9215735DAE33', handleNotificationsEvent);
+    // };
   }, [socket, handleUserEvent, handleUserDataEvent, handleAccountsEvent, handleLoansEvent, handleSchemesEvent, handleNotificationsEvent]);
 
   // Subscribe to an event dynamically
