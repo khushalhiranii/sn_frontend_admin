@@ -5,10 +5,49 @@ import InputComponent from '../../components/InputComponent';
 import RedButton from '../../../user/DesignSystem/RedButton';
 import OutlinedButton from '../../components/OutlinedButton';
 import { useAdminSocket } from '../../context/AdminSocketContext';
+import { getFullUrl } from '../../utils';
+import axiosInstance from '../../../../axios.utils';
 
 function LoanDetails() {
   const { userId, loanId } = useParams(); // Get the userId from the URL
   const { users, userData, loans, accounts } = useAdminSocket();
+  const [approvedDetails, setApprovedDetails] = useState({"Loan": loanId});
+
+  const appendApprovedDetails = (key, value) => {
+    setApprovedDetails({
+      ...approvedDetails,
+      [key]: value,
+    });
+  };
+
+  const OfferLoan = async () => {
+    try {
+      console.log(approvedDetails)
+      const response = await axiosInstance.put('/admin/classic/Loan/Details',{
+        "data": approvedDetails
+      })
+      if(response.status == 200){
+        alert("Loan Offered")
+      }
+      
+    } catch (error) {
+      console.error("Request failed: ", error)
+    }
+  }
+
+  const approve = async (action) => {
+    try {
+      const response = await axiosInstance.put('admin/classic/Loan', {
+        "data" : {
+            "Status" : action, //[ "Active" , "Closed" , "Rejected" , "Overdue" ]
+            "Loan" : loanId
+        }
+      })
+      console.log(response)
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   console.log(users)
   console.log(userData)
@@ -96,7 +135,7 @@ function LoanDetails() {
               className="h-[5rem] w-[5rem] rounded-lg object-cover"
               loading="lazy"
               alt=""
-              src={data.Photo} // Provide a fallback image
+              src={getFullUrl(data?.Photo)} // Provide a fallback image
             />
             <div className="flex-1 flex flex-col items-start justify-start gap-2 min-w-[5.063rem]">
               <div className="font-medium min-w-[6.5rem] mq450:text-[1rem]">
@@ -161,6 +200,76 @@ function LoanDetails() {
   </div>
 )}
 
+      {data.loanInfo.Type === "Business" && (
+        <div className="flex flex-col items-start justify-start gap-2 w-full">
+          <div className="tracking-tight leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap mq450:text-[1rem] text-[20px] mq450:leading-[1.5rem]">
+            Business Details
+          </div>
+          
+          {/* Inputs for Property Information */}
+          <div className="flex flex-row flex-wrap w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+            <InputComponent label="Business Type" value={data.loanInfo.Nature} />
+            <InputComponent label="Firm Name" value={data.loanInfo.Name} />
+            <InputComponent label="Business Profit" value={data.loanInfo.Profit}/>
+            <InputComponent label="Udhyam" value={data.loanInfo.Udhyam}/>
+            <InputComponent label="GST" value={data.loanInfo.Gst}/>
+          </div>
+
+          {/* Inputs for Purchase Information */}
+          <div className="flex flex-row w-full items-start justify-self-start gap-4 text-[1rem] text-gray-400 font-roboto">
+            
+          </div>
+        </div>
+      )}
+
+
+<div className="flex flex-col items-start justify-start gap-2 w-full">
+      <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">
+        Approved Loan Details
+      </div>
+
+      <div className="flex flex-row flex-wrap w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+        {/* Input Components for Amount, Interest Rate, and Tenure */}
+        <InputComponent
+          label={"Amount"}
+          value={approvedDetails?.Amount || ''}
+          onChange={(e) => appendApprovedDetails('Amount', e.target.value)}
+        />
+
+        <InputComponent
+          label={"Interest Rate"}
+          value={approvedDetails?.Interest || ''}
+          onChange={(e) => appendApprovedDetails('Interest', e.target.value)}
+        />
+
+        <InputComponent
+          label={"Tenure"}
+          value={approvedDetails?.Tenure || ''}
+          onChange={(e) => appendApprovedDetails('Tenure', e.target.value)}
+        />
+
+        {/* Dropdown for Loan Type */}
+        <div className="flex flex-col w-[333px] box-border items-start justify-normal p-1 gap-2">
+          <div className="tracking-tight text-[14px] leading-[150%] font-medium min-w-[6.438rem]">
+            Interest Type
+          </div>
+
+          <select
+            className="w-full box-border outline-none text-[1rem] placeholder:text-black1 font-medium border-[#E3E3E3] rounded-[4px] border-[1px] border-solid p-[12px] bg-white"
+            value={approvedDetails?.LoanType || ''}
+            onChange={(e) => appendApprovedDetails('LoanType', e.target.value)}
+          >
+            <option value="" disabled>Select Option</option>
+            <option value="Reducing">Reducing</option>
+            <option value="Flat">Flat</option>
+          </select>
+        </div>
+        
+      </div>
+      <div className='flex flex-row w-full items-end justify-end'>
+        <RedButton label="Offer a Loan" onClick={()=>OfferLoan()} />
+      </div>
+    </div>
         
             
             
@@ -192,8 +301,9 @@ function LoanDetails() {
         </div>
         
         <div className="flex flex-row w-full items-end justify-end gap-6 text-[1rem] text-foundation-red-normal font-roboto">
-        <OutlinedButton label={"Cancel"} />
-          <RedButton label={"Approve"}/>
+        <OutlinedButton label="Cancel" onClick={()=>approve("Rejected")} />
+        
+          <RedButton label="Approve" onClick={()=>approve("Active")} />
         </div>
       </div>
     </div>

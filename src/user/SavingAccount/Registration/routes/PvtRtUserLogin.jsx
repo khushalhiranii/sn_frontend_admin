@@ -2,15 +2,18 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useUserData } from '../context/UserDataContext';
+import { useUserSocket } from '../../../context/UserSocketContext';
 
 const PvtRtUserLogin = ({ component: Component }) => {
-  const { userData } = useUserData();
+  const { account } = useUserSocket()
+  const accountArray = Array.isArray(account) ? account : Object.values(account);
+  console.log(accountArray)
 
   return (
-    userData ? (
+    accountArray?.Status != "Pending" && account?.Status === "Verified" ? (
       <Component />
     ) : (
-      <Navigate to="/login" replace />
+      <Navigate to="/register/openAcc" replace />
     )
   );
 }

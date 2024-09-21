@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import useAxios from '../../axiosSetup';
+
 import { useAdminSocket } from '../../context/AdminSocketContext';
 import { getFullUrl } from '../../utils';
+import axiosInstance from '../../../../axios.utils';
 
 function ClientDetails() {
   const { userId } = useParams(); // Get the userId from the URL
-  const { users, userData } = useAdminSocket();
-  const { status, setStatus} = useState();
+  const { users, userData, accounts } = useAdminSocket();
+  const [ status, setStatus ] = useState(null);
+  const [ data, setData ] = useState(null);
 
   console.log(users)
   console.log(userData)
@@ -15,9 +17,9 @@ function ClientDetails() {
 
   // Function to get and merge data
   const getMergedData = () => {
-    const usersArray = Object.values(users);
-    const userDataArray = Object.values(userData);
-    const accountArray = Object.values(accounts);
+    const usersArray = Array.isArray(users) ? users : Object.values(users);
+    const userDataArray = Array.isArray(userData) ? userData : Object.values(userData);
+    const accountArray = Array.isArray(accounts) ? accounts : Object.values(accounts);
 
     console.log(usersArray)
 
@@ -29,7 +31,7 @@ function ClientDetails() {
     const filteredUserData = userDataArray.find((data) => data.Identifier === userId);
     const account = accountArray.find((a) => a.Identifier === userId);
 
-    if(filteredUserData.Verification && !account.Status){
+    if(filteredUserData?.Verification && !account.Status){
       setStatus(true);
     }else{
       setStatus(false);
@@ -45,10 +47,13 @@ function ClientDetails() {
   };
 
   // Call the function to get the merged data
-  let data;
-  if(users){
-    data = getMergedData();
-  }
+  useEffect(() => {
+    if (users) {
+      const mergedData = getMergedData();
+      setData(mergedData);  // Merged data will be stored in local state
+    }
+  }, [users, userData, accounts]);
+  
   
   console.log(data);
   function calculateAge(dobString) {
@@ -73,30 +78,27 @@ function ClientDetails() {
     return age;
   }
   
-  async function approve(verify){
-    try {
+  function approve(verify){
       let res;
       if(status){ 
-        res = await axiosInstance.put('admin/classic/Saving', {
+        res = axiosInstance.put('admin/classic/Saving', {
           "data" : {
-              "Status" : {verify},
-              "Account" : `${data.Account.Account}`
+              "Status" : verify,
+              "Account" : data.Account.Account
             }
         })
       }else{
-      res = await axiosInstance.put('admin/classic/Data', {
+      res = axiosInstance.put('admin/classic/Data', {
         "data" : {
-            "Verification" : {verify},
-            "Identifier" : `${userId}`
+            "Verification" : verify,
+            "Identifier" : userId
           }
       })
-    }
+    
     
       
       console.log(res);
-    } catch (error) {
-      console.error(error);
-    }
+    } 
   }
 
   
@@ -237,19 +239,17 @@ function ClientDetails() {
               </div>
             </div>
             <div className="self-stretch relative flex-1 rounded overflow-hidden">
-    <img
-      className="w-full h-full object-contain"
-      loading="lazy"
-      alt=""
-      src={getFullUrl(data?.Pan) || ''}
-      style={{ maxWidth: '80%', maxHeight: '80%' }}
-    />
-  </div>
+              <img
+                className="w-full h-full object-contain"
+                loading="lazy"
+                alt=""
+                src={getFullUrl(data?.Pan) || ''}
+                style={{ maxWidth: '80%', maxHeight: '80%' }}
+              />
+            </div>
           </div>
         </div>
-        <div
-          className="h-[19rem] w-[20.375rem] flex flex-col items-start justify-start py-[1rem] px-[0.5rem] box-border gap-[0.5rem] max-w-full text-left text-[1.25rem] text-darkslategray-100 font-roboto"
-        >
+        <div className="h-[19rem] w-[20.375rem] flex flex-col items-start justify-start py-[1rem] px-[0.5rem] box-border gap-[0.5rem] max-w-full text-left text-[1.25rem] text-darkslategray-100 font-roboto">
           <div className="self-stretch flex flex-row items-center justify-between p-[0.25rem] gap-[1.25rem]">
             <div className="relative tracking-[0.05em] leading-[1.5rem] font-medium inline-block min-w-[5.625rem] mq450:text-[1rem]">
               Aaadhar Card
@@ -262,29 +262,25 @@ function ClientDetails() {
             />
           </div>
           <div className="self-stretch relative flex-1 flex flex-col items-start justify-start gap-[0.5rem] text-[1.125rem] text-gray-100">
-  <div className="self-stretch flex flex-row items-center justify-start pt-[0.468rem] px-[0.25rem] pb-[0.375rem] border-b-[0.5px] border-solid border-darkslategray-100">
-    <div className="relative tracking-[0.05em] inline-block min-w-[7.313rem]">
-      {data?.Aadhar_Number || ''}
-    </div>
-  </div>
-  <div className="self-stretch relative flex-1 rounded overflow-hidden">
-    <img
-      className="w-full h-full object-contain"
-      loading="lazy"
-      alt=""
-      src={getFullUrl(data?.Aadhar) || ''}
-      style={{ maxWidth: '80%', maxHeight: '80%' }}
-    />
-  </div>
-</div>
-
-
+            <div className="self-stretch flex flex-row items-center justify-start pt-[0.468rem] px-[0.25rem] pb-[0.375rem] border-b-[0.5px] border-solid border-darkslategray-100">
+              <div className="relative tracking-[0.05em] inline-block min-w-[7.313rem]">
+                {data?.Aadhar_Number || ''}
+              </div>
+            </div>
+            <div className="self-stretch relative flex-1 rounded overflow-hidden">
+              <img
+                className="w-full h-full object-contain"
+                loading="lazy"
+                alt=""
+                src={getFullUrl(data?.Aadhar) || ''}
+                style={{ maxWidth: '80%', maxHeight: '80%' }}
+              />
+            </div>
+          </div>
         </div>
       </div>
       <div className="w-[64.125rem] flex flex-row items-start justify-between py-[0rem] px-[1rem] box-border max-w-full gap-[1.25rem] mq975:flex-wrap">
-        <div
-          className="h-[12.75rem] w-[20.375rem] flex flex-col items-start justify-start py-[1rem] px-[0.5rem] box-border gap-[0.5rem] max-w-full text-left text-[1.25rem] text-darkslategray-100 font-roboto"
-        >
+        <div className="h-[12.75rem] w-[20.375rem] flex flex-col items-start justify-start py-[1rem] px-[0.5rem] box-border gap-[0.5rem] max-w-full text-left text-[1.25rem] text-darkslategray-100 font-roboto">
           <div className="self-stretch flex flex-row items-center justify-between p-[0.25rem] gap-[1.25rem]">
             <div className="relative tracking-[0.05em] leading-[1.5rem] font-medium inline-block min-w-[6.938rem] mq450:text-[1rem]">
               Client Photo
@@ -297,19 +293,16 @@ function ClientDetails() {
             />
           </div>
           <div className="self-stretch relative flex-1 rounded overflow-hidden">
-    <img
-      className="w-full h-full object-contain"
-      loading="lazy"
-      alt=""
-      src={getFullUrl(data?.Photo) || ''}
-      style={{ maxWidth: '100%', maxHeight: '100%' }}
-    />
-  </div>
-
+            <img
+              className="w-full h-full object-contain"
+              loading="lazy"
+              alt=""
+              src={getFullUrl(data?.Photo) || ''}
+              style={{ maxWidth: '100%', maxHeight: '100%' }}
+            />
+          </div>
         </div>
-        <div
-          className="h-[12.75rem] w-[20.375rem] flex flex-col items-start justify-start py-[1rem] px-[0.5rem] box-border gap-[0.5rem] max-w-full text-left text-[1.25rem] text-darkslategray-100 font-roboto"
-        >
+        <div className="h-[12.75rem] w-[20.375rem] flex flex-col items-start justify-start py-[1rem] px-[0.5rem] box-border gap-[0.5rem] max-w-full text-left text-[1.25rem] text-darkslategray-100 font-roboto">
           <div className="self-stretch flex flex-row items-center justify-between p-[0.25rem] gap-[1.25rem]">
             <div className="relative tracking-[0.05em] leading-[1.5rem] font-medium inline-block min-w-[6.938rem] mq450:text-[1rem]">
               Client Signature
@@ -322,24 +315,24 @@ function ClientDetails() {
             />
           </div>
           <div className="self-stretch relative flex-1 rounded overflow-hidden">
-    <img
-      className="w-full h-full object-contain"
-      loading="lazy"
-      alt=""
-      src={getFullUrl(data?.Signature) || ''}
-      style={{ maxWidth: '100%', maxHeight: '100%' }}
-    />
-  </div>
+            <img
+              className="w-full h-full object-contain"
+              loading="lazy"
+              alt=""
+              src={getFullUrl(data?.Signature) || ''}
+              style={{ maxWidth: '100%', maxHeight: '100%' }}
+            />
+          </div>
         </div>
       </div>
     </div>
         <div className="flex flex-row items-center justify-center gap-6 text-[1rem] text-foundation-red-normal font-roboto ">
-          <div onClick={approve("Rejected")} className="flex-[0.8333] flex items-center justify-center py-[0.906rem] px-6 border border-solid border-foundation-red-normal rounded cursor-pointer">
+          <div onClick={()=>approve("Rejected")} className="flex-[0.8333] flex items-center justify-center py-[0.906rem] px-6 border border-solid border-foundation-red-normal rounded cursor-pointer">
             <div className="font-medium">
               Cancel
             </div>
           </div>
-          <div onClick={approve("Verified")} className=" flex-1 flex items-center justify-center py-[0.906rem] px-5 bg-foundation-red-normal text-white rounded cursor-pointer">
+          <div onClick={()=>approve("Verified")} className=" flex-1 flex items-center justify-center py-[0.906rem] px-5 bg-foundation-red-normal text-white rounded cursor-pointer">
             <div className="font-medium">
               Approve
             </div>

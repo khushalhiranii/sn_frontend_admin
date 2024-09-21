@@ -8,9 +8,10 @@
 export const getFullUrl = (filename) => {
     const baseUrl = 'https://subandhan.nidhi.blazearcs.space/'; // Base URL
   
-    if (!filename) {
-      throw new Error('Filename is required'); // Error handling if filename is not provided
-    }
+    // if (!filename) {
+    //   // throw new Error('Filename is required'); // Error handling if filename is not provided
+
+    // }
   
     return `${baseUrl}${filename}`; // Return the full URL
   };

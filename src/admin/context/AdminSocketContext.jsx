@@ -41,7 +41,7 @@ const useSocket = (url) => {
 };
 
 export const SocketProvider = ({ children }) => {
-  const socket = useSocket(import.meta.env.VITE_USER_SOCKET);
+  const socket = useSocket(import.meta.env.VITE_ADMIN_SOCKET);
   const [state, dispatch] = useReducer(socketReducer, initialState);
 
   // Define socket event handlers

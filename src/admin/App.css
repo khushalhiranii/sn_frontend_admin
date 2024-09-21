@@ -1,4 +1,6 @@
 .navlink2 {
+  /* border: 2px solid #fbfbfb; */
+  border-radius: 15px;
     width: 100%;
     gap: 8px;
     display: flex;

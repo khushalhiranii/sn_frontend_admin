@@ -4,6 +4,7 @@ import { useEffect, useRef, useState }
 import { useUserData } from '../context/UserDataContext';
 import { useNavigate } from 'react-router-dom';
 import RedButton from '../../../DesignSystem/RedButton';
+import { useUserSocket } from '../../../context/UserSocketContext';
 
 export const Otp = ({ length = 4
     // ,
@@ -12,6 +13,7 @@ export const Otp = ({ length = 4
     // } 
 }) => {
         const [finalOtp, setFinalOtp] = useState('')
+		const { sendUserIdentifier } = useUserSocket();
 	const [otp, setOtp] = useState(
 		new Array(length).fill(""));
 	const inputRefs = useRef([]);
@@ -89,6 +91,7 @@ export const Otp = ({ length = 4
 	  if (hasLoginInPath) {
 		// If the URL contains "login", call sendLoginOTP
 		response = await sendLoginOTP(finalOtp);
+		sendUserIdentifier(response.data.credentials.Identifier)
 	  } else {
 		// Otherwise, call sendOTP
 		response = await sendOTP(finalOtp);

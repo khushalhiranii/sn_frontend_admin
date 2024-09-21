@@ -1,43 +1,126 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLoanContext } from '../context/LoanContext';
+import { useUserSocket } from '../context/UserSocketContext';
+import FormInput from '../DesignSystem/FormInput';
+import axiosInstance from '../../../axios.utils';
 
-const FormInput = ({ label, placeholder, type = "text", className = "", inputClassName = "" }) => {
-  return (
-    <div className={`flex-1 flex flex-col items-start justify-start gap-[8px] min-w-[126px] ${className}`}>
-      <div className="relative text-sm font-medium font-roboto text-black text-left inline-block min-w-[66px]">
-        {label}
-      </div>
-      <div className="self-stretch rounded flex flex-row items-center justify-start py-[11px] px-3 border-[1px] border-solid border-foundation-white-normal-hover">
-        <input
-          className={`w-full border-none outline-none font-medium font-roboto text-base bg-transparent h-[19px] relative text-black text-left inline-block p-0 ${inputClassName}`}
-          placeholder={placeholder}
-          type={type}
-        />
-      </div>
-    </div>
-  );
-};
-
-FormInput.propTypes = {
-  label: PropTypes.string.isRequired,
-  placeholder: PropTypes.string,
-  type: PropTypes.string,
-  className: PropTypes.string,
-  inputClassName: PropTypes.string,
-};
 
 const LoanPage = ({ className = "" }) => {
   const { selectedLoan } = useLoanContext();
+  const { user, account, userData } = useUserSocket();
+  const [loanDetails, setLoanDetails] = useState({"Identifier" : user?.Identifier, "Type": selectedLoan, "Interest": 0});
+  const [guarantorDetails, setGuarantorDetails] = useState({});
+  const [documents, setDocuments] = useState(null);  // For file uploads
+
+  const handleInputChange = (e, key, section) => {
+    const value = e.target.value;
+    if (section === 'loan') {
+      setLoanDetails((prevDetails) => ({
+        ...prevDetails,
+        [key]: value,
+      }));
+    } else if (section === 'guarantor') {
+      setGuarantorDetails((prevDetails) => ({
+        ...prevDetails,
+        [key]: value,
+      }));
+    }
+  };
+
+  const handleDocumentUpload = (e) => {
+    setDocuments(e.target.files[0]);  // Assuming single file upload
+  };
+
+  const submitLoanDetailsAPI = async (loanData) => {
+    // API call for submitting loan details
+    let response;
+    if(selectedLoan === "Personal" || selectedLoan === "Instant"){
+      response = await axiosInstance.post('/client/classic/Loan', {
+        "data" : {...loanData}
+      });
+    }else if(selectedLoan === "Micro Finance"){
+      response = await axiosInstance.post('/client/classic/Loan/Micro', {
+        "data" : {...loanData}
+      });
+    }else if(selectedLoan === "Property"){
+      response = await axiosInstance.post('/client/classic/Loan/Property', {
+        "data" : {...loanData}
+      });
+    }else if(selectedLoan === "Business"){
+      response = await axiosInstance.post('/client/classic/Loan/Buisness/Joint', {
+        "data" : {...loanData}
+      });
+    }
+    console.log(response)
+    
+    return await response;
+  };
+  
+  const submitGuarantorDetailsAPI = async (guarantorData, loanId) => {
+    // API call for submitting guarantor details
+    const response = await axiosInstance.post('client/classic/Guarantor', {
+      "data" : {...guarantorData,
+        "Loan": loanId
+      }
+    });
+    return await response;
+  };
+  
+  const uploadDocumentsAPI = async (documentFile, loanId) => {
+    const formData = new FormData();
+    formData.append('file', documentFile);
+  
+    const response = await axiosInstance.post(`/client/classic/Loan/Property/Docs?Loan=${loanId}`, {
+      "Loan-Docs" : formData
+    });
+    return await response;
+  };
+
+  const submitLoan = async (e) => {
+    e.preventDefault();  // Prevent the default form submission
+    try {
+      let loanData = { ...loanDetails };
+      console.log(loanData);
+      console.log(guarantorDetails);
+  
+      // Call the API to submit the loan details
+      const response = await submitLoanDetailsAPI(loanData); // Replace with actual API call
+      console.log(response);
+  
+      // Submit guarantor details if a loan ID is received
+      if (response?.data?.loan) {
+        await submitGuarantorDetailsAPI(guarantorDetails, response?.data?.loan); // Replace with actual API call
+  
+        // Upload documents if necessary
+        if (documents) {
+          await uploadDocumentsAPI(documents, response?.data?.loan); // Replace with actual API call
+        }
+  
+        alert("Loan application successful!");
+      }
+    } catch (error) {
+      console.error("Loan application failed", error);
+      alert("Error occurred while applying for the loan.");
+    }
+  };
+  
+
   console.log(selectedLoan);
+  if(!user || !account){
+    return(
+      <div>Loading..</div>
+    )
+  }
   return (
     <form
+    onSubmit={submitLoan}
       className={`m-0 w-full bg-white flex flex-col items-end justify-start pt-2 px-16 pb-[17px] box-border gap-[32px] leading-[normal] tracking-[normal] mq750:gap-[16px] mq750:pl-8 mq750:pt-20 mq750:pr-8 mq750:box-border ${className}`}
     >
       <main className="self-stretch flex flex-col items-start justify-start gap-[24px] max-w-full">
         <div className="flex flex-row items-center justify-center">
           <h2 className="m-0 relative text-[24px] leading-[130%] font-bold font-roboto text-text-primary text-center mq450:text-[19px] mq450:leading-[25px]">
-            {selectedLoan}
+            {selectedLoan} Loan
           </h2>
         </div>
 
@@ -55,14 +138,15 @@ const LoanPage = ({ className = "" }) => {
             </div>
 
             <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
-              <FormInput label="Name" placeholder="Value" />
-              <FormInput label="Aadhar" placeholder="Value" />
-              <FormInput label="PAN" placeholder="Value" />
-              <FormInput label="Annual Income" placeholder="Value" />
+              <FormInput label="Name" value= {user.Name} />
+              <FormInput label="Aadhar" value={userData.Aadhar_Number} />
+              <FormInput label="PAN" value={userData.Pan_Number} />
+              <FormInput label="Annual Income" value={userData.Salary} />
+              <FormInput label="Employment Type" value={userData.Employment}/>
             </div>
 
             <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
-              <FormInput label="Employment Type" placeholder="Type" className="max-w-[335px]" />
+              
             </div>
           </div>
 
@@ -70,10 +154,10 @@ const LoanPage = ({ className = "" }) => {
             <h3 className="m-0 relative text-xl font-medium font-roboto text-text-primary text-left mq450:text-base">
               Bank Details
             </h3>
-            <div className="self-stretch w-full flex flex-row flex-wrap items-start justify-start py-0 pr-[332px] pl-0 gap-[16px] lg:pr-[166px] lg:box-border mq450:pr-5 mq450:box-border mq750:pr-[83px] mq750:box-border">
-              <FormInput label="Account No" placeholder="Value" className="max-w-[335px]" />
-              <FormInput label="IFSC Code" placeholder="Value" className="max-w-[335px]" />
-              <div className="flex-1 flex flex-col items-start justify-start gap-[8px] min-w-[126px] max-w-[335px]">
+            <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
+              <FormInput label="Account No" value={account.Account} />
+              <FormInput label="IFSC Code" placeholder="Value" />
+              <div className="flex-1 flex flex-col items-start justify-start gap-[8px] min-w-[126px] max-w-[306px]">
                 <div className="relative text-sm font-medium font-roboto text-black text-left">
                   Statement (last 6 months)
                 </div>
@@ -90,34 +174,74 @@ const LoanPage = ({ className = "" }) => {
             <h3 className="m-0 relative text-xl font-medium font-roboto text-text-primary text-left mq450:text-base">
               Loan Details
             </h3>
-            <div className="self-stretch w-full flex flex-row flex-wrap items-start justify-start py-0 pr-[332px] pl-0 gap-[16px] lg:pr-[166px] lg:box-border mq450:pr-5 mq450:box-border mq750:pr-[83px] mq750:box-border">
-              <FormInput label="Enter Your Amount" placeholder="Value" className="max-w-[335px]" />
-              <FormInput label="Tenure" placeholder="in months" className="max-w-[335px]" />
-              <FormInput label="Maturity Amount" placeholder="Value" className="max-w-[335px]" />
-              <div className="relative text-sm font-small font-roboto text-black text-left">
-                *Maturity Amount (Calculated from above entries)
-              </div>
+            <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
+              <FormInput label="Enter Your Amount" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Amount', 'loan')} />
+              <FormInput label="Tenure" placeholder="in weeks" onChange={(e)=> handleInputChange(e, 'Tenure', 'loan')} />
+              <FormInput label="Purpose of Loan" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Purpose', 'loan')} />
+              {selectedLoan === 'Micro Finance' && 
+              (<>
+              <FormInput label="Shop Name" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Name', 'loan')} />
+                <FormInput label="Nature of Business" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Nature', 'loan')} />
+                <FormInput label="Shop Address" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Address', 'loan')} />
+                <FormInput label="Age of Business" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Age', 'loan')} />
+                <FormInput label="Monthly Income" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Profit', 'loan')} />
+                </>
+              )
+              }
             </div>
           </div>
+
+          {selectedLoan === 'Property' && 
+          (<div className="self-stretch flex flex-col items-start justify-start gap-[16px]">
+          <h3 className="m-0 relative text-xl font-medium font-roboto text-text-primary text-left mq450:text-base">
+            Property Details
+          </h3>
+          <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
+            <FormInput label="Property Address" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Address', 'loan')} />
+            <FormInput label="Property Type" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Nature', 'loan')} />
+            <FormInput label="Purchse Date" type='date' onChange={(e)=> handleInputChange(e, 'Amount', 'loan')} />
+            <FormInput label="Value" placeholder="Value" onChange={(e)=> {handleInputChange(e, 'Value', 'loan')}} />
+            <FormInput label="Property Documents" type='File' onChange={handleDocumentUpload} />
+          </div>
+        </div>)
+          }
+
+{selectedLoan === 'Business' && 
+          (<div className="self-stretch flex flex-col items-start justify-start gap-[16px]">
+          <h3 className="m-0 relative text-xl font-medium font-roboto text-text-primary text-left mq450:text-base">
+            Business Details
+          </h3>
+          <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
+            <FormInput label="Name" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Name', 'loan')} />
+            <FormInput label="Nature" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Nature', 'loan')} />
+            {/* <FormInput label="Age" placeholder="Value"  /> */}
+            <FormInput label="Pin Code" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Zip', 'loan')} />
+            <FormInput label="Net Profit" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Profit', 'loan')} />
+            {/* <FormInput label="Industry" placeholder="Value" /> */}
+            <FormInput label="Phone" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Phone', 'loan')} />
+            <FormInput label="Mail" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Mail', 'loan')} />
+            <FormInput label="PAN No" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Pan', 'loan')} />
+            <FormInput label="Udhyam" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Udhyam', 'loan')} />
+            <FormInput label="GST No" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Gst', 'loan')} />
+          </div>
+        </div>)
+          }
 
           <div className="self-stretch flex flex-col items-start justify-start gap-[16px]">
             <div className="self-stretch flex flex-row items-center justify-between gap-[20px] mq450:flex-wrap">
               <div className="flex flex-row items-center justify-center">
                 <a className="no-underline relative text-xl font-medium font-roboto text-text-primary text-left inline-block min-w-[108px] mq450:text-base">
-                  Nominee Details
+                  Guarantor Details
                 </a>
               </div>
             </div>
 
             <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
-              <FormInput label="Nominee Name" placeholder="Value" />
-              <FormInput label="Date of Birth" placeholder="Value" type="date" />
-              <FormInput label="Relation" placeholder="Value" />
-              <FormInput label="Phone No" placeholder="Value" />
-            </div>
-
-            <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
-              <FormInput label="PAN Card" placeholder="Value" className="max-w-[335px]" />
+              <FormInput label="Guarantor Name" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Name', 'guarantor')} />
+              <FormInput label="Phone No" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Phone', 'guarantor')} />
+              <FormInput label="Address" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Address', 'guarantor')} />
+              <FormInput label="Relation" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Relation', 'guarantor')} />
+              <FormInput label="PAN No" placeholder="Value"  onChange={(e)=> handleInputChange(e, 'Pan', 'guarantor')} />
             </div>
           </div>
         </section>
@@ -129,7 +253,7 @@ const LoanPage = ({ className = "" }) => {
             Cancel
           </div>
         </button>
-        <button className="cursor-pointer [border:none] py-4 px-9 bg-foundation-red-normal rounded flex flex-row items-center justify-center whitespace-nowrap hover:bg-mediumvioletred-100">
+        <button type="submit" className="cursor-pointer [border:none] py-4 px-9 bg-foundation-red-normal rounded flex flex-row items-center justify-center whitespace-nowrap hover:bg-mediumvioletred-100">
           <div className="relative text-base font-medium font-roboto text-white text-left inline-block min-w-[77px]">
             Apply Now
           </div>

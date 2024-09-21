@@ -59,6 +59,8 @@ import Repogen from './admin/assets/repo-gen.jsx';
 import RepoGen from './admin/pages/Repo-Gen/RepoGen.jsx';
 import { SchemeProvider } from './admin/pages/Scheme-Request/SchemeContext.jsx';
 import ApprovedLoans from './admin/pages/Loan-Info/ApprovedLoans.jsx';
+import { UserSocketProvider } from './user/context/UserSocketContext.jsx';
+import CustomerInfoPage from './admin/pages/Customer-mngmt/CustomerInfoPage.jsx';
 
 const RenderSocketProvider = ({ children }) => {
   const location = useLocation();
@@ -77,8 +79,18 @@ const RenderSocketProvider = ({ children }) => {
             </LoanInfoProvider>
           </SocketProvider>
         );
+        // case 'user':
+        //   return(
+        //     <UserSocketProvider>
+        //       {children}
+        //     </UserSocketProvider>
+        //   )
       default:
-        return children;  // No socket provider for unauthenticated routes
+        return(
+          <UserSocketProvider>
+            {children}
+          </UserSocketProvider>
+        )
     }
   }, [role, location.pathname]); // Recompute whenever role or path changes
 
@@ -95,8 +107,8 @@ const AppRouter = () => {
     <Routes>
     <Route path="/" element={<Landing/>}>
       <Route index element={<Home/>}/>
-      {/* <Route path="schemes" element={<PvtRtUserLogin component={Schemes}/>}/> */}
-      <Route path="schemes" element={<Schemes/>}/>
+      <Route path="schemes" element={<PvtRtUserLogin component={Schemes}/>}/>
+      {/* <Route path="schemes" element={<Schemes/>}/> */}
       <Route path="loans" element={<Loans/>}/>
       {/* <Route path="schemeApplication" element={<PvtRtUserLogin component={SchemePage}/>}/> */}
       <Route path="schemeApplication" element={<SchemePage/>}/>
@@ -175,6 +187,7 @@ const AppRouter = () => {
       <Route path="repogen" element={<RepoGen />}/>
       <Route path="notifications" element={<Notifications />} />
       <Route path="savingAccount/:userId" element={<ClientDetails />} />
+      <Route path="cusmgmt/:userId" element={<CustomerInfoPage />} />
       <Route path="loanRequest/:userId/:loanId" element={<LoanDetails />} />
       <Route path="scheme/:userId/:schemeId" element={<SchemeDetails />} />
       <Route path="schemeInfo/:userId/:schemeId" element={<SchemeDetails1 />} />

@@ -8,11 +8,16 @@ import { useLoanInfoContext } from './LoanInfoContext';
 
 function ApprovedLoans() {
     const { mergedData, selectedLoanType, setSelectedLoanType } = useLoanInfoContext();
-    const [ recovered, setRecovered ] = useState(false)
+    const [ recovered, setRecovered ] = useState(null)
+    const [ Loan, setLoan ] = useState("Property")
 
   const handleButtonClick = (loanType) => {
-    setSelectedLoanType(loanType);
+    setLoan(loanType);
   };
+
+  const filteredLoans = mergedData.filter(
+    (loan) => loan.Loan.Status !== 'Pending' && loan.Loan.Status !== 'Rejected' && loan.Loan.Type === Loan
+  );
 
   return (
     <div className="flex-1 flex flex-col items-start justify-start pt-[0.5rem] px-[0rem] pb-[0rem] box-border max-w-[calc(100%_-_344px)] text-[1rem] text-white mq850:h-auto mq850:max-w-full">
@@ -22,22 +27,22 @@ function ApprovedLoans() {
             {/* Loan type buttons */}
             <div className="flex-auto flex flex-row items-center justify-center text-[16px] font-normal gap-[0.5rem] w-full text-black">
               <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border text-[16px] font-normal gap-[0.5rem] w-full text-black">  
-                <button onClick={() => handleButtonClick('Property')} className={`navlink2 ${selectedLoanType === 'Property' ? 'active' : ''}`}>
+                <button onClick={() => handleButtonClick('Property')} className={`navlink2 ${Loan === 'Property' ? 'active' : ''}`}>
                   <Apartment /> Property Loan
                 </button>
               </div>
               <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border text-[16px] font-normal gap-[0.5rem] w-full text-black">
-                <button onClick={() => handleButtonClick('Instant')} className={`navlink2 ${selectedLoanType === 'Instant' ? 'active' : ''}`}>
+                <button onClick={() => handleButtonClick('Instant')} className={`navlink2 ${Loan === 'Instant' ? 'active' : ''}`}>
                   <Time /> Instant Loan
                 </button>
               </div>
               <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border text-[16px] font-normal gap-[0.5rem] w-full text-black">
-                <button onClick={() => handleButtonClick('Personal')} className={`navlink2 ${selectedLoanType === 'Personal' ? 'active' : ''}`}>
+                <button onClick={() => handleButtonClick('Personal')} className={`navlink2 ${Loan === 'Personal' ? 'active' : ''}`}>
                   <Hr /> Personal Loan
                 </button>
               </div>
               <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border text-[16px] font-normal gap-[0.5rem] w-full text-black">
-                <button onClick={() => handleButtonClick('Business')} className={`navlink2 ${selectedLoanType === 'Business' ? 'active' : ''}`}>
+                <button onClick={() => handleButtonClick('Business')} className={`navlink2 ${Loan === 'Business' ? 'active' : ''}`}>
                   <Briefcase /> Business Loan
                 </button>
               </div>
@@ -58,7 +63,7 @@ function ApprovedLoans() {
 
           {/* Display filtered and merged data */}
           <div className="w-full flex flex-row flex-wrap gap-[16px] items-center justify-between px-[16px] box-border">
-            {mergedData.map((account, index) => (
+            {filteredLoans.map((account, index) => (
               <LoanCard
                 key={index}
                 phoneno={account.User?.Number}

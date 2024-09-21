@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import useAxios from "../axiosSetup";
 import { getFullUrl } from "../utils";
+import axiosInstance from "../../../axios.utils";
 
 const LoanCard = ({
   className = "",
@@ -14,7 +15,8 @@ const LoanCard = ({
   address,
   amount,
   key1,
-  id
+  id,
+  loan
 }) => {
   const navigate = useNavigate();
   const axios = useAxios();
@@ -25,6 +27,20 @@ const LoanCard = ({
     };
   }, [propLeft, propRight]);
 
+  const approve = async (action) => {
+    try {
+      const response = await axiosInstance.put('admin/classic/Loan', {
+        "data" : {
+            "Status" : action, //[ "Active" , "Closed" , "Rejected" , "Overdue" ]
+            "Loan" : loan
+        }
+      })
+      console.log(response)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   
   const viewDetails = (key1, id) => {
     const userId = key1;
@@ -32,15 +48,6 @@ const LoanCard = ({
     navigate(`/admin/loanRequest/${userId}/${loanId}`);
   };
 
-  async function approve(){
-    try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/admin/user/account/requests/${key1}`);
-      const user = res.data.data;
-      console.log(user);
-    } catch (error) {
-      console.error(error);
-    }
-  }
   
 
   return (
@@ -95,12 +102,12 @@ const LoanCard = ({
             </div>
           </div>
           <div className="self-stretch flex flex-row items-start justify-start gap-[0.75rem] mq450:flex-wrap">
-            <button onClick={approve} className="cursor-pointer [border:none] py-[0.5rem] px-[2.562rem] bg-foundation-red-normal rounded flex flex-row items-start justify-start hover:bg-mediumvioletred-100">
+            <button onClick={()=>approve("Active")} className="cursor-pointer [border:none] py-[0.5rem] px-[2.562rem] bg-foundation-red-normal rounded flex flex-row items-start justify-start hover:bg-mediumvioletred-100">
               <div className="relative text-[1rem] capitalize font-medium font-roboto text-white text-left inline-block min-w-[3.75rem]">
                 Approve
               </div>
             </button>
-            <button className="cursor-pointer py-[0.375rem] pr-[3.25rem] pl-[3.312rem] bg-[transparent] rounded flex flex-row items-start justify-start border-[1px] border-solid border-foundation-red-normal hover:bg-mediumvioletred-200 hover:box-border hover:border-[1px] hover:border-solid hover:border-mediumvioletred-100">
+            <button onClick={()=>approve("Rejected")} className="cursor-pointer py-[0.375rem] pr-[3.25rem] pl-[3.312rem] bg-[transparent] rounded flex flex-row items-start justify-start border-[1px] border-solid border-foundation-red-normal hover:bg-mediumvioletred-200 hover:box-border hover:border-[1px] hover:border-solid hover:border-mediumvioletred-100">
               <div className="relative text-[1rem] capitalize font-medium font-roboto text-foundation-red-normal text-left inline-block min-w-[2.25rem]">
                 Deny
               </div>

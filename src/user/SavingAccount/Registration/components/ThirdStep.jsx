@@ -31,9 +31,11 @@ const ThirdStep = () => {
   const handleFileChange = async (event, setFile, field) => {
     const file = event.target.files[0];
     setFile(file);
+    const formData = new FormData();
+    formData.append('User-Docs', file);
     const Identifier = sessionStorage.getItem('Identifier')
     try {
-      const response = await axiosInstance.post(`client/classic/Docs?Identifier=${Identifier}&Field=${field}`, file)
+      const response = await axiosInstance.post(`client/classic/Docs?Identifier=${Identifier}&Field=${field}`, formData)
       console.log(response)
     } catch (error) {
       console.error(error)
@@ -158,7 +160,7 @@ const ThirdStep = () => {
             "Pan Card",
             "Enter Your Pan Number",
             userData['panNo'] || '',
-            (e)=>setUserData({...userData, "panNo": e.target.value}),
+            (e)=>{setUserData({...userData, "panNo": e.target.value}); setPanNumber(e.target.value)},
             panCardFile,
             setPanCardFile,
             panCardInputRef,
@@ -168,7 +170,7 @@ const ThirdStep = () => {
             "Aadhar Card",
             "Enter Your Aadhar Number",
             userData['aadharNo'] || '',
-            (e)=>setUserData({...userData, "aadharNo": e.target.value}),
+            (e)=>{setUserData({...userData, "aadharNo": e.target.value}); setAadharNumber(e.target.value)},
             aadharCardFile,
             setAadharCardFile,
             aadharCardInputRef,

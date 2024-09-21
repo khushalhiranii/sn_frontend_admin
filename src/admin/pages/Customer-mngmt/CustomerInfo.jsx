@@ -1,18 +1,15 @@
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import { getFullUrl } from "../utils";
+import { getFullUrl } from "../../utils"; 
 
-const Card1 = ({
+const CustomerInfo = ({
   className='',
   phoneno,
   fullname,
   address,
   profilePicture,
   key1,
-  id,
-  amount,
-  tenure,
-  plan
+  accountno
 }) => {
   const navigate = useNavigate();
   return (
@@ -23,14 +20,32 @@ const Card1 = ({
       <img
         className="w-[7.5rem] h-[7.5rem] absolute !m-[0] top-[1.5rem] left-[6.331rem] rounded-[50%] object-cover z-[1]"
         alt=""
-        src={getFullUrl(profilePicture)}
+        src={profilePicture ? getFullUrl(profilePicture) : ""}
       />
       <div className="self-stretch flex flex-row items-start justify-start py-[0rem] pr-[0.812rem] pl-[0.687rem]">
         <div className="flex-1 flex flex-col items-start justify-start gap-[1rem]">
           <div className="self-stretch flex flex-col items-start justify-start gap-[0.75rem]">
+          <div className="relative text-gray-100">
+              <span className="font-medium">
+                <span className="text-black1">Customer id :</span>
+                <span>{` `}</span>
+              </span>
+              <span>
+                <span>{key1}</span>
+              </span>
+            </div>
             <div className="relative">
               <span className="font-medium">{`Name : `}</span>
               <span className="text-gray-100">{fullname}</span>
+            </div>
+            <div className="relative text-gray-100">
+              <span className="font-medium">
+                <span className="text-black1">Account no :</span>
+                <span>{` `}</span>
+              </span>
+              <span>
+                <span>{accountno}</span>
+              </span>
             </div>
             <div className="relative text-gray-100">
               <span className="font-medium">
@@ -50,21 +65,9 @@ const Card1 = ({
                 <span>{address}</span>
               </span>
             </div>
-            <div className="relative inline-block min-w-[7.5rem]">
-              <span className="font-medium">Applied Scheme :</span>
-              <span> *****</span>
-            </div>
-            <div className="relative">
-              <span className="font-medium">Invested Amount :</span>
-              <span>{amount}</span>
-            </div>
-            <div className="relative">
-              <span className="font-medium">Tenure :</span>
-              <span>{tenure}</span>
-            </div>
           </div>
           <div
-            onClick={() => navigate(`/admin/schemeInfo/${key1}/${id}`)}
+            onClick={() => navigate(`/admin/cusmgmt/${key1}`)}
             className="self-stretch rounded flex flex-row items-start justify-center py-[0.375rem] px-[1.25rem] whitespace-nowrap text-[1rem] text-foundation-red-normal border-[1px] border-solid border-foundation-red-normal cursor-pointer hover:bg-foundation-red-normal hover:text-white transition-transform ease-in-out"
           >
             <div className="relative capitalize font-medium">
@@ -77,9 +80,9 @@ const Card1 = ({
   );
 };
 
-Card1.propTypes = {
+CustomerInfo.propTypes = {
   className: PropTypes.string,
   ellipse245: PropTypes.string,
 };
 
-export default Card1;
+export default CustomerInfo;

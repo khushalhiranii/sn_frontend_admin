@@ -17,7 +17,9 @@ function LoanDetails({ component: Component, label, type }) {
     navigate('/admin/loanInfo/ApprovedLoans')
   }
 
-  console.log(mergedData)
+  const filteredLoans = mergedData.filter(
+    (loan) => loan.Loan.Status !== 'Pending' && loan.Loan.Status !== 'Rejected' && loan.Loan.Type === type
+  );
 
   // Use mergedData directly from context
   return (
@@ -28,7 +30,7 @@ function LoanDetails({ component: Component, label, type }) {
         </div>
         <div className='flex flex-col gap-[8px]'>
           <div>{label}</div>
-          <div>{mergedData.length}</div> {/* Displaying count of filtered data */}
+          <div>{filteredLoans.length}</div> {/* Displaying count of filtered data */}
         </div>
       </div>
       <div className='flex flex-col gap-[8px] w-full'>

@@ -17,9 +17,9 @@ function Kycprocess() {
 
   // Function to merge data based on status
   const getMergedData = (status) => {
-    const usersArray = Object.values(users);
-    const userDataArray = Object.values(userData);
-    const accountArray = Object.values(accounts);
+    const usersArray = Array.isArray(users) ? users : Object.values(users);
+    const userDataArray = Array.isArray(userData) ? userData : Object.values(userData);
+    const accountArray = Array.isArray(accounts) ? accounts : Object.values(accounts);
 
     // Filter users based on the given status and additional conditions
     const filteredUsers = usersArray.filter((user) => {

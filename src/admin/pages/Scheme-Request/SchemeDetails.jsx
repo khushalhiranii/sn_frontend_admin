@@ -132,7 +132,7 @@ function SchemeDetails() {
             </div>
         </div>
         <div className="flex flex-col items-start justify-start gap-2 w-full">
-            <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">Employment ID's Details</div>
+          <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">Employment ID's Details</div>
             <div className="flex flex-row w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
             <InputComponent label={"Employment Type"} value={data.Employment}/>
             <InputComponent label={"Company Name"}/>
@@ -179,8 +179,8 @@ function SchemeDetails() {
         </div>
         
         <div className="flex flex-row w-full items-end justify-end gap-6 text-[1rem] text-foundation-red-normal font-roboto">
-        <OutlinedButton label={"Cancel"} onClick={approve("Rejected")} />
-          <RedButton label={"Approve"} onClick={approve("Active")}/>
+        <OutlinedButton label={"Cancel"} onClick={()=>approve("Rejected")} />
+          <RedButton label={"Approve"} onClick={()=>approve("Active")}/>
         </div>
       </div>
     </div>

@@ -24,20 +24,20 @@ const DepositProvider = ({ children }) => {
     }
   };
 
-  const schemes = [
-    { id: 1, type: 'Weekly Deposit', description: 'Deposit a fixed amount weekly.' },
-    { id: 2, type: 'Recurring Deposit', description: 'Deposit a fixed sum at regular intervals.' },
-    { id: 3, type: 'Monthly Deposit', description: 'Deposit a fixed amount monthly.' },
-    { id: 4, type: 'Fixed Deposit', description: 'One-time lump sum investment for a fixed tenure.' }
-  ];
+  // const schemes = [
+  //   { id: 1, type: 'Weekly Deposit', description: 'Deposit a fixed amount weekly.' },
+  //   { id: 2, type: 'Recurring Deposit', description: 'Deposit a fixed sum at regular intervals.' },
+  //   { id: 3, type: 'Monthly Deposit', description: 'Deposit a fixed amount monthly.' },
+  //   { id: 4, type: 'Fixed Deposit', description: 'One-time lump sum investment for a fixed tenure.' }
+  // ];
 
-  const applyForScheme = (scheme) => {
-    setSelectedScheme(scheme);
-    alert(`You have applied for the ${scheme.type}`);
-  };
+  // const applyForScheme = (scheme) => {
+  //   setSelectedScheme(scheme);
+  //   alert(`You have applied for the ${scheme.type}`);
+  // };
 
   return (
-    <DepositContext.Provider value={{ schemes, selectedScheme, setSelectedScheme, applyForScheme }}>
+    <DepositContext.Provider value={{ selectedScheme, setSelectedScheme }}>
       {children}
     </DepositContext.Provider>
   );

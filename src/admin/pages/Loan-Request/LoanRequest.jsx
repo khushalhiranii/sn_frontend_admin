@@ -88,6 +88,7 @@ function LoanRequest() {
                 key1={account.Identifier}
                 id={account.Loan}
                 amount={account.Amount}
+                loan={account.Loan}
                 {...account}
               />
             ))}

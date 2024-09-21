@@ -28,20 +28,20 @@ function Schemes() {
       <NavLink 
         to="/schemeApplication" 
         className="no-underline text-black" 
-        onClick={() => setSelectedScheme('Weekly Deposit')}
+        onClick={() => setSelectedScheme('Weekly')}
       >
         {imgWithLabel("/wd.png", "Weekly Deposit")}
       </NavLink>
 
-        <NavLink to="/schemeApplication" className="no-underline text-black" onClick={() => setSelectedScheme('Recurring Deposit')}>
+        <NavLink to="/schemeApplication" className="no-underline text-black" onClick={() => setSelectedScheme('Recurring')}>
           {imgWithLabel("/rd.png", "Recurring Deposit")}
         </NavLink>
-        <NavLink to="/schemeApplication" className="no-underline text-black" onClick={() => setSelectedScheme('Monthly Deposit')}>
+        <NavLink to="/schemeApplication" className="no-underline text-black" onClick={() => setSelectedScheme('Monthly')}>
           {imgWithLabel("/monthly.png", "Monthly Deposit")}
         </NavLink>
         </div>
         <div className='flex flex-row p-[64px] justify-center'>
-        <NavLink to="/schemeApplication" className="no-underline text-black"  onClick={() => setSelectedScheme('Fixed Deposit')}>
+        <NavLink to="/schemeApplication" className="no-underline text-black"  onClick={() => setSelectedScheme('Fixed')}>
           {imgWithLabel("/fixedDeposit.png", "Fixed Deposit")}
         </NavLink>
         </div>

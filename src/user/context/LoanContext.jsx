@@ -27,11 +27,11 @@ const LoanProvider = ({ children }) => {
   };
 
   const loans = [
-    { id: 1, type: 'Personal Loan' },
-    { id: 2, type: 'Instant Loan' },
-    { id: 3, type: 'Property Loan' },
-    { id: 4, type: 'Business Loan' },
-    { id: 5, type: 'Micro Finance Loan' }
+    { id: 1, type: 'Personal' },
+    { id: 2, type: 'Instant' },
+    { id: 3, type: 'Property' },
+    { id: 4, type: 'Business' },
+    { id: 5, type: 'Micro Finance' }
   ];
 
   const applyForLoan = (loan) => {

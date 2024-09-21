@@ -33,18 +33,18 @@ function Loans() {
         {imgWithLabel("/PL.png", "Personal Loan")}
       </NavLink>
 
-        <NavLink to="/loanApplication" className="no-underline text-black" onClick={() => setSelectedLoan('Instant Loan')}>
+        <NavLink to="/loanApplication" className="no-underline text-black" onClick={() => setSelectedLoan('Instant')}>
           {imgWithLabel("/IL.png", "Instant Loan")}
         </NavLink>
-        <NavLink to="/loanApplication" className="no-underline text-black" onClick={() => setSelectedLoan('Property Loan')}>
+        <NavLink to="/loanApplication" className="no-underline text-black" onClick={() => setSelectedLoan('Property')}>
           {imgWithLabel("/PrL.png", "Property Loan")}
         </NavLink>
         </div>
         <div className='flex flex-row p-[64px] justify-evenly mq1275:flex-col mq1275:gap-[16px]'>
-        <NavLink to="/loanApplication" className="no-underline text-black"  onClick={() => setSelectedLoan('Business Loan')}>
+        <NavLink to="/loanApplication" className="no-underline text-black"  onClick={() => setSelectedLoan('Business')}>
           {imgWithLabel("/BL.png", "Business Loan")}
         </NavLink>
-        <NavLink to="/loanApplication" className="no-underline text-black"  onClick={() => setSelectedLoan('Micro Finance Loan')}>
+        <NavLink to="/loanApplication" className="no-underline text-black"  onClick={() => setSelectedLoan('Micro Finance')}>
           {imgWithLabel("/MFL.png", "Micro Finance Loan")}
         </NavLink>
         </div>

@@ -45,7 +45,7 @@ export const Inputbar = () => {
           <InputReg label={"Full Name"} id={"fullName"} type={"text"} placeholder={"Name"} onChange={(e) => setName(e.target.value)} />
           <InputReg label={"E-mail"} id={"email"} type={"email"} placeholder={"E-mail"} onChange={(e) => setEmail(e.target.value)} />
           <InputReg label={"Date of Birth"} id={"dob"} type={"date"} placeholder={"DD-MM-YYYY"} onChange={(e) => setDob(e.target.value)} />
-          <InputReg label={"Phone No"} id={"phone"} type={"tel"} placeholder={"Number"} onChange={(e) => setPhone(e.target.value)} />
+          <InputReg label={"Phone No"} id={"phoneno"} type={"tel"} placeholder={"Number"} onChange={(e) => setPhone(e.target.value)} />
         </div>
       </div>
       <div className="self-stretch flex justify-end">
