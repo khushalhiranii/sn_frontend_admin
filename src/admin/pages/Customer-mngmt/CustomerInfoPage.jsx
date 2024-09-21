@@ -109,8 +109,8 @@ function CustomerInfoPage() {
         <div className="flex flex-col items-start justify-start gap-2 w-full">
           <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">Government ID Details</div>
           <div className="flex flex-row w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
-            <InputComponent label={"Aadhaar"} value={data.Aadhaar} />
-            <InputComponent label={"PAN"} value={data.PAN} />
+            <InputComponent label={"Aadhaar"} value={data.Aadhar_Number} />
+            <InputComponent label={"PAN"} value={data.Pan_Number} />
             <InputComponent label={"Voter ID"} />
           </div>
         </div>

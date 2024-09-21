@@ -219,7 +219,7 @@ function ClientDetails() {
         <div className="self-stretch rounded-lg flex flex-row flex-wrap items-start justify-between min-h-[33.75rem] max-w-full">
       <div className="w-[64.125rem] flex flex-row items-start justify-between py-[0rem] px-[1rem] box-border max-w-full gap-[1.25rem] mq975:flex-wrap">
         <div
-          className="h-[19rem] w-[20.375rem] flex flex-col items-start justify-start py-[1rem] px-[0.5rem] box-border gap-[0.5rem] max-w-full text-left text-[1.25rem] text-darkslategray-100 font-roboto"
+          className="h-[17rem] w-[20.375rem] flex flex-col items-start justify-start py-[1rem] px-[0.5rem] box-border gap-[0.5rem] max-w-full text-left text-[1.25rem] text-darkslategray-100 font-roboto"
         >
           <div className="self-stretch flex flex-row items-center justify-between p-[0.25rem] gap-[1.25rem]">
             <div className="relative tracking-[0.05em] leading-[1.5rem] font-medium inline-block min-w-[5.625rem] mq450:text-[1rem]">
@@ -238,9 +238,9 @@ function ClientDetails() {
                 {data?.Pan_Number || ''}
               </div>
             </div>
-            <div className="self-stretch relative flex-1 rounded overflow-hidden">
+            <div className="relative flex flex-row w-full justify-center border rounded box-border overflow-hidden">
               <img
-                className="w-full h-full object-contain"
+                className="w-full h-[170px] object-contain"
                 loading="lazy"
                 alt=""
                 src={getFullUrl(data?.Pan) || ''}
@@ -267,9 +267,9 @@ function ClientDetails() {
                 {data?.Aadhar_Number || ''}
               </div>
             </div>
-            <div className="self-stretch relative flex-1 rounded overflow-hidden">
+            <div className="relative flex flex-row w-full h-full justify-center border rounded box-border overflow-hidden">
               <img
-                className="w-full h-full object-contain"
+                className="w-full h-[170px] object-contain"
                 loading="lazy"
                 alt=""
                 src={getFullUrl(data?.Aadhar) || ''}
