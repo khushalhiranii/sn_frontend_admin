@@ -261,7 +261,7 @@ const handleSelectChange = (e) => {
               <input
                 type="checkbox"
                 value={product.Product}
-                checked={data?.loanInfo?.Products?.includes(product.Product)}
+                checked={selected.includes(product.Product)}
                 onChange={handleSelectChange}
               />
               Amount: {product.Amount}, 
