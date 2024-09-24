@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import useAxios from "../axiosSetup";
@@ -16,7 +16,7 @@ const LoanCard = ({
   amount,
   key1,
   id,
-  loan
+  ...props
 }) => {
   const navigate = useNavigate();
   const axios = useAxios();
@@ -61,13 +61,29 @@ const LoanCard = ({
     navigate(`/admin/loanRequest/${userId}/${loanId}`);
   };
 
+  const [isLoaded, setIsLoaded] = useState(false);
+  useEffect(() => {
+    // Simulate loading effect after a brief delay
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 100); // Adjust delay as needed
+    return () => clearTimeout(timer);
+  }, []);
+
   
 
   return (
     <div
       className={`w-[20.25rem] rounded-lg bg-white box-border flex flex-col items-start justify-start pt-[0rem] px-[0rem] pb-[1rem] relative gap-[5rem] max-w-full text-left text-[0.875rem] text-black1 font-roboto border-[1px] border-solid border-foundation-white-normal-hover mq450:gap-[2.5rem] ${className}`}
     >
-      <div className="self-stretch h-[5rem] relative rounded-t-lg rounded-b-none bg-off-white" />
+      <div className="self-stretch h-[5rem] relative rounded-t-lg rounded-b-none bg-off-white">
+        <div className={`relative text-white px-4 py-1 my-2 transition-all duration-500 ease-out transform ${
+          isLoaded ? 'translate-x-0 w-[35%]' : '-translate-x-full w-0'
+        } ${props.Status === "Pending" ? "bg-red-600" : props.Status === "Accepted" ? "bg-green-400" : "bg-blue-500"}`}>
+          <span className="absolute inset-y-0 left-0 w-2 h-full bg-current"></span> {/* Tail effect */}
+          {props.Status}
+        </div>
+      </div>
       <img
         className="w-[7.5rem] h-[7.5rem] absolute !m-[0] top-[1.5rem] left-[6.331rem] rounded-[50%] object-cover z-[1]"
         loading="lazy"
