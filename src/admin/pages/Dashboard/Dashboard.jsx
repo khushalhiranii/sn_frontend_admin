@@ -11,7 +11,7 @@ import LoanInfoCard from '../../components/LoanInfoCard';
 function Dashboard() {
   // Set the default state to 'Property Loan'
   const [selectedLoanType, setSelectedLoanType] = useState('Property'); // Default type
-  const { users, userData, loans, schemes, accounts } = useAdminSocket();
+  const { users, userData, loans, schemes, accounts, requests } = useAdminSocket();
 
   const handleButtonClick = (loanType) => {
     setSelectedLoanType(loanType);
@@ -19,7 +19,7 @@ function Dashboard() {
 
   const usersArray = Object.values(users);
   const userDataArray = Object.values(userData);
-  const loansArray = Object.values(loans);
+  const loansArray = Object.values(requests);
   const schemesArray = Object.values(schemes);
   const accountsArray = Object.values(accounts);
 
