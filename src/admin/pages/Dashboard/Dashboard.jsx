@@ -24,7 +24,7 @@ function Dashboard() {
   const accountsArray = Object.values(accounts);
 
   const filteredLoansLength = loansArray.filter(
-    (loan) => loan.Status === 'Pending').length;
+    (loan) => loan.Status === 'Pending' || loan.Status ==='Offered' ).length;
 
   const filteredDueLoansLength = loansArray.filter(
     (loan) => loan.Status === 'Active').length;

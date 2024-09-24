@@ -21,9 +21,15 @@ function LoanRequest() {
     const requestsArray = Object.values(requests);
 
     // Filter loans by status and selectedLoanType
-    const filteredLoans = requestsArray.filter(
-      (loan) => loan.Status != 'Active' && loan.Status != 'Rejected' && loan.Type === selectedLoanType
-    );
+    const filteredLoans = requestsArray.filter((loan) => {
+      // If "Business Loan" is selected, include both "Self Business" and "Joint Business"
+      if (selectedLoanType === 'Business') {
+        return loan.Status !== 'Active' && loan.Status !== 'Rejected' && (loan.Type === 'Self Business' || loan.Type === 'Joint Business');
+      }
+
+      // For other loan types, just match with selectedLoanType
+      return loan.Status !== 'Active' && loan.Status !== 'Rejected' && loan.Type === selectedLoanType;
+    });
 
     // Merge the data based on the "Identifier"
     const mergedData = filteredLoans.map((loan) => {
@@ -72,7 +78,7 @@ function LoanRequest() {
                 </button>
               </div>
               <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border text-[16px] font-normal gap-[0.5rem] w-full text-black">
-                <button onClick={() => handleButtonClick('Self Business')} className={`navlink2 ${selectedLoanType === 'Self Business' ? 'active' : ''}`}>
+                <button onClick={() => handleButtonClick('Business')} className={`navlink2 ${selectedLoanType === 'Self Business' ? 'active' : ''}`}>
                   <Briefcase /> Business Loan
                 </button>
               </div>

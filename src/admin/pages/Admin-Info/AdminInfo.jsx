@@ -38,7 +38,6 @@ function AdminInfo() {
 
     return (
         <div className='flex-1 flex flex-col py-4  max-w-[calc(100%_-_344px)] gap-[16px]'>
-        
             <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">
                 Create Loan Product
             </div>
