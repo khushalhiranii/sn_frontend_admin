@@ -29,12 +29,6 @@ const handleSelectChange = (e) => {
   
 };
 
-  const appendApprovedDetails = (key, value) => {
-    setApprovedDetails({
-      ...approvedDetails,
-      [key]: value,
-    });
-  };
 
   const OfferLoan = async () => {
     try {
@@ -55,19 +49,30 @@ const handleSelectChange = (e) => {
     }
   }
 
-  const approve = async (action) => {
+  const deny = async () => {
     try {
-      const response = await axiosInstance.put('admin/classic/Loan', {
+      const response = await axiosInstance.put('admin/classic/Reject', {
         "data" : {
-            "Status" : action, //[ "Active" , "Closed" , "Rejected" , "Overdue" ]
-            "Loan" : loanId
+            "Request":id
         }
       })
       console.log(response)
-      alert("Loan Approved")
-      navigate('/admin/loanRequest')
     } catch (error) {
       console.error(error)
+    }
+  }
+
+  const approve = async () => {
+    try {
+      const response = await axiosInstance.post('admin/classic/Create-Loan', {
+        "data" : {
+            "Request":id
+        }
+      })
+      console.log(response)
+    } catch (error) {
+      console.error(error)
+      alert("Customer didn't accept the offer")
     }
   }
 
@@ -307,7 +312,7 @@ const handleSelectChange = (e) => {
         <div className="flex flex-row w-full items-end justify-end gap-6 text-[1rem] text-foundation-red-normal font-roboto">
         <OutlinedButton label="Cancel" onClick={()=>navigate('/admin/loanRequest')} />
         
-          <RedButton label="Approve" onClick={()=>approve("Active")} />
+          <RedButton label="Approve" onClick={()=>approve()} />
         </div>
       </div>
     </div>
