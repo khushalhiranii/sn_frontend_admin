@@ -18,7 +18,7 @@ function OpenAcc() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false); // Stop loading after 1 second
-    }, 1000);
+    }, 2000);
 
     return () => clearTimeout(timer); // Cleanup the timer
   }, []);

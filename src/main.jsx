@@ -61,6 +61,7 @@ import { SchemeProvider } from './admin/pages/Scheme-Request/SchemeContext.jsx';
 import ApprovedLoans from './admin/pages/Loan-Info/ApprovedLoans.jsx';
 import { UserSocketProvider } from './user/context/UserSocketContext.jsx';
 import CustomerInfoPage from './admin/pages/Customer-mngmt/CustomerInfoPage.jsx';
+import AdminInfo from './admin/pages/Admin-Info/AdminInfo.jsx';
 
 const RenderSocketProvider = ({ children }) => {
   const location = useLocation();
@@ -192,6 +193,7 @@ const AppRouter = () => {
       <Route path="scheme/:userId/:schemeId" element={<SchemeDetails />} />
       <Route path="schemeInfo/:userId/:schemeId" element={<SchemeDetails1 />} />
       <Route path='loanInfo/ApprovedLoans' element={<ApprovedLoans/>} />
+      <Route path='AdminInfo' element={<AdminInfo/>} />
       <Route path="*" element={<Navigate to="/admin" replace />} />
     </Route>
     </Routes>

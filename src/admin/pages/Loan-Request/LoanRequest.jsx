@@ -8,7 +8,7 @@ import LoanCard from '../../components/LoanCard';
 
 function LoanRequest() {
   const [selectedLoanType, setSelectedLoanType] = useState('Property'); // Default type
-  const { users, userData, loans } = useAdminSocket();
+  const { users, userData, loans, requests } = useAdminSocket();
 
   const handleButtonClick = (loanType) => {
     setSelectedLoanType(loanType);
@@ -18,10 +18,11 @@ function LoanRequest() {
     const usersArray = Object.values(users);
     const userDataArray = Object.values(userData);
     const loansArray = Object.values(loans);
+    const requestsArray = Object.values(requests);
 
     // Filter loans by status and selectedLoanType
-    const filteredLoans = loansArray.filter(
-      (loan) => loan.Status === 'Pending' && loan.Status != 'Rejected' && loan.Type === selectedLoanType
+    const filteredLoans = requestsArray.filter(
+      (loan) => loan.Status != 'Active' && loan.Status != 'Rejected' && loan.Type === selectedLoanType
     );
 
     // Merge the data based on the "Identifier"
@@ -46,6 +47,7 @@ function LoanRequest() {
 
   // Get filtered and merged data
   const mergedAccounts = getMergedData();
+  console.log(mergedAccounts)
 
   return (
     <div className="flex-1 flex flex-col items-start justify-start pt-[0.5rem] px-[0rem] pb-[0rem] box-border max-w-[calc(100%_-_344px)] text-[1rem] text-white mq850:h-auto mq850:max-w-full">
@@ -70,7 +72,7 @@ function LoanRequest() {
                 </button>
               </div>
               <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border text-[16px] font-normal gap-[0.5rem] w-full text-black">
-                <button onClick={() => handleButtonClick('Business')} className={`navlink2 ${selectedLoanType === 'Business' ? 'active' : ''}`}>
+                <button onClick={() => handleButtonClick('Self Business')} className={`navlink2 ${selectedLoanType === 'Self Business' ? 'active' : ''}`}>
                   <Briefcase /> Business Loan
                 </button>
               </div>
@@ -86,9 +88,9 @@ function LoanRequest() {
                 address={account.Address}
                 profilePicture={account.Photo}
                 key1={account.Identifier}
-                id={account.Loan}
+                id={account.Request}
                 amount={account.Amount}
-                loan={account.Loan}
+                loan={account?.Request}
                 {...account}
               />
             ))}

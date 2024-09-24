@@ -10,9 +10,24 @@ import axiosInstance from '../../../../axios.utils';
 
 function LoanDetails() {
   const { userId, loanId } = useParams(); // Get the userId from the URL
-  const { users, userData, loans, accounts } = useAdminSocket();
+  const { users, userData, accounts, requests, products } = useAdminSocket();
   const [approvedDetails, setApprovedDetails] = useState({"Loan": loanId});
   const navigate = useNavigate();
+  const [selected, setSelected] = useState([]);
+  const productsArray = Object.values(products);
+  console.log(productsArray)
+
+// Handle checkbox selection
+const handleSelectChange = (e) => {
+  const value = e.target.value;
+
+  setSelected((prevSelected) =>
+    prevSelected.includes(value)
+      ? prevSelected.filter((item) => item !== value) // Deselect if already selected
+      : [...prevSelected, value] // Select if not already selected
+  );
+  
+};
 
   const appendApprovedDetails = (key, value) => {
     setApprovedDetails({
@@ -24,8 +39,12 @@ function LoanDetails() {
   const OfferLoan = async () => {
     try {
       console.log(approvedDetails)
-      const response = await axiosInstance.put('/admin/classic/Loan/Details',{
-        "data": approvedDetails
+      console.log(selected)
+      const response = await axiosInstance.put('/admin/classic/Offers',{
+        "data" : {
+        "Request": loanId ,
+        "Products": selected
+    }
       })
       if(response.status == 200){
         alert("Loan Offered")
@@ -60,7 +79,7 @@ function LoanDetails() {
   const getMergedData = () => {
     const usersArray = Object.values(users);
     const userDataArray = Object.values(userData);
-    const loansArray = Object.values(loans);
+    const requestsArray = Object.values(requests);
     const accountsArray = Object.values(accounts);
 
     console.log(usersArray)
@@ -71,7 +90,7 @@ function LoanDetails() {
     // Find the user and userData by userId
     const filteredUser = usersArray.find((user) => user.Identifier === userId);
     const filteredUserData = userDataArray.find((data) => data.Identifier === userId);
-    const filteredLoanData = loansArray.find((loan)=> loan.Identifier === userId && loan.Loan === loanId)
+    const filteredLoanData = requestsArray.find((loan)=> loan.Identifier === userId && loan.Request === loanId)
     const filteredAccountData = accountsArray.find((account) => account.Identifier === userId);
     // Combine the data if both are available
     const mergedData = filteredUser && filteredUserData && filteredLoanData ? {
@@ -228,46 +247,28 @@ function LoanDetails() {
 
 <div className="flex flex-col items-start justify-start gap-2 w-full">
       <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">
-        Approved Loan Details
+        Offer Products
       </div>
-
-      <div className="flex flex-row flex-wrap w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
-        {/* Input Components for Amount, Interest Rate, and Tenure */}
-        <InputComponent
-          label={"Amount"}
-          value={approvedDetails?.Amount || ''}
-          onChange={(e) => appendApprovedDetails('Amount', e.target.value)}
-        />
-
-        <InputComponent
-          label={"Interest Rate"}
-          value={approvedDetails?.Interest || ''}
-          onChange={(e) => appendApprovedDetails('Interest', e.target.value)}
-        />
-
-        <InputComponent
-          label={"Tenure"}
-          value={approvedDetails?.Tenure || ''}
-          onChange={(e) => appendApprovedDetails('Tenure', e.target.value)}
-        />
-
-        {/* Dropdown for Loan Type */}
-        <div className="flex flex-col w-[333px] box-border items-start justify-normal p-1 gap-2">
-          <div className="tracking-tight text-[14px] leading-[150%] font-medium min-w-[6.438rem]">
-            Interest Type
+      <div>
+        {productsArray.map((product) => (
+          <div key={product.Product}>
+            <label className="flex items-center gap-2 cursor-pointer text-black hover:bg-blue-100 p-2 rounded">
+              <input
+                type="checkbox"
+                value={product.Product}
+                checked={selected.includes(product.Product)}
+                onChange={handleSelectChange}
+              />
+              Amount: {product.Amount}, 
+              Emi: {product.Emi}, 
+              Interest: {product.Interest}, 
+              Mode: {product.Mode}, 
+              Product: {product.Product}, 
+              Tenure: {product.Tenure}, 
+              Type: {product.Type}
+            </label>
           </div>
-
-          <select
-            className="w-full box-border outline-none text-[1rem] placeholder:text-black1 font-medium border-[#E3E3E3] rounded-[4px] border-[1px] border-solid p-[12px] bg-white"
-            value={approvedDetails?.LoanType || ''}
-            onChange={(e) => appendApprovedDetails('LoanType', e.target.value)}
-          >
-            <option value="" disabled>Select Option</option>
-            <option value="Reducing">Reducing</option>
-            <option value="Flat">Flat</option>
-          </select>
-        </div>
-        
+        ))}
       </div>
       <div className='flex flex-row w-full items-end justify-end'>
         <RedButton label="Offer a Loan" onClick={()=>OfferLoan()} />

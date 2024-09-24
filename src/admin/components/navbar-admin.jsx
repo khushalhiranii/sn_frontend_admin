@@ -36,7 +36,7 @@ const NavbarAdmin = () => {
   const { logout } = useAuth();
 
   return (
-    <div className="flex flex-col w-[20%] h-[944px] border-solid border-[#E6E6E6] border-r-[1px] !sticky top-16 left-0 bg-white items-start justify-between pb-12 py-[32px] pl-16 gap-[16px] text-left text-[14px] font-medium text-black font-roboto">
+    <div className="flex flex-col w-[20%] border-solid border-[#E6E6E6] border-r-[1px] !sticky top-16 left-0 bg-white items-start justify-between pb-12 py-[16px] pl-16 gap-[16px] text-left text-[14px] font-medium text-black font-roboto">
       <div className="flex flex-col items-start justify-start w-[110%] gap-y-[16px] text-left text-[1.125rem] text-black font-roboto">
         <NavLinkItem to="/admin/dashboard" icon={IconHome} label="Dashboard" />
         <NavLinkItem to="/admin/loanRequest" icon={Loan} label="Loan Request" />
@@ -48,7 +48,7 @@ const NavbarAdmin = () => {
         <NavLinkItem to="/admin/agmgmt" icon={Agmng} label="Agent Management" />
         <NavLinkItem to="/admin/repogen" icon={Repogen} label="Report Generation" />
       </div>
-      <div className="flex flex-col items-start justify-start w-[110%] gap-[16px] text-left text-[1.125rem] text-black font-roboto">
+      <div className="flex flex-col items-start justify-start w-[110%] text-left text-[1.125rem] text-black font-roboto">
         <NavLinkItem to="/admin" icon={Signout} label="Sign Out" onClick={()=> sessionStorage.clear()} />
       </div>
     </div>

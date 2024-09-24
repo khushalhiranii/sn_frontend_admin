@@ -103,7 +103,7 @@ function Kycprocess() {
               />
             </div>
           </div>
-          <div className="w-full flex flex-row items-center justify-between px-[16px] box-border">
+          <div className="w-full flex flex-wrap gap-[16px] items-center justify-between px-[16px] box-border">
             {mergedAccounts.map((account, index) => (
               <SavingCard
                 key={index}

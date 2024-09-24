@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom"; // Assuming you are using React Route
 
 const Layout = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col  min-h-screen">
       <Header />
       <div className="flex flex-row gap-[16px] pr-[48px] font-roboto">
         <NavbarAdmin/>

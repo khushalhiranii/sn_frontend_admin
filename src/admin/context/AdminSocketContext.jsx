@@ -12,6 +12,8 @@ const initialState = {
   loans: {},
   schemes: {},
   notifications: {},
+  products: {},
+  requests:{}
 };
 
 const socketReducer = (state, action) => {
@@ -30,6 +32,10 @@ const socketReducer = (state, action) => {
       return { ...state, schemes: action.payload };
     case 'SET_NOTIFICATIONS':
       return { ...state, notifications: action.payload };
+    case 'SET_PRODUCTS':
+      return { ...state, products: action.payload };
+    case 'SET_REQUESTS':
+      return { ...state, requests: action.payload };
     default:
       return state;
   }
@@ -52,6 +58,8 @@ export const SocketProvider = ({ children }) => {
   const handleLoansEvent = useCallback((data) => dispatch({ type: 'SET_LOANS', payload: data.data.details.loans }), []);
   const handleSchemesEvent = useCallback((data) => dispatch({ type: 'SET_SCHEMES', payload: data.data.details.schemes }), []);
   const handleNotificationsEvent = useCallback((data) => dispatch({ type: 'SET_NOTIFICATIONS', payload: data.data.details.notifications }), []);
+  const handleProductsEvent = useCallback((data) => dispatch({ type: 'SET_PRODUCTS', payload: data.data.details.products }), []);
+  const handleLoanRequestsEvent = useCallback((data) => dispatch({ type: 'SET_REQUESTS', payload: data.data.details.request }), []);
 
   useEffect(() => {
     // Attach event listeners
@@ -61,6 +69,8 @@ export const SocketProvider = ({ children }) => {
     socket.on('7712D5ECDA9F00F842E470D02D381F9A', handleLoansEvent);
     socket.on('B23CD2AE771A705F2F5EF60173743B5B', handleSchemesEvent);
     socket.on('09BAE709245B6148A2EC9215735DAE33', handleNotificationsEvent);
+    socket.on('7712D5EQDA9F00F842E470D02D381F9P', handleProductsEvent);
+    socket.on('7712D5EQDA9F00F842E470D02D381F9R', handleLoanRequestsEvent)
 
     // Cleanup event listeners when the component unmounts
     // return () => {
