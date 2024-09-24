@@ -20,13 +20,11 @@ function LoanDetails() {
 // Handle checkbox selection
 const handleSelectChange = (e) => {
   const value = e.target.value;
-
   setSelected((prevSelected) =>
     prevSelected.includes(value)
       ? prevSelected.filter((item) => item !== value) // Deselect if already selected
       : [...prevSelected, value] // Select if not already selected
   );
-  
 };
 
 
@@ -147,6 +145,12 @@ const handleSelectChange = (e) => {
   //   }
   // }
 
+  useEffect(() => {
+    if (data?.loanInfo?.Products) {
+      setSelected(data.loanInfo.Products); // Set the initial selected state to Products from loanInfo
+    }
+  }, []);
+
   
 
   if (!data) {
@@ -255,7 +259,7 @@ const handleSelectChange = (e) => {
         Offer Products
       </div>
       <div>
-        {productsArray.map((product) => (
+      {productsArray.map((product) => (
           <div key={product.Product}>
             <label className="flex items-center gap-2 cursor-pointer text-black hover:bg-blue-100 p-2 rounded">
               <input
@@ -265,7 +269,7 @@ const handleSelectChange = (e) => {
                 onChange={handleSelectChange}
               />
               Amount: {product.Amount}, 
-              Emi: {product.Emi}, 
+              EMI: {product.Emi}, 
               Interest: {product.Interest}, 
               Mode: {product.Mode}, 
               Product: {product.Product}, 
