@@ -4,6 +4,7 @@ import { useDepositContext } from '../context/SchemeContext';
 import FormInput from '../DesignSystem/FormInput';
 import { useUserSocket } from '../context/UserSocketContext';
 import axiosInstance from '../../../axios.utils';
+import Loader from '../../LoadingIndicator/Loader';
 
 const SchemePage = ({ className = "" }) => {
   const { selectedScheme } = useDepositContext();
@@ -75,7 +76,7 @@ const SchemePage = ({ className = "" }) => {
   
   if(!user || !account){
     return(
-      <div>Loading..</div>
+      <Loader/>
     )
   }
 

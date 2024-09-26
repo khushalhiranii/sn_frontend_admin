@@ -11,45 +11,40 @@ export const Inputbar = () => {
   const [dob, setDob] = useState('');
   const [phoneno, setPhone] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // loading state
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      // Call sendUserData function from context
       await sendUserData(name, email, dob, phoneno);
       requestOTP();
-      navigate('/register/otp'); // Proceed to OTP verification step
+      navigate('/register/otp');
     } catch (error) {
-      console.error('Failed to send user data:', error.message);
       setError('User already exists');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className='h-[896px] flex flex-col w-full'>
-      <div className="flex flex-col w-full items-start justify-start flex-grow gap-[2rem] mq750:gap-[1rem]">
-        <div className="flex flex-row items-center justify-center gap-[1.5rem] mq450:flex-wrap">
-          <img
-            className="h-[4rem] w-[4rem] relative rounded-981xl object-cover"
-            loading="lazy"
-            alt=""
-            src="/sn.svg"
-          />
-          <div className="m-0 relative text-[32px] font-semibold mq450:text-[1.188rem] mq1050:text-[1.625rem]">
-            Registration
-          </div>
+    <div className='h-[896px] flex flex-col justify-between w-full'>
+      <div className="flex flex-col w-full gap-[2rem]">
+        <div className="flex flex-row items-center justify-start gap-[1.5rem]">
+          <img className="h-[4rem] w-[4rem]" alt="" src="/sn.svg" />
+          <div className="relative text-[32px] font-semibold">Registration</div>
         </div>
-        {error && <div className="text-red-700 text-mid">{error}</div>}
-        <div className="self-stretch flex flex-col items-start justify-start gap-6 md:gap-4">
-          <InputReg label={"Full Name"} id={"fullName"} type={"text"} placeholder={"Name"} onChange={(e) => setName(e.target.value)} />
-          <InputReg label={"E-mail"} id={"email"} type={"email"} placeholder={"E-mail"} onChange={(e) => setEmail(e.target.value)} />
-          <InputReg label={"Date of Birth"} id={"dob"} type={"date"} placeholder={"DD-MM-YYYY"} onChange={(e) => setDob(e.target.value)} />
-          <InputReg label={"Phone No"} id={"phoneno"} type={"tel"} placeholder={"Number"} onChange={(e) => setPhone(e.target.value)} />
+        {error && <div className="text-red-700">{error}</div>}
+        <div className="self-stretch flex flex-col gap-6">
+          <InputReg label="Full Name" id="fullName" type="text" placeholder="Name" onChange={(e) => setName(e.target.value)} />
+          <InputReg label="E-mail" id="email" type="email" placeholder="E-mail" onChange={(e) => setEmail(e.target.value)} />
+          <InputReg label="Date of Birth" id="dob" type="date" placeholder="DD-MM-YYYY" onChange={(e) => setDob(e.target.value)} />
+          <InputReg label="Phone No" id="phoneno" type="tel" placeholder="Number" onChange={(e) => setPhone(e.target.value)} />
         </div>
       </div>
       <div className="self-stretch flex justify-end">
-        <RedButton label={"Get OTP"} onClick={handleSubmit} className={'w-[100%]'} />
+        <RedButton label="Get OTP" onClick={handleSubmit} disabled={loading || !name || !email || !dob || !phoneno } loading={loading} className="w-[100%]" />
       </div>
     </div>
   );

@@ -300,13 +300,14 @@ const handleSelectChange = (e) => {
         </div>
         <div className="flex flex-col items-start justify-start gap-2 w-full">
             <div className="tracking-tight leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap text-[20px] mq450:text-[1rem] mq450:leading-[1.5rem]">Guarantor Details</div>
-            <div className="flex flex-row w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
-            <InputComponent label={"Name"}/>
-            <InputComponent label={"Account No(in Subandhan Nidhi)"}/>
-            <InputComponent label={"Phone No"}/>
-            </div>
-            <div className="flex flex-row w-full items-start justify-self-start gap-4 text-[1rem] text-gray-400 font-roboto">
-            <InputComponent label={"Aadhar No"}/>
+            <div className="flex flex-wrap w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+            <InputComponent label={"Name"} value={data.loanInfo.Guarantor[0]?.Name || "Value"}/>
+            <InputComponent label={"Mail"} value={data.loanInfo.Guarantor[0]?.Mail || "Value"}/>
+            <InputComponent label={"Phone"} value={data.loanInfo.Guarantor[0]?.Phone || "Value"}/>
+            <InputComponent label={"PAN Number"} value={data.loanInfo.Guarantor[0]?.Pan || "Value"}/>
+            
+            <InputComponent label={"Relation"} value={data.loanInfo.Guarantor[0]?.Relation || "Value"}/>
+            <InputComponent label={"Address"} value={data.loanInfo.Guarantor[0]?.Address || "Value"}/>
               </div>
             
           

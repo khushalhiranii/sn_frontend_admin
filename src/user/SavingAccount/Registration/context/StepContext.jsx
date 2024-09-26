@@ -54,6 +54,7 @@ const StepContext = ({ children }) => {
           }
         });
         console.log('Second API response:', res.data);
+        return res;
       }
     } catch (error) {
       console.error('Error submitting data:', error);

@@ -33,7 +33,7 @@ function AccountUpdate() {
                     </div>
                     </NavLink>
                     <NavLink
-                    to={'/saving-account/update/mpin'}
+                    to={'/saving-account/update/details'}
                     className={({ isActive }) =>
                         `no-underline text-[#707070] rounded-[8px] ${isActive ? 'bg-[#D9E8FB] text-black' : ''}`
                     }
@@ -44,7 +44,7 @@ function AccountUpdate() {
                     </div>
                     </NavLink>
                     </div>
-                    <div>
+                    <div className='w-[432px]'>
                         <Outlet/>
                     </div>
                 </div>

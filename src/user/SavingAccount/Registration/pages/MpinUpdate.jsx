@@ -3,7 +3,7 @@ import RedButton from '../../../DesignSystem/RedButton';
 import { useUserSocket } from '../../../context/UserSocketContext';
 import axiosInstance from '../../../../../axios.utils';
 
-function PhoneUpdate() {
+function MpinUpdate() {
   const { user } = useUserSocket(); // Get user data from context
   const [phone, setPhone] = useState(''); // State for phone input
   const [otp, setOtp] = useState(''); // State for OTP input
@@ -11,9 +11,8 @@ function PhoneUpdate() {
   const [error, setError] = useState(''); // State for displaying error messages
   const [loading, setLoading] = useState(false); // Loading state for buttons
   const [verified, setVerified] = useState(false); // Track if OTP is verified
-  const [newNumber, setNewNumber] = useState(''); // State for new phone number
-  const [newOtp, setNewOtp] = useState(''); // State for new OTP input
-  const [newOtpSent, setNewOtpSent] = useState(false); // Track if OTP is sent
+  const [newMpin, setMpin] = useState(''); // State for new M-Pin
+  const [reenter, setReenter] = useState(''); // State for re-entered M-Pin
   const [successMessage, setSuccessMessage] = useState(''); // State for success message
 
   // Request OTP for verifying the current phone number
@@ -40,25 +39,6 @@ function PhoneUpdate() {
     }
   };
 
-  // Request OTP for verifying the new phone number
-  const requestOTPForNewNumber = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const response = await axiosInstance.post('/client/classic/Code', {
-        data: { Number: newNumber },
-      });
-      console.log(response);
-      setNewOtpSent(true);
-      setError('');
-    } catch (error) {
-      console.error('Error requesting OTP:', error);
-      setError('Failed to send OTP. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // Verify OTP for the current phone number
   const verifyOTP = async () => {
     setLoading(true);
@@ -80,36 +60,31 @@ function PhoneUpdate() {
     }
   };
 
-  // Verify OTP for the new phone number and update it
-  const verifyOTPForNewNumber = async () => {
+  // Update M-Pin
+  const updateMpin = async () => {
+    if (newMpin !== reenter) {
+      setError("Re-entered M-Pin doesn't match the new M-Pin.");
+      return;
+    }
+
     setLoading(true);
     setError('');
+    console.log(newMpin)
     try {
-      const response = await axiosInstance.post('/client/classic/Code', {
-        data: { Number: newNumber, Code: newOtp, Verify: true },
+      const updateResponse = await axiosInstance.put('/client/classic/Update', {
+        data: {
+          "Identifier": user?.Identifier,
+          "Key": "Password",
+          "Value": newMpin,
+        },
       });
-      if (response.status === 200) {
-        try {
-          // Update phone number after successful verification
-          const updateResponse = await axiosInstance.put('/client/classic/Update', {
-            data: {
-              Identifier: user?.Identifier,
-              Key: 'Number',
-              Value: newNumber,
-            },
-          });
-          console.log(updateResponse);
-          setSuccessMessage(`Phone number updated to ${newNumber}`); // Show success message
-          setNewOtp('');
-        } catch (error) {
-          console.error('Error updating phone number:', error);
-          setError('Failed to update phone number.');
-        }
-      }
+      console.log(updateResponse);
+      setSuccessMessage('M-Pin updated successfully!'); // Show success message
+      setMpin(''); // Clear new M-Pin input
+      setReenter(''); // Clear re-entered M-Pin input
     } catch (error) {
-      console.error('Error verifying OTP:', error);
-      setError('Invalid OTP. Please try again.');
-      setNewOtp(''); // Reset OTP input after error
+      console.error('Error updating M-Pin', error);
+      setError('Failed to update M-Pin.');
     } finally {
       setLoading(false);
     }
@@ -120,11 +95,10 @@ function PhoneUpdate() {
     return (
       <div className="flex flex-col mt-[32px] gap-[16px]">
         {error && <p className="text-red-500">{error}</p>}
-        {successMessage && <p className="text-green-500">{successMessage}</p>}
         <div className="flex flex-row gap-[16px]">
           <input
             className="border border-t-0 p-[8px] border-x-0 text-base"
-            placeholder="Enter your current number"
+            placeholder="Enter your number"
             value={phone}
             onChange={(e) => setPhone(e.target.value)} // Handle phone input change
           />
@@ -156,52 +130,45 @@ function PhoneUpdate() {
           onClick={verifyOTP}
           disabled={otp.length !== 4 || loading} // Disable while loading or if OTP length is incorrect
         />
-        
+        {successMessage && <p className="text-green-500">{successMessage}</p>}
       </div>
     );
   }
 
-  // View for updating the phone number after verifying the current one
+  // View for updating the M-Pin after verifying the current one
   return (
     <div className="flex flex-col mt-[32px] gap-[16px]">
-      {error && <p className="text-red-500">{error}</p>}
-      {successMessage && <p className="text-green-500">{successMessage}</p>}
+        {error && <p className="text-red-500">{error}</p>}
+        {successMessage && <p className="text-green-500">{successMessage}</p>}
       <div className="flex flex-row gap-[16px]">
         <input
-          className="border border-t-0 p-[8px] border-x-0 text-base"
-          placeholder="Enter your new number"
-          value={newNumber}
-          onChange={(e) => setNewNumber(e.target.value)} // Handle new phone input change
+          type="password"
+          maxLength={4} // Limit input to 4 digits
+          className="border border-t-0 p-[8px] border-x-0 text-base text-center"
+          placeholder="Enter your new M-Pin"
+          value={newMpin}
+          onChange={(e) => setMpin(e.target.value)} // Handle new M-Pin input change
         />
-        <button
-          onClick={requestOTPForNewNumber}
-          disabled={newNumber.length !== 10 || loading} // Disable while loading or if new number is not 10 digits
-          className={`flex px-[64px] py-[8px] text-base text-white rounded-[4px] font-medium ${
-            newNumber.length === 10 && !loading ? 'bg-blue-700' : 'bg-[#B0CFF6]'
-          }`}
-        >
-          {loading ? 'Sending...' : newOtpSent ? 'Resend OTP' : 'Send OTP'}
-        </button>
       </div>
       
-      {newOtpSent && (
-        <div className="flex flex-row gap-[16px]">
-          <input
-            className="border border-t-0 p-[8px] border-x-0 text-base"
-            placeholder="Enter OTP"
-            value={newOtp}
-            onChange={(e) => setNewOtp(e.target.value)} // Handle OTP input change
-          />
-        </div>
-      )}
+      <div className="flex flex-row gap-[16px]">
+        <input
+          type="password"
+          maxLength={4} // Limit input to 4 digits
+          className="border border-t-0 p-[8px] border-x-0 text-base text-center"
+          placeholder="Re-enter new M-Pin"
+          value={reenter}
+          onChange={(e) => {setReenter(e.target.value)}} // Handle re-entered M-Pin input change
+        />
+      </div>
       <RedButton
-        label={loading ? 'Verifying...' : 'Submit'}
-        onClick={verifyOTPForNewNumber}
-        disabled={newOtp.length !== 4 || loading} // Disable while loading or if OTP length is incorrect
+        label={loading ? 'Updating...' : 'Update M-Pin'}
+        onClick={updateMpin}
+        disabled={newMpin.length !== 4 || loading} // Disable while loading or if new M-Pin length is incorrect
       />
       
     </div>
   );
 }
 
-export default PhoneUpdate;
+export default MpinUpdate;

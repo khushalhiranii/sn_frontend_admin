@@ -83,7 +83,7 @@ export const UserDataProvider = ({ children }) => {
       // Set userData and verificationStatus based on API response
       // setUserData({ fullname, email, dob, phoneno });
       setVerificationStatus(true); // Proceed to OTP verification
-      // console.log(response.data.data.userId)
+      return response;
       
     } catch (error) {
       console.error('Error sending user data:', error);

@@ -3,6 +3,7 @@ import InputReg from '../../../DesignSystem/InputReg';
 import RedButton from '../../../DesignSystem/RedButton';
 import { multiStepContext } from '../context/StepContext';
 import axiosInstance from '../../../../../axios.utils';
+import Loader from '../../../../LoadingIndicator/Loader';
 
 function FirstStep() {
   const [states, setStates] = useState([]); // Store the states
@@ -56,7 +57,7 @@ function FirstStep() {
   };
 
   if (!states) {
-    return (<div>Loading..</div>);
+    return (<Loader/>);
   }
 
   return (

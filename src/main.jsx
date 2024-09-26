@@ -62,6 +62,12 @@ import ApprovedLoans from './admin/pages/Loan-Info/ApprovedLoans.jsx';
 import { UserSocketProvider } from './user/context/UserSocketContext.jsx';
 import CustomerInfoPage from './admin/pages/Customer-mngmt/CustomerInfoPage.jsx';
 import AdminInfo from './admin/pages/Admin-Info/AdminInfo.jsx';
+import MpinUpdate from './user/SavingAccount/Registration/pages/MpinUpdate.jsx';
+import DetailsUpdate from './user/SavingAccount/Registration/pages/DetailsUpdate.jsx';
+import UserNotifications from './user/SavingAccount/Registration/pages/UserNotification.jsx';
+import UserInfoPage from './user/SavingAccount/Registration/pages/UserInfoPage.jsx';
+import { AccountApplied } from './user/SavingAccount/Registration/components/AccountApplied.jsx';
+
 
 const RenderSocketProvider = ({ children }) => {
   const location = useLocation();
@@ -108,7 +114,8 @@ const AppRouter = () => {
     <Routes>
     <Route path="/" element={<Landing/>}>
       <Route index element={<Home/>}/>
-      <Route path="schemes" element={<PvtRtUserLogin component={Schemes}/>}/>
+      <Route path='user' element={<UserInfoPage/>} />
+      <Route path="schemes" element={<Schemes/>}/>
       {/* <Route path="schemes" element={<Schemes/>}/> */}
       <Route path="loans" element={<Loans/>}/>
       {/* <Route path="schemeApplication" element={<PvtRtUserLogin component={SchemePage}/>}/> */}
@@ -117,8 +124,11 @@ const AppRouter = () => {
       <Route path='saving-account' element={<AccountAction/>}/>
       <Route path='saving-account/info' element={<AccountDetails/>}/>
       <Route path='saving-account/statement' element={<AccountStatement/>}/>
+      <Route path='/notifications' element={<UserNotifications/>} />
       <Route path='saving-account/update/' element={<AccountUpdate/>}>
       <Route path='phone' element={<PhoneUpdate/>}/>
+      <Route path='mpin' element={<MpinUpdate/>}/>
+      <Route path='details' element={<DetailsUpdate/>}/>
       </Route>
       
       
@@ -131,6 +141,7 @@ const AppRouter = () => {
       <Route path='otpverified' element={<OtpVerified/>}/>
       {/* <Route path='openAcc' element={<PrivateRoute2 component={OpenAcc}/>}/> */}
       <Route path='openAcc' element={<OpenAcc/>}/>
+      <Route path='verified' element={<AccountApplied/>}/>
     </Route>
     <Route path='/login' element={<Registration/>}>
     <Route index element={<Login/>}/>

@@ -6,6 +6,8 @@ import HeaderNavLink from "../DesignSystem/HeaderNavlink";
 import CustomInputWithIcon from "../DesignSystem/CustomInput";
 import CustomInput from "../DesignSystem/CustomInput";
 import DropdownMenu from "../DesignSystem/Dropdown";
+import Bell from "../../admin/assets/bell";
+import User from "../../admin/assets/user";
 const FrameComponent = ({ className = "" }) => {
   const navigate = useNavigate();
   const user = () => {
@@ -32,22 +34,30 @@ const FrameComponent = ({ className = "" }) => {
         <HeaderNavLink to="/saving-account" label={"Saving Account"} img={true} />
         <HeaderNavLink to="/contact" label={"Contact Us"} />
         <CustomInput placeholder="Search" iconSrc="/search.svg" />
-        <div className="rounded box-border flex flex-row items-center justify-center border-[2px] border-solid border-foundation-white-normal-hover">
-          <img
-            className="h-[20px] w-[20px] px-[14px] py-[14px] relative overflow-hidden shrink-0"
-            loading="lazy"
-            alt=""
-            src="/notification.svg"
-          />
-        </div>
-        <div onClick={user} className="rounded box-border flex flex-row items-center justify-center border-[2px] border-solid border-foundation-white-normal-hover">
-          <img
-            className="h-[20px] w-[20px] px-[14px] py-[14px] relative overflow-hidden shrink-0"
-            loading="lazy"
-            alt=""
-            src="/user.svg"
-          />
-        </div>
+        <NavLink
+          to="/notifications"
+          className={({ isActive }) =>
+            `text-foundation-blue-normal flex flex-row items-center justify-center p-[14px] gap-[12px] border-[2px] border-solid border-foundation-white-normal-hover rounded ${
+              isActive
+                ? "bg-foundation-blue-normal text-white"
+                : "hover:bg-foundation-blue-normal hover:text-white"
+            }`
+          }
+        >
+          <Bell />
+          </NavLink>
+          <NavLink
+          to="/user"
+          className={({ isActive }) =>
+            `text-foundation-blue-normal flex flex-row items-center justify-center p-[14px] gap-[12px] border-[2px] border-solid border-foundation-white-normal-hover rounded ${
+              isActive
+                ? "bg-foundation-blue-normal text-white"
+                : "hover:bg-foundation-blue-normal hover:text-white"
+            }`
+          }
+        >
+          <User />
+        </NavLink>
       </div>
 
       {/* Three Dots Dropdown for Small Screens */}

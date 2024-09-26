@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import InputComponent from '../../components/InputComponent';
 import { useAdminSocket } from '../../context/AdminSocketContext';
 import { getFullUrl } from '../../utils';
+import Loader from '../../../LoadingIndicator/Loader';
+import RedButton from '../../../user/DesignSystem/RedButton';
 
 function CustomerInfoPage() {
   const { userId } = useParams(); // Get the userId from the URL
@@ -80,7 +82,7 @@ function CustomerInfoPage() {
   }
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <Loader/>;
   }
 
   return (
@@ -210,6 +212,7 @@ function CustomerInfoPage() {
             <InputComponent label={"Nominee Age"}  />
           </div>
         </div>
+
       </div>
     </div>
   );

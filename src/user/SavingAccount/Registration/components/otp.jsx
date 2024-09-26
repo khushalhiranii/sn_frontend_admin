@@ -1,61 +1,44 @@
-import React from 'react';
-import { useEffect, useRef, useState }
-	from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useUserData } from '../context/UserDataContext';
 import { useNavigate } from 'react-router-dom';
 import RedButton from '../../../DesignSystem/RedButton';
 import { useUserSocket } from '../../../context/UserSocketContext';
 
-export const Otp = ({ length = 4
-    // ,
-	// onOtpSubmit = (nalotp) => { 
-    //     console.log(nalotp)
-    // } 
-}) => {
-        const [finalOtp, setFinalOtp] = useState('')
-		const { sendUserIdentifier } = useUserSocket();
-	const [otp, setOtp] = useState(
-		new Array(length).fill(""));
-	const inputRefs = useRef([]);
+export const Otp = ({ length = 4 }) => {
+    const [finalOtp, setFinalOtp] = useState('');
+    const { sendUserIdentifier } = useUserSocket();
+    const [otp, setOtp] = useState(new Array(length).fill(""));
+    const inputRefs = useRef([]);
+    const { sendOTP, sendLoginOTP } = useUserData();
+    const [loading, setLoading] = useState(false); // Loading state
+    const [errorMessage, setErrorMessage] = useState(''); // Error message state
+	const navigate = useNavigate();
+    useEffect(() => {
+        if (inputRefs.current[0]) {
+            inputRefs.current[0].focus();
+        }
+    }, []);
 
-	const { sendOTP, sendLoginOTP } = useUserData()
+    const currentPath = window.location.pathname;
+    const hasLoginInPath = currentPath.includes('login');
 
-	useEffect(() => {
-		if (inputRefs.current[0]) {
-			inputRefs.current[0].focus();
-		}
-		
-	}, []);
+    const handleChange = (index, e) => {
+        const value = e.target.value;
+        if (isNaN(value)) return;
 
-	const currentPath = window.location.pathname;
+        const newOtp = [...otp];
+        newOtp[index] = value.substring(value.length - 1);
+        setOtp(newOtp);
 
-  // Check if the path contains the word "login"
-  	const hasLoginInPath = currentPath.includes('login');
-
-
-	const handleChange = (index, e) => {
-		const value = e.target.value;
-		if (isNaN(value)) return;
-
-		const newOtp = [...otp];
-		// allow only one input
-		newOtp[index] =
-			value.substring(value.length - 1);
-		setOtp(newOtp);
-
-		// submit trigger
-		const combinedOtp = newOtp.join("");
-		if (combinedOtp.length === length){
-			// onOtpSubmit(combinedOtp);
+        const combinedOtp = newOtp.join("");
+        if (combinedOtp.length === length) {
             setFinalOtp(combinedOtp);
         }
 
-		// Move to next input if current field is filled
-		if (value && index < length - 1 &&
-			inputRefs.current[index + 1]) {
-			inputRefs.current[index + 1].focus();
-		}
-	};
+        if (value && index < length - 1 && inputRefs.current[index + 1]) {
+            inputRefs.current[index + 1].focus();
+        }
+    };
 
 	const handleClick = (index) => {
 		inputRefs.current[index].setSelectionRange(1, 1);
@@ -78,87 +61,78 @@ export const Otp = ({ length = 4
 		}
 	};
 
-  const navigate = useNavigate()
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true); // Set loading to true when submitting
+        setErrorMessage(''); // Reset error message
 
-  const handleSubmit = async (e) => {
-	e.preventDefault(); // Prevent the default form submission behavior
-  
-	try {
-	  // Check if 'finalOtp' is available
-	  console.log(finalOtp);
-  
-	  let response;
-	  if (hasLoginInPath) {
-		// If the URL contains "login", call sendLoginOTP
-		response = await sendLoginOTP(finalOtp);
-		sendUserIdentifier(response.data.credentials.Identifier)
-	  } else {
-		// Otherwise, call sendOTP
-		response = await sendOTP(finalOtp);
-	  }
-  
-	  console.log(response);
-  
-	  // Check if the response is successful and navigate accordingly
-	  if (response) {
-		navigate('/register/otpverified');
-	  }
-  
-	  // Implement additional logic here if needed
-	} catch (error) {
-	  console.error('Failed to send user data:', error.message);
-  
-	  // Handle error (e.g., show error message to user)
-	  // You can use a state to display an error message in the UI
-	}
-  };
-  
+        try {
+            let response;
+            if (hasLoginInPath) {
+                response = await sendLoginOTP(finalOtp);
+                sendUserIdentifier(response.data.credentials.Identifier);
+            } else {
+                response = await sendOTP(finalOtp);
+            }
 
-  return (
-    
-	<div className='h-[896px] flex flex-col w-full'>
-	<div className="flex flex-col w-full flex-grow gap-[32px] mq750:gap-[1rem]">
-	  <div className="flex flex-row items-center justify-start gap-[1.5rem] mq450:flex-wrap">
-		<img
-		  className="h-[4rem] w-[4rem] relative rounded-981xl object-cover"
-		  loading="lazy"
-		  alt=""
-		  src="/sn.svg"
-		/>
-		<div className="m-0 relative text-[32px] font-semibold mq450:text-[1.188rem] mq1050:text-[1.625rem]">
-		  Phone Verification
-		</div>
-	  </div>
-        <div className="flex flex-col justify-center gap-[24px]">
-          <div className="flex justify-center gap-4">
-          {otp.map((value, index) => {
-				return (
-					<input
-						key={index}
-						type="text"
-						ref={(input) => (inputRefs.current[index] = input)}
-						value={value}
-						onChange={(e) => handleChange(index, e)}
-						onClick={() => handleClick(index)}
-						onKeyDown={(e) => handleKeyDown(index, e)}
-						className="w-9 h-10 text-2xl text-center border border-solid border-foundation-Violet-violet-100 rounded-md"
-					/>
-				);
-			})}
-          </div>
-          <div className="flex flex-row text-center justify-center text-base font-normal">
-            <p>Didn’t you receive the OTP?</p>
-            <button className="bg-white text-foundation-red-normal font-medium hover:text-red-600">
-              Resend Code
-            </button>
-          </div>
-		</div>
-		</div>
-          <div className="self-stretch flex justify-end">
-        <RedButton label={"Verify OTP"} onClick={handleSubmit} className={'w-[100%]'} />
-      </div>
-    </div>
-    
-  );
-}
+            if (response) {
+                navigate('/register/otpverified');
+            }
+        } catch (error) {
+            console.error('Failed to verify OTP:', error.message);
+            setErrorMessage(error.response?.data?.message || 'Verification failed');
+        } finally {
+            setLoading(false); // Set loading to false after request completes
+        }
+    };
 
+    return (
+        <div className="h-[896px] flex flex-col w-full">
+            <div className="flex flex-col w-full flex-grow gap-[32px] mq750:gap-[1rem]">
+                <div className="flex flex-row items-center justify-start gap-[1.5rem] mq450:flex-wrap">
+                    <img
+                        className="h-[4rem] w-[4rem] relative rounded-981xl object-cover"
+                        loading="lazy"
+                        alt=""
+                        src="/sn.svg"
+                    />
+                    <div className="m-0 relative text-[32px] font-semibold mq450:text-[1.188rem] mq1050:text-[1.625rem]">
+                        Phone Verification
+                    </div>
+                </div>
+                <div className="flex flex-col justify-center gap-[24px]">
+                    <div className="flex justify-center gap-4">
+                        {otp.map((value, index) => (
+                            <input
+							key={index}
+							type="text"
+							ref={(input) => (inputRefs.current[index] = input)}
+							value={value}
+							onChange={(e) => handleChange(index, e)}
+							onClick={() => handleClick(index)}
+							onKeyDown={(e) => handleKeyDown(index, e)}
+							className="w-9 h-10 text-2xl text-center border border-solid border-foundation-Violet-violet-100 rounded-md"
+							/>
+                        ))}
+                    </div>
+                    <div className="flex flex-row text-center justify-center text-base font-normal">
+                        <p>Didn’t you receive the OTP?</p>
+                        <button className="bg-white text-foundation-red-normal font-medium hover:text-red-600">
+                            Resend Code
+                        </button>
+                    </div>
+                    {errorMessage && <div className="text-red-500 text-center">{errorMessage}</div>}
+                </div>
+            </div>
+            <div className="self-stretch flex justify-end">
+                <RedButton
+                    label="Verify OTP"
+                    onClick={handleSubmit}
+                    className="w-[100%]"
+                    loading={loading} // Pass loading state to RedButton
+                    disabled={loading || finalOtp.length != 4} // Disable button while loading
+                />
+            </div>
+        </div>
+    );
+};

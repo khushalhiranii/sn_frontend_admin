@@ -3,6 +3,7 @@ import { multiStepContext } from '../context/StepContext';
 import InputReg from '../../../DesignSystem/InputReg';
 import RedButton from '../../../DesignSystem/RedButton';
 import axiosInstance from '../../../../../axios.utils';
+import { useNavigate } from 'react-router-dom';
 
 const ThirdStep = () => {
   const [panNumber, setPanNumber] = useState('');
@@ -12,8 +13,35 @@ const ThirdStep = () => {
   const [userPhotoFile, setUserPhotoFile] = useState(null);
   const [signatureFile, setSignatureFile] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading state for file upload
+  const [uploadError, setUploadError] = useState('');
+  const [uploadSuccess, setUploadSuccess] = useState('');
+  const [apiRes, setApiRes] = useState(false)
+  const [finalRes, setFinalRes] = useState("")
+  const navigate = useNavigate();
+
+  const [uploadAttempted, setUploadAttempted] = useState({
+    panCard: false,
+    aadharCard: false,
+    userPhoto: false,
+    signature: false,
+  });
 
   const { submitData, userData, setUserData } = useContext(multiStepContext);
+
+  const submit = async () =>{
+    try {
+      setApiRes(true);
+      const res = await submitData();
+      if(res.status === 200){
+        setApiRes(false);
+        setFinalRes(res.response.data.data.message)
+        navigate('/register/verified')
+      }
+    } catch (error) {
+      setApiRes(error.response.data.data.message)
+    }
+  }
 
   const panCardInputRef = useRef(null);
   const aadharCardInputRef = useRef(null);
@@ -28,22 +56,47 @@ const ThirdStep = () => {
     }
   }, [panNumber, aadharNumber, aadharCardFile, panCardFile, userPhotoFile, signatureFile]);
 
-  const handleFileChange = async (event, setFile, field) => {
+  const handleFileChange = async (event, setFile, field, type) => {
     const file = event.target.files[0];
+    const fileSizeLimit = 5 * 1024 * 1024; // 5MB size limit
+
+    // Reset error and success messages for the specific file type
+    setUploadError('');
+    setUploadSuccess('');
+    setUploadAttempted(prev => ({ ...prev, [type]: true })); // Mark upload attempt
+
+    if (file.size > fileSizeLimit) {
+      setUploadError('File size exceeds the 5MB limit.');
+      return;
+    }
+
+    if (!['application/pdf', 'image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
+      setUploadError('Only image or PDF files are allowed.');
+      return;
+    }
+
     setFile(file);
     const formData = new FormData();
     formData.append('User-Docs', file);
-    const Identifier = sessionStorage.getItem('Identifier')
+    const Identifier = sessionStorage.getItem('Identifier');
+
     try {
-      const response = await axiosInstance.post(`client/classic/Docs?Identifier=${Identifier}&Field=${field}`, formData)
-      console.log(response)
+      setLoading(true); // Set loading to true while uploading
+      const response = await axiosInstance.post(`client/classic/Docs?Identifier=${Identifier}&Field=${field}`, formData);
+      setLoading(false); // Stop loading
+      setUploadSuccess('File uploaded successfully.');
+      console.log(response);
     } catch (error) {
-      console.error(error)
+      setLoading(false); // Stop loading on error
+      setUploadError('Error uploading the file. Please try again.');
+      console.error(error);
     }
   };
 
-  const handleRemoveFile = (setFile) => {
+  const handleRemoveFile = (setFile, type) => {
     setFile(null);
+    setUploadSuccess(''); // Clear success message on file removal
+    setUploadAttempted(prev => ({ ...prev, [type]: false })); // Reset upload attempt flag
   };
 
   const handleViewImage = (file) => {
@@ -54,7 +107,7 @@ const ThirdStep = () => {
     inputRef.current.click();
   };
 
-  const renderUploadSection = (label, placeholder, value, onChange, file, setFile, inputRef, field) => (
+  const renderUploadSection = (label, placeholder, value, onChange, file, setFile, inputRef, field, type) => (
     <div className="flex flex-col gap-[16px]">
       <InputReg
         label={label}
@@ -63,12 +116,12 @@ const ThirdStep = () => {
         value={value}
         onChange={onChange}
       />
-      <div className="font-normal text-sm">* Upload a file below **mb</div>
+      <div className="font-normal text-sm">* Upload a file below (max 5MB)</div>
       <input
-        accept="image/*"
+        accept="image/*,application/pdf"
         type="file"
         ref={inputRef}
-        onChange={(event) => handleFileChange(event, setFile, field)}
+        onChange={(event) => handleFileChange(event, setFile, field, type)}
         style={{ display: 'none' }}
         required
       />
@@ -77,82 +130,39 @@ const ThirdStep = () => {
           <button
             className="py-[14px] rounded-lg bg-[#B0D0F7] text-white text-[17px] font-medium w-full"
             onClick={() => triggerFileInput(inputRef)}
+            disabled={loading} // Disable button during loading
           >
-            {`Upload Original ${label}`}
+            {loading ? 'Uploading...' : `Upload Original ${label}`} {/* Show loading text */}
           </button>
         ) : (
           <div className="w-full flex flex-row justify-between">
-            <div className='flex flex-row w-[50%] gap-[8px]'>
-              <img src='/document.svg' className='w-[40px] h-[40px]'/>
-              <div className='flex flex-col gap-[12px]'>
-                <div className="font-medium text-sm">
-                  {file.name}
-                </div>
+            <div className="flex flex-row w-[50%] gap-[8px]">
+              <img src="/document.svg" className="w-[40px] h-[40px]" />
+              <div className="flex flex-col gap-[12px]">
+                <div className="font-medium text-sm">{file.name}</div>
                 <div className="relative w-full h-[8px] bg-blue-200 rounded-lg overflow-hidden">
                   <div className="absolute top-0 left-0 h-full bg-blue-500 animate-progress-bar"></div>
                 </div>
               </div>
-              <button className='bg-white px-0 py-0'  onClick={() => handleRemoveFile(setFile)}>
-                <img src='/cross-circle 2.svg' className='h-[20px] w-[20px] ' />
-              </button>  
+              <button className="bg-white px-0 py-0" onClick={() => handleRemoveFile(setFile, type)}>
+                <img src="/cross-circle 2.svg" className="h-[20px] w-[20px]" />
+              </button>
             </div>
             <div className="flex gap-2">
-              <RedButton label={"View"} onClick={() => handleViewImage(file)} />  
+              <RedButton label={"View"} onClick={() => handleViewImage(file)} />
             </div>
           </div>
         )}
       </div>
-    </div>
-  );
-
-  const renderUploadSection2 = (label, placeholder, value, onChange, file, setFile, inputRef, field) => (
-    <div className="flex flex-col gap-[16px]">
-      <div className="font-normal text-sm">* Upload a file below **mb</div>
-      <input
-        accept="image/*"
-        type="file"
-        ref={inputRef}
-        onChange={(event) => handleFileChange(event, setFile, field)}
-        style={{ display: 'none' }}
-        required
-      />
-      <div className="flex flex-row justify-between w-full items-center">
-        {!file ? (
-          <button
-            className="py-[14px] rounded-lg bg-[#B0D0F7] text-white text-[17px] font-medium w-full"
-            onClick={() => triggerFileInput(inputRef)}
-          >
-            {`Upload Original ${label}`}
-          </button>
-        ) : (
-          <div className='w-full text-sm font-semibold gap-[12px]'> <div className='mb-[14px]'>{label}</div>
-          <div className="w-full flex flex-row justify-between">
-            <div className='flex flex-row w-[50%] gap-[8px]'>
-              <img src='/document.svg' className='w-[40px] h-[40px]'/>
-              <div className='flex flex-col gap-[12px]'>
-                <div className="font-medium text-sm">
-                  {file.name}
-                </div>
-                <div className="relative w-full h-[8px] bg-blue-200 rounded-lg overflow-hidden">
-                  <div className="absolute top-0 left-0 h-full bg-blue-500 animate-progress-bar"></div>
-                </div>
-              </div>
-              <button className='bg-white px-0 py-0'  onClick={() => handleRemoveFile(setFile)}>
-                <img src='/cross-circle 2.svg' className='h-[20px] w-[20px] ' />
-              </button>  
-            </div>
-            <div className="flex gap-2">
-              <RedButton label={"View"} onClick={() => handleViewImage(file)} />  
-            </div>
-          </div>
-          </div>
-        )}
-      </div>
+      {/* Show messages only if upload has been attempted */}
+      {uploadAttempted[type] && uploadError && <div className="text-red-500 text-sm">{uploadError}</div>}
+      {uploadAttempted[type] && uploadSuccess && <div className="text-green-500 text-sm">{uploadSuccess}</div>}
     </div>
   );
 
   return (
     <div className="flex flex-col w-full min-h-screen">
+      {finalRes && <div className="text-red-500 text-sm">{apiRes}</div>}
       <div className="flex flex-col gap-[32px] w-full">
         <div className="text-2xl font-bold">Upload Documents</div>
         <div className="flex flex-col gap-[32px] w-full">
@@ -160,182 +170,63 @@ const ThirdStep = () => {
             "Pan Card",
             "Enter Your Pan Number",
             userData['panNo'] || '',
-            (e)=>{setUserData({...userData, "panNo": e.target.value}); setPanNumber(e.target.value)},
+            (e) => { setUserData({ ...userData, "panNo": e.target.value }); setPanNumber(e.target.value); },
             panCardFile,
             setPanCardFile,
             panCardInputRef,
-            "Pan"
+            "Pan",
+            "panCard" // type for tracking
           )}
           {renderUploadSection(
             "Aadhar Card",
             "Enter Your Aadhar Number",
             userData['aadharNo'] || '',
-            (e)=>{setUserData({...userData, "aadharNo": e.target.value}); setAadharNumber(e.target.value)},
+            (e) => { setUserData({ ...userData, "aadharNo": e.target.value }); setAadharNumber(e.target.value); },
             aadharCardFile,
             setAadharCardFile,
             aadharCardInputRef,
-            "Aadhar"
+            "Aadhar",
+            "aadharCard" // type for tracking
           )}
           <div className={`flex ${!userPhotoFile || !signatureFile ? 'flex-row' : 'flex-col'} gap-[16px]`}>
-  <div className={`${!userPhotoFile ? 'w-[50%]' : 'w-full'}`}>
-    {renderUploadSection2(
-      "Photograph",
-      "",
-      null,
-      null,
-      userPhotoFile,
-      setUserPhotoFile,
-      userPhotoInputRef,
-      "Photo"
-    )}
-  </div>
-  <div className={`${!signatureFile ? 'w-[50%]' : 'w-full'}`}>
-    {renderUploadSection2(
-      "Signature",
-      "",
-      null,
-      null,
-      signatureFile,
-      setSignatureFile,
-      signatureInputRef,
-      "Signature"
-    )}
-  </div>
-</div>
-
+            <div className={`${!userPhotoFile ? 'w-[50%]' : 'w-full'}`}>
+              {renderUploadSection(
+                "Photograph",
+                "",
+                null,
+                null,
+                userPhotoFile,
+                setUserPhotoFile,
+                userPhotoInputRef,
+                "Photo",
+                "userPhoto" // type for tracking
+              )}
+            </div>
+            <div className={`${!signatureFile ? 'w-[50%]' : 'w-full'}`}>
+              {renderUploadSection(
+                "Signature",
+                "",
+                null,
+                null,
+                signatureFile,
+                setSignatureFile,
+                signatureInputRef,
+                "Signature",
+                "signature" // type for tracking
+              )}
+            </div>
+          </div>
         </div>
       </div>
       <RedButton
-  label={"Continue"}
-  onClick={submitData}
-  disabled={!isFormValid}
-  className={`${(!aadharCardFile && !panCardFile && !userPhotoFile && !signatureFile) ? 'mt-[24px]' : 'mt-[4px]'} ${!isFormValid && 'opacity-50 cursor-not-allowed'}`}
-/>
-
+        label={"Continue"}
+        onClick={submit}
+        disabled={!isFormValid || loading} // Disable button while form is invalid or loading
+        className={`${(!aadharCardFile && !panCardFile && !userPhotoFile && !signatureFile) ? 'mt-[24px]' : 'mt-5'}`}
+        loading={apiRes}
+      />
     </div>
   );
 };
 
 export default ThirdStep;
-
-
-
-
-
-{/* <Paper elevation={3} style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
-      <Typography variant="h5" gutterBottom>
-        Upload Documents
-      </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="PAN Number"
-            variant="outlined"
-            value={panNumber}
-            onChange={(e) => setPanNumber(e.target.value)}
-            required
-          />
-          <input
-            accept="image/*"
-            id="pan-card-upload"
-            type="file"
-            onChange={handlePanCardChange}
-            style={{ display: 'none' }}
-            required
-          />
-          <div className='flex flex-row justify-between py-2 pb-6'>
-            <label htmlFor="pan-card-upload">
-              <Button variant="contained" component="span" size='large'>
-                Upload PAN Card
-              </Button>
-            </label>
-            {panCardFile && (
-              <div style={{ marginTop: '1px' }}>
-                <Button variant="outlined" onClick={() => handleViewImage(panCardFile)}>View PAN Card</Button>
-              </div>
-            )}
-          </div>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Aadhar Number"
-            variant="outlined"
-            value={aadharNumber}
-            onChange={(e) => setAadharNumber(e.target.value)}
-            required
-          />
-          <input
-            accept="image/*"
-            id="aadhar-card-upload"
-            type="file"
-            onChange={handleAadharCardChange}
-            style={{ display: 'none' }}
-            required
-          />
-          <div className='flex flex-row justify-between py-2 pb-6'>
-            <label htmlFor="aadhar-card-upload">
-              <Button variant="contained" component="span">
-                Upload Aadhar Card
-              </Button>
-            </label>
-            {aadharCardFile && (
-              <div style={{ marginTop: '10px' }}>
-                <Button variant="outlined" onClick={() => handleViewImage(aadharCardFile)}>View Aadhar Card</Button>
-              </div>
-            )}
-          </div>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <input
-            accept="image/*"
-            id="user-photo-upload"
-            type="file"
-            onChange={handleUserPhotoChange}
-            style={{ display: 'none' }}
-            required
-          />
-          <label htmlFor="user-photo-upload">
-            <Button variant="contained" component="span">
-              Upload Photograph
-            </Button>
-          </label>
-          {userPhotoFile && (
-            <div style={{ marginTop: '10px' }}>
-              <Button variant="outlined" onClick={() => handleViewImage(userPhotoFile)}>View Photograph</Button>
-            </div>
-          )}
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <input
-            accept="image/*"
-            id="signature-upload"
-            type="file"
-            onChange={handleSignatureChange}
-            style={{ display: 'none' }}
-            required
-          />
-          <label htmlFor="signature-upload">
-            <Button variant="contained" component="span">
-              Upload Signature
-            </Button>
-          </label>
-          {signatureFile && (
-            <div style={{ marginTop: '10px' }}>
-              <Button variant="outlined" onClick={() => handleViewImage(signatureFile)}>View Signature</Button>
-            </div>
-          )}
-        </Grid>
-        <Grid item xs={12}>
-          <div className='flex flex-row gap-5 pt-5 pl-4'>
-            <button onClick={() => { setStep(2) }} className="self-center py-2 px-4 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 focus:outline-none">
-              Back
-            </button>
-            <button onClick={submitData} disabled={!isFormValid} className={`self-center py-2 px-4 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 focus:outline-none ${!isFormValid && 'opacity-50 cursor-not-allowed'}`}>
-              Submit
-            </button>
-          </div>
-        </Grid>
-      </Grid>
-    </Paper> */}

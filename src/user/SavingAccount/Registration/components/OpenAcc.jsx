@@ -6,6 +6,7 @@ import { Stepper, StepLabel, Step } from '@mui/material';
 import { multiStepContext } from '../context/StepContext';
 import { useUserSocket } from '../../../context/UserSocketContext';
 import { Navigate, useNavigate } from 'react-router-dom';
+import Loader from '../../../../LoadingIndicator/Loader';
 
 function OpenAcc() {
   const { currentStep } = useContext(multiStepContext);
@@ -18,7 +19,7 @@ function OpenAcc() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false); // Stop loading after 1 second
-    }, 2000);
+    }, 5000);
 
     return () => clearTimeout(timer); // Cleanup the timer
   }, []);
@@ -39,7 +40,9 @@ function OpenAcc() {
 
   // If loading is true, show the loading message
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <Loader/>
+    );
   }
 
   // If the user is not fetched or not verified, navigate to login

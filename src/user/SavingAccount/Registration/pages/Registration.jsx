@@ -11,7 +11,7 @@ const Registration = () => {
         <div className="h-auto flex-1 relative rounded-3xl bg-whitesmoke box-border min-w-[26rem] max-w-full border-[4px] border-solid border-white lg:flex-1 mq750:min-w-full">
           <img src='sn.png'/>
         </div>
-        <div className="flex-[0.8] rounded-3xl bg-white box-border flex flex-col items-start justify-between py-[4rem] px-[4rem] min-h-[34rem] max-w-full border-[1px] border-solid border-foundation-white-normal-hover lg:flex-1 lg:min-h-[auto] mq750:pl-[1.938rem] mq750:pr-[1.938rem] mq750:box-border mq450:pt-[1.688rem] mq450:pb-[1.688rem] mq450:box-border mq1050:pt-[2.625rem] mq1050:pb-[2.625rem] mq1050:box-border">
+        <div className="flex-[0.8] rounded-3xl bg-white box-border flex flex-col items-start justify-between py-[4rem] px-[4rem] min-h-[34rem] w-full border-[1px] border-solid border-foundation-white-normal-hover lg:flex-1 lg:min-h-[auto] mq750:pl-[1.938rem] mq750:pr-[1.938rem] mq750:box-border mq450:pt-[1.688rem] mq450:pb-[1.688rem] mq450:box-border mq1050:pt-[2.625rem] mq1050:pb-[2.625rem] mq1050:box-border">
           
           <Outlet/>
           
