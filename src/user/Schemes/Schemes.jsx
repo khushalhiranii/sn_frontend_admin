@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Navigate, NavLink } from 'react-router-dom';
 import { useDepositContext } from '../context/SchemeContext'; 
 import { useUserSocket } from '../context/UserSocketContext';
 import Loader from '../../LoadingIndicator/Loader';
@@ -10,11 +10,12 @@ function Schemes() {
   const { account } = useUserSocket();
 
   useEffect(() => {
-    // Check if account data is available to stop loading
-    if (account && Object.keys(account).length > 0) {
+    // Simulate loading effect after a brief delay
+    const timer = setTimeout(() => {
       setLoading(false);
-    }
-  }, [account]); // Dependency array includes account
+    }, 5000); // Adjust delay as needed
+    return () => clearTimeout(timer);
+  }, []);
 
   const imgWithLabel = (src, label) => {
     return (
@@ -33,10 +34,15 @@ function Schemes() {
     return <Loader />;
   }
 
+  // Check if account is available and valid
+  if (!account || Object.keys(account).length === 0) {
+    return <Navigate to={'/login'} />;
+  }
+
   return (
     <div className='flex flex-col'>
       <div className='flex p-[64px]'>
-        <img className='w-full' src='/schems.png' alt="Schemes" />
+        <img className='w-full' src='/schems.png' alt="Schemes"/>
       </div>
       <div className='flex flex-col'>
         <div className='flex flex-row p-[64px] justify-between'>

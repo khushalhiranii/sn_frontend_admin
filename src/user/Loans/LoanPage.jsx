@@ -1,17 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLoanContext } from '../context/LoanContext';
 import { useUserSocket } from '../context/UserSocketContext';
 import FormInput from '../DesignSystem/FormInput';
 import axiosInstance from '../../../axios.utils';
+import Loader from '../../LoadingIndicator/Loader';
+import { Navigate } from 'react-router-dom';
+import RedButton from '../DesignSystem/RedButton';
+import OutlinedButton from '../../admin/components/OutlinedButton';
 
 
 const LoanPage = ({ className = "" }) => {
   const { selectedLoan } = useLoanContext();
   const { user, account, userData } = useUserSocket();
-  const [loanDetails, setLoanDetails] = useState({"Identifier" : user?.Identifier, "Type": selectedLoan, "Interest": 0});
+  const [loanDetails, setLoanDetails] = useState({"Type": selectedLoan, "Interest": 0});
   const [guarantorDetails, setGuarantorDetails] = useState({});
   const [documents, setDocuments] = useState(null);  // For file uploads
+  const [loading, setLoading]= useState(true)
+  const [api, setApi] = useState(false);
+
+  useEffect(() => {
+    // Simulate loading effect after a brief delay
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 5000); // Adjust delay as needed
+    return () => clearTimeout(timer);
+  }, []);
+
 
   const handleInputChange = (e, key, section) => {
     const value = e.target.value;
@@ -37,19 +52,19 @@ const LoanPage = ({ className = "" }) => {
     let response;
     if(selectedLoan === "Personal" || selectedLoan === "Instant"){
       response = await axiosInstance.post('/client/classic/Loan', {
-        "data" : {...loanData}
+        "data" : {...loanData, "Identifier" : user?.Identifier}
       });
     }else if(selectedLoan === "Micro Finance"){
       response = await axiosInstance.post('/client/classic/Loan/Micro', {
-        "data" : {...loanData}
+        "data" : {...loanData, "Identifier" : user?.Identifier}
       });
     }else if(selectedLoan === "Property"){
       response = await axiosInstance.post('/client/classic/Loan/Property', {
-        "data" : {...loanData}
+        "data" : {...loanData, "Identifier" : user?.Identifier}
       });
     }else if(selectedLoan === "Business"){
       response = await axiosInstance.post('/client/classic/Loan/Buisness/Joint', {
-        "data" : {...loanData}
+        "data" : {...loanData, "Identifier" : user?.Identifier}
       });
     }
     console.log(response)
@@ -61,7 +76,7 @@ const LoanPage = ({ className = "" }) => {
     // API call for submitting guarantor details
     const response = await axiosInstance.post('client/classic/Guarantor', {
       "data" : {...guarantorData,
-        "Loan": loanId
+        "Request": loanId
       }
     });
     return await response;
@@ -80,6 +95,7 @@ const LoanPage = ({ className = "" }) => {
   const submitLoan = async (e) => {
     e.preventDefault();  // Prevent the default form submission
     try {
+      setApi(true)
       let loanData = { ...loanDetails };
       console.log(loanData);
       console.log(guarantorDetails);
@@ -96,21 +112,27 @@ const LoanPage = ({ className = "" }) => {
         if (documents) {
           await uploadDocumentsAPI(documents, response?.data?.loan); // Replace with actual API call
         }
-  
+        setApi(false);
         alert("Loan application successful!");
+
       }
     } catch (error) {
       console.error("Loan application failed", error);
+      setApi(false);
       alert("Error occurred while applying for the loan.");
     }
   };
   
 
   console.log(selectedLoan);
-  if(!user || !account){
+  if(loading){
     return(
-      <div>Loading..</div>
+      <Loader/>
     )
+  }
+
+  if (!user || Object.keys(user).length === 0) {
+    return <Navigate to={'/login'} />;
   }
   return (
     <form
@@ -239,8 +261,32 @@ const LoanPage = ({ className = "" }) => {
             <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
               <FormInput label="Guarantor Name" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Name', 'guarantor')} />
               <FormInput label="Phone No" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Phone', 'guarantor')} />
+              <FormInput label="Mail" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Mail', 'guarantor')} />
               <FormInput label="Address" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Address', 'guarantor')} />
-              <FormInput label="Relation" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Relation', 'guarantor')} />
+              <div className={`flex-1 flex flex-col items-start justify-center max-w-[306px] gap-[8px] min-w-[306px] ${className}`}>
+                <div className="relative text-sm font-medium font-roboto text-black text-left inline-block min-w-[66px]">
+                  Relation
+                </div>
+                <div className="self-stretch rounded flex flex-row items-center justify-start py-[11px] px-3 border-[1px] border-solid border-foundation-white-normal-hover">
+                  <select
+                    value={guarantorDetails?.Relation || ""}
+                    className={`w-full border-none outline-none font-medium font-roboto text-base bg-transparent h-[19px] relative text-black text-left inline-block p-0`}
+                    onChange={(e)=> handleInputChange(e, 'Relation', 'guarantor')}
+                  >
+                    <option value="" disabled>Select a relation</option>
+                    <option value="Father">Father</option>
+                    <option value="Mother">Mother</option>
+                    <option value="Brother">Brother</option>
+                    <option value="Sister">Sister</option>
+                    <option value="Uncle">Uncle</option>
+                    <option value="Aunt">Aunt</option>
+                    <option value="Friend">Friend</option>
+                    <option value="Colleague">Colleague</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+
               <FormInput label="PAN No" placeholder="Value"  onChange={(e)=> handleInputChange(e, 'Pan', 'guarantor')} />
             </div>
           </div>
@@ -248,16 +294,8 @@ const LoanPage = ({ className = "" }) => {
       </main>
 
       <div className="flex flex-row items-start justify-start gap-[24px] max-w-full mq450:flex-wrap">
-        <button className="cursor-pointer py-3.5 px-[49px] bg-[transparent] rounded flex flex-row items-center justify-center border-[1px] border-solid border-foundation-red-normal hover:bg-mediumvioletred-200 hover:box-border hover:border-[1px] hover:border-solid hover:border-mediumvioletred-100">
-          <div className="relative text-base font-medium font-roboto text-foundation-red-normal text-left inline-block min-w-[50px]">
-            Cancel
-          </div>
-        </button>
-        <button type="submit" className="cursor-pointer [border:none] py-4 px-9 bg-foundation-red-normal rounded flex flex-row items-center justify-center whitespace-nowrap hover:bg-mediumvioletred-100">
-          <div className="relative text-base font-medium font-roboto text-white text-left inline-block min-w-[77px]">
-            Apply Now
-          </div>
-        </button>
+        <OutlinedButton label={"Cancel"} />
+        <RedButton label={"Apply Now"} type={"submit"} loading={api} />
       </div>
     </form>
   );

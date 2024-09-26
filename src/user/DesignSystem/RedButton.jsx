@@ -1,8 +1,9 @@
 import React from 'react';
 
-const RedButton = ({ label, onClick, className = '', disabled, loading = false, ...props }) => {
+const RedButton = ({ label, type, onClick, className = '', disabled, loading = false, ...props }) => {
   return (
     <button
+    type={type}
       className={`cursor-pointer [border:none] py-[12px] px-[24px] bg-foundation-red-normal rounded-lg flex flex-row items-center justify-center whitespace-nowrap hover:bg-mediumvioletred ${disabled && 'opacity-50 cursor-not-allowed'} ${className}`}
       onClick={onClick}
       disabled={disabled} // Disable button when loading
