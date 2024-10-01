@@ -1,8 +1,10 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { getFullUrl } from "../utils";
 import axiosInstance from "../../../axios.utils";
+import OutlinedButton from "./OutlinedButton";
+import RedButton from "../../user/DesignSystem/RedButton";
 
 const SavingCard = ({
   className = "",
@@ -17,6 +19,7 @@ const SavingCard = ({
   status,
 }) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
   const profilePictureIconStyle = useMemo(() => {
     return {
       left: propLeft,
@@ -32,6 +35,9 @@ const SavingCard = ({
   async function approve(verify) {
     const userId = key1;
     try {
+      setLoading(true
+
+      )
       let res;
       if (status) {
         res = await axiosInstance.put("admin/classic/Saving", {
@@ -48,8 +54,10 @@ const SavingCard = ({
           },
         });
       }
+      setLoading(false)
       console.log(res);
     } catch (error) {
+      setLoading(false)
       console.error(error);
     }
   }
@@ -101,31 +109,23 @@ const SavingCard = ({
             </div>
           </div>
           <div className="self-stretch flex flex-row items-start justify-start gap-[0.75rem] mq450:flex-wrap">
-            <button
-              onClick={() => approve("Verified")}
-              className="cursor-pointer [border:none] py-[0.5rem] px-[2.562rem] bg-foundation-red-normal rounded flex flex-row items-start justify-start hover:bg-mediumvioletred-100"
-            >
-              <div className="relative text-[1rem] capitalize font-medium font-roboto text-white text-left inline-block min-w-[3.75rem]">
-                Approve
-              </div>
-            </button>
-            <button
-              onClick={() => approve("Rejected")}
-              className="cursor-pointer py-[0.375rem] pr-[3.25rem] pl-[3.312rem] bg-[transparent] rounded flex flex-row items-start justify-start border-[1px] border-solid border-foundation-red-normal hover:bg-mediumvioletred-200 hover:box-border hover:border-[1px] hover:border-solid hover:border-mediumvioletred-100"
-            >
-              <div className="relative text-[1rem] capitalize font-medium font-roboto text-foundation-red-normal text-left inline-block min-w-[2.25rem]">
-                Deny
-              </div>
-            </button>
+            <RedButton
+            label={"Approve"}
+            padding="py-[0.5rem] px-[2.562rem]"
+            className="w-full"
+            onClick={()=>approve("Verified")}
+            loading={loading}/>
+            <OutlinedButton
+            label={"Deny"}
+            padding="py-[0.5rem] px-[2.562rem]"
+            className={"w-full h-[35.2px]"}
+            onClick={()=>approve("Rejected")}/>
           </div>
-          <button
-            className="cursor-pointer py-[0.375rem] px-[1.25rem] bg-[transparent] self-stretch rounded flex flex-row items-start justify-center whitespace-nowrap border-[1px] border-solid border-foundation-red-normal hover:bg-mediumvioletred-200 hover:box-border hover:border-[1px] hover:border-solid hover:border-mediumvioletred-100"
-            onClick={() => viewDetails(key1)}
-          >
-            <div className="relative text-[1rem] capitalize font-medium font-roboto text-foundation-red-normal text-left inline-block min-w-[7.438rem]">
-              View Full Details
-            </div>
-          </button>
+          <OutlinedButton
+            label={"View Full Details"}
+            padding="py-[0.5rem] px-[2.562rem]"
+            className={"w-full h-[35.2px]"}
+            onClick={() => viewDetails(key1) }/>
         </div>
       </div>
     </div>

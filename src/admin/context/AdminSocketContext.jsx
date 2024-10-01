@@ -81,7 +81,7 @@ export const SocketProvider = ({ children }) => {
     //   socket.off('B23CD2AE771A705F2F5EF60173743B5B', handleSchemesEvent);
     //   socket.off('09BAE709245B6148A2EC9215735DAE33', handleNotificationsEvent);
     // };
-  }, [socket, handleUserEvent, handleUserDataEvent, handleAccountsEvent, handleLoansEvent, handleSchemesEvent, handleNotificationsEvent]);
+  }, [socket, handleUserEvent, handleUserDataEvent, handleAccountsEvent, handleLoansEvent, handleSchemesEvent, handleNotificationsEvent, handleLoanRequestsEvent, handleProductsEvent]);
 
   // Subscribe to an event dynamically
   const subscribeToEvent = useCallback((eventName, callback) => {

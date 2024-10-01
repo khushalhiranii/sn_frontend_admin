@@ -36,31 +36,24 @@
 }
 
 .loan-component {
-    position: relative;
-    transition: padding-left 0.3s ease;
-  }
-  
-  .loan-component::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px; /* Width of the red bar */
-    height: 100%;
-    background-color: #AA0542; /* Color of the bar */
-    transform: scaleY(0);
-    transition: transform 0.3s ease;
-    /* transform-origin: center; */
-    border-top-left-radius : 0.25rem;
-    border-bottom-left-radius : 0.25rem;
-  }
-  
-  .loan-component:hover {
-    padding-left: 16px; /* Shift the content to the right */
-    
-  }
-  
-  .loan-component:hover::before {
-    transform: scaleY(1);
-  }
+  position: relative;
+  padding-left: 16px; /* Ensure the content is always shifted to the right */
+  transition: none; /* No transition effect */
+}
+
+.loan-component::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px; /* Width of the red bar */
+  height: 100%;
+  background-color: #AA0542; /* Color of the bar */
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+  transform: scaleY(1); /* Always display the bar */
+}
+
+
+
   

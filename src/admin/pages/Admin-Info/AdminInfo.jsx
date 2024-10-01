@@ -24,7 +24,7 @@ function AdminInfo() {
             console.log(approvedDetails);
             console.log(selected); // If selected is relevant to this function
 
-            const response = await axiosInstance.put('/admin/classic/Product', {
+            const response = await axiosInstance.post('/admin/classic/Product', {
                 "data": approvedDetails,
             });
 

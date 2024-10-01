@@ -7,6 +7,7 @@ import Briefcase from '../../assets/briefcase';
 import Apartment from '../../assets/apartment';
 import { useAdminSocket } from '../../context/AdminSocketContext';
 import LoanInfoCard from '../../components/LoanInfoCard';
+import ApprovedLoans from '../Loan-Info/ApprovedLoans';
 
 function Dashboard() {
   // Set the default state to 'Property Loan'
@@ -24,7 +25,7 @@ function Dashboard() {
   const accountsArray = Object.values(accounts);
 
   const filteredLoansLength = loansArray.filter(
-    (loan) => loan.Status === 'Pending' || loan.Status ==='Offered' ).length;
+    (loan) => loan.Status === 'Pending' || loan.Status ==='Offered' || loan.Status ==='Accepted' ).length;
 
   const filteredDueLoansLength = loansArray.filter(
     (loan) => loan.Status === 'Active').length;
@@ -110,66 +111,7 @@ function Dashboard() {
         </div>
       </div>
       <div className="flex flex-col w-full items-start justify-start pt-[1rem] gap-[2rem] mq675:gap-[1rem]">
-        <div className="self-stretch rounded-xl bg-white box-border flex flex-col items-start justify-start pt-[0rem] pb-[1rem] gap-[1rem] w-full shrink-0 z-[1] text-[1rem] text-foundation-blue-normal font-roboto border-[1px] border-solid border-foundation-white-normal-hover">
-          <div className="w-full flex flex-row items-center justify-between max-w-full [row-gap:20px] border-solid border-b-[1px] border-[#E6E6E6]">
-            <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border text-[16px] font-normal gap-[0.5rem] w-full text-black">
-              
-              <button 
-                onClick={() => handleButtonClick('Property')}
-                className={`navlink2 ${selectedLoanType === 'Property' ? 'active' : ''}`}
-              >
-                <Apartment/>
-                Property Loan
-              </button>
-            </div>
-            <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border gap-[0.5rem] w-full text-black">
-              
-              <button
-                onClick={() => handleButtonClick('Instant')}
-                className={`navlink2 ${selectedLoanType === 'Instant' ? 'active' : ''}`}
-              >
-                <Time/>
-                Instant Loan
-              </button>
-            </div>
-            <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border gap-[0.5rem] w-full text-black">
-              
-              <button
-                onClick={() => handleButtonClick('Personal')}
-                className={`navlink2 ${selectedLoanType === 'Personal' ? 'active' : ''}`}
-              >
-                <Hr/>
-                Personal Loan
-              </button>
-            </div>
-            <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border gap-[0.5rem] w-full text-black">
-              
-              <button
-                onClick={() => handleButtonClick('Business')}
-                className={`navlink2 ${selectedLoanType === 'Business' ? 'active' : ''}`}
-              >
-                <Briefcase/>
-                Business Loan
-              </button>
-            </div>
-          </div>
-          
-          <div className="w-full flex flex-row flex-wrap gap-[16px] items-center justify-between px-[16px] box-border">
-          {mergedAccounts.map((account, index) => (
-              <LoanInfoCard
-                key={index}
-                phoneno={account.Number}
-                fullname={account.Name}
-                address={account.Address}
-                profilePicture={account.Photo}
-                key1={account.Identifier}
-                id={account.Loan}
-                amount={account.Amount}
-                {...account}
-              />
-            ))}
-            </div>
-        </div>
+        <ApprovedLoans />
       </div>
     </div>
   );

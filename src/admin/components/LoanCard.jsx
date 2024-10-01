@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import useAxios from "../axiosSetup";
 import { getFullUrl } from "../utils";
 import axiosInstance from "../../../axios.utils";
+import RedButton from "../../user/DesignSystem/RedButton";
+import OutlinedButton from "./OutlinedButton";
 
 const LoanCard = ({
   className = "",
@@ -19,13 +21,13 @@ const LoanCard = ({
   ...props
 }) => {
   const navigate = useNavigate();
-  const axios = useAxios();
   const profilePictureIconStyle = useMemo(() => {
     return {
       left: propLeft,
       right: propRight,
     };
   }, [propLeft, propRight]);
+  const [loading, setLoading] = useState(false)
 
   const deny = async () => {
     try {
@@ -42,14 +44,17 @@ const LoanCard = ({
 
   const approve = async () => {
     try {
+      setLoading(true)
       const response = await axiosInstance.post('admin/classic/Create-Loan', {
         "data" : {
             "Request":id
         }
       })
+      setLoading(false)
       console.log(response)
     } catch (error) {
       console.error(error)
+      setLoading(false)
       alert("Customer didn't accept the offer")
     }
   }
@@ -77,7 +82,7 @@ const LoanCard = ({
       className={`w-[20.25rem] rounded-lg bg-white box-border flex flex-col items-start justify-start pt-[0rem] px-[0rem] pb-[1rem] relative gap-[5rem] max-w-full text-left text-[0.875rem] text-black1 font-roboto border-[1px] border-solid border-foundation-white-normal-hover mq450:gap-[2.5rem] ${className}`}
     >
       <div className="self-stretch h-[5rem] relative rounded-t-lg rounded-b-none bg-off-white">
-        <div className={`relative text-white px-4 py-1 my-2 transition-all duration-500 ease-out transform ${
+        <div className={`relative text-white px-4 py-1 my-2 transition-all duration-500 ease-out transform overflow-hidden ${
           isLoaded ? 'translate-x-0 w-[35%]' : '-translate-x-full w-0'
         } ${props.Status === "Pending" ? "bg-red-600" : props.Status === "Accepted" ? "bg-green-400" : "bg-blue-500"}`}>
           <span className="absolute inset-y-0 left-0 w-2 h-full bg-current"></span> {/* Tail effect */}
@@ -131,25 +136,23 @@ const LoanCard = ({
             </div>
           </div>
           <div className="self-stretch flex flex-row items-start justify-start gap-[0.75rem] mq450:flex-wrap">
-            <button onClick={()=>approve()} className="cursor-pointer [border:none] py-[0.5rem] px-[2.562rem] bg-foundation-red-normal rounded flex flex-row items-start justify-start hover:bg-mediumvioletred-100">
-              <div className="relative text-[1rem] capitalize font-medium font-roboto text-white text-left inline-block min-w-[3.75rem]">
-                Approve
-              </div>
-            </button>
-            <button onClick={()=>deny()} className="cursor-pointer py-[0.375rem] pr-[3.25rem] pl-[3.312rem] bg-[transparent] rounded flex flex-row items-start justify-start border-[1px] border-solid border-foundation-red-normal hover:bg-mediumvioletred-200 hover:box-border hover:border-[1px] hover:border-solid hover:border-mediumvioletred-100">
-              <div className="relative text-[1rem] capitalize font-medium font-roboto text-foundation-red-normal text-left inline-block min-w-[2.25rem]">
-                Deny
-              </div>
-            </button>
+            <RedButton
+            label={"Approve"}
+            padding="py-[0.5rem] px-[2.562rem]"
+            className="w-full"
+            onClick={()=>approve()}
+            loading={loading}/>
+            <OutlinedButton
+            label={"Deny"}
+            padding="py-[0.5rem] px-[2.562rem]"
+            className={"w-full h-[35.2px]"}
+            onClick={()=>deny()}/>
           </div>
-          <button 
-            className="cursor-pointer py-[0.375rem] px-[1.25rem] bg-[transparent] self-stretch rounded flex flex-row items-start justify-center whitespace-nowrap border-[1px] border-solid border-foundation-red-normal hover:bg-mediumvioletred-200 hover:box-border hover:border-[1px] hover:border-solid hover:border-mediumvioletred-100"
-            onClick={() => viewDetails(key1, id)}
-          >
-            <div className="relative text-[1rem] capitalize font-medium font-roboto text-foundation-red-normal text-left inline-block min-w-[7.438rem]">
-              View Full Details
-            </div>
-          </button>
+          <OutlinedButton
+            label={"View Full Details"}
+            padding="py-[0.5rem] px-[2.562rem]"
+            className={"w-full h-[35.2px]"}
+            onClick={() => viewDetails(key1, id) }/>
         </div>
       </div>
     </div>

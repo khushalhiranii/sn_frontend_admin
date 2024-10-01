@@ -67,6 +67,7 @@ import DetailsUpdate from './user/SavingAccount/Registration/pages/DetailsUpdate
 import UserNotifications from './user/SavingAccount/Registration/pages/UserNotification.jsx';
 import UserInfoPage from './user/SavingAccount/Registration/pages/UserInfoPage.jsx';
 import { AccountApplied } from './user/SavingAccount/Registration/components/AccountApplied.jsx';
+import LoanInfoPage from './admin/pages/Loan-Info/LoanInfoPage.jsx';
 
 
 const RenderSocketProvider = ({ children }) => {
@@ -133,21 +134,21 @@ const AppRouter = () => {
       
       
     </Route>
-    <Route path='/register' element={<Registration/>}>
-      <Route index element={<Inputbar/>}/>
+    <Route path='/register' element={<Inputbar/>}>
+      {/* <Route index element={<Inputbar/>}/> */}
       {/* <Route path='otp' element={<PrivateRoute component={Otp} />}/> */}
-      <Route path='otp' element={<Otp/>}/>
+      
       {/* <Route path='otpverified' element={<PrivateRoutes component={OtpVerified}/>}/> */}
-      <Route path='otpverified' element={<OtpVerified/>}/>
+      {/* <Route path='otpverified' element={<OtpVerified/>}/> */}
       {/* <Route path='openAcc' element={<PrivateRoute2 component={OpenAcc}/>}/> */}
       <Route path='openAcc' element={<OpenAcc/>}/>
       <Route path='verified' element={<AccountApplied/>}/>
     </Route>
-    <Route path='/login' element={<Registration/>}>
-    <Route index element={<Login/>}/>
-    <Route path='otp' element={<Otp/>}/>
-    <Route path='otpverified' element={<OtpVerified/>}/>
-    </Route>
+    <Route path='/register/otp' element={<Otp/>}/>
+    <Route path='/register/otpverified' element={<OtpVerified/>}/>
+    <Route path='/login' element={<Login/>}/>
+    <Route path='/login/otp' element={<Otp/>}/>
+    <Route path='/login/otpverified' element={<OtpVerified/>}/>
     <Route path="/agent" element={<AgentLogin />} />
     {/* <Route
       path="/admin/*"
@@ -204,6 +205,7 @@ const AppRouter = () => {
       <Route path="scheme/:userId/:schemeId" element={<SchemeDetails />} />
       <Route path="schemeInfo/:userId/:schemeId" element={<SchemeDetails1 />} />
       <Route path='loanInfo/ApprovedLoans' element={<ApprovedLoans/>} />
+      <Route path='loanInfo/ApprovedLoans/:userId/:loanId' element={<LoanInfoPage/>} />
       <Route path='AdminInfo' element={<AdminInfo/>} />
       <Route path="*" element={<Navigate to="/admin" replace />} />
     </Route>

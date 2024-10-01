@@ -60,7 +60,7 @@ const Header = () => {
                 <li className="text-red-500">{searchResults[0].message}</li>
               ) : (
                 searchResults.map((user, index) => (
-                  <li key={index} onClick={()=> navigate(`/admin/cusmgmt/${user.Identifier}`)} className="py-1 px-2 text-gray-800 cursor-pointer">
+                  <li key={index} onClick={()=> navigate(`/admin/cusmgmt/${user.Identifier}`)} className="py-1 px-2 font-normal list-none text-base text-gray-800 cursor-pointer hover:bg-mediumvioletred-200">
                     {user.Name}
                   </li>
                 ))

@@ -84,11 +84,9 @@ const LoanPage = ({ className = "" }) => {
   
   const uploadDocumentsAPI = async (documentFile, loanId) => {
     const formData = new FormData();
-    formData.append('file', documentFile);
+    formData.append('Loan-Docs', documentFile);
   
-    const response = await axiosInstance.post(`/client/classic/Loan/Property/Docs?Loan=${loanId}`, {
-      "Loan-Docs" : formData
-    });
+    const response = await axiosInstance.post(`/client/classic/Loan/Property/Docs?Request=${loanId}`, formData);
     return await response;
   };
 
@@ -221,7 +219,7 @@ const LoanPage = ({ className = "" }) => {
           <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
             <FormInput label="Property Address" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Address', 'loan')} />
             <FormInput label="Property Type" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Nature', 'loan')} />
-            <FormInput label="Purchse Date" type='date' onChange={(e)=> handleInputChange(e, 'Amount', 'loan')} />
+            <FormInput label="Purchase Date" type='date' onChange={(e)=> handleInputChange(e, 'Purchased', 'loan')} />
             <FormInput label="Value" placeholder="Value" onChange={(e)=> {handleInputChange(e, 'Value', 'loan')}} />
             <FormInput label="Property Documents" type='File' onChange={handleDocumentUpload} />
           </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import WeeklyD from '../../assets/WeeklyD';
 import MonthlyI from '../../assets/MonthlyI';
 import FixedD from '../../assets/FixedD';
@@ -14,18 +14,21 @@ function SchemeInfo() {
   };
 
   const { users, userData, schemes } = useAdminSocket();
+
+  const schemesArray = Object.values(schemes);
+
+    // Filter loans by status and selectedLoanType
+  const filteredSchemes = schemesArray.filter(
+    (scheme) => scheme.Status != 'Pending' && scheme.Status != 'Rejected'
+  );
   const getMergedData = () => {
     const usersArray = Object.values(users);
     const userDataArray = Object.values(userData);
-    const schemesArray = Object.values(schemes);
-
-    // Filter loans by status and selectedLoanType
-    const filteredSchemes = schemesArray.filter(
-      (scheme) => scheme.Status != 'Pending' && scheme.Status != 'Rejected' && scheme.Type === selectedLoanType
-    );
+    const filteredSchemesWise = filteredSchemes.filter((scheme) => scheme.Type === selectedLoanType )
+    
 
     // Merge the data based on the "Identifier"
-    const mergedData = filteredSchemes.map((scheme) => {
+    const mergedData = filteredSchemesWise.map((scheme) => {
       const user = usersArray.find((u) => u.Identifier === scheme.Identifier);
       const data = userDataArray.find((d) => d.Identifier === scheme.Identifier);
       // const scheme = schemesArray.find((s) => s.Identifier === scheme.Identifier);
@@ -46,6 +49,18 @@ function SchemeInfo() {
 
   const mergedAccounts = getMergedData();
   console.log(mergedAccounts)
+  const schemeCounts = useMemo(() => {
+    const counts = { Weekly: 0, Monthly: 0, Fixed: 0, Recurring: 0 };
+    
+    filteredSchemes.forEach((scheme) => {
+        if (scheme.Type === 'Weekly') counts.Weekly++;
+        if (scheme.Type === 'Monthly') counts.Monthly++;
+        if (scheme.Type === 'Fixed') counts.Fixed++;
+        if (scheme.Type === 'Recurring') counts.Recurring++;
+    });
+
+    return counts;
+  }, [mergedAccounts]);
 
 
 
@@ -61,7 +76,7 @@ function SchemeInfo() {
                 className={`navlink2 ${selectedLoanType === 'Weekly' ? 'active' : ''}`}
               >
                 <WeeklyD/>
-                Weekly Deposit
+                Weekly Deposit ({schemeCounts.Weekly})
               </button>
             </div>
             <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border gap-[0.5rem] w-full text-black">
@@ -71,7 +86,7 @@ function SchemeInfo() {
                 className={`navlink2 ${selectedLoanType === 'Monthly' ? 'active' : ''}`}
               >
                 <MonthlyI/>
-                Monthly Income
+                Monthly Income ({schemeCounts.Monthly})
               </button>
             </div>
             <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border gap-[0.5rem] w-full text-black">
@@ -81,7 +96,7 @@ function SchemeInfo() {
                 className={`navlink2 ${selectedLoanType === 'Fixed' ? 'active' : ''}`}
               >
                 <FixedD/>
-                Fixed Deposit
+                Fixed Deposit ({schemeCounts.Fixed})
               </button>
             </div>
             <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border gap-[0.5rem] w-full text-black">
@@ -91,7 +106,7 @@ function SchemeInfo() {
                 className={`navlink2 ${selectedLoanType === 'Recurring' ? 'active' : ''}`}
               >
                 <RecurringD/>
-                Recurring Deposit
+                Recurring Deposit ({schemeCounts.Recurring})
               </button>
             </div>
           </div>

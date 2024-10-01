@@ -11,6 +11,7 @@ import { getFullUrl } from '../../utils';
 function SchemeDetails() {
   const { userId, schemeId } = useParams(); // Get the userId from the URL
   const { users, userData, schemes, accounts } = useAdminSocket();
+  const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
   console.log(users)
   console.log(userData)
@@ -75,18 +76,21 @@ function SchemeDetails() {
   
   async function approve(status){
     try {
+      setLoading(true)
       const res = await axiosInstance.put('admin/classic/Scheme', {
           "data" : {
-              "Status" : {status},
-              "Scheme" : `${schemeId}`
+              "Status" : status,
+              "Scheme" : schemeId
             }
         })
       
     
-      
+      setLoading(false)
       console.log(res);
+      alert('Scheme Approved Successfully')
       navigate('/admin/scheme')
     } catch (error) {
+      setLoading(false)
       console.error(error);
     }
   }
@@ -180,7 +184,10 @@ function SchemeDetails() {
         
         <div className="flex flex-row w-full items-end justify-end gap-6 text-[1rem] text-foundation-red-normal font-roboto">
         <OutlinedButton label={"Cancel"} onClick={()=>approve("Rejected")} />
-          <RedButton label={"Approve"} onClick={()=>approve("Active")}/>
+        <RedButton
+            label={"Approve"}
+            onClick={()=>approve("Active")}
+            loading={loading}/>
         </div>
       </div>
     </div>

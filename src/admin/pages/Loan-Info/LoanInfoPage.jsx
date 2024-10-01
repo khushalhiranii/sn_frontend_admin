@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useAxios from '../../axiosSetup';
@@ -8,45 +9,11 @@ import { useAdminSocket } from '../../context/AdminSocketContext';
 import { getFullUrl } from '../../utils';
 import axiosInstance from '../../../../axios.utils';
 
-function LoanDetails() {
+function LoanInfoPage() {
   const { userId, loanId } = useParams(); // Get the userId from the URL
-  const { users, userData, accounts, requests, products } = useAdminSocket();
-  const [approvedDetails, setApprovedDetails] = useState({"Loan": loanId});
+  const { users, userData, accounts, loans } = useAdminSocket();
   const navigate = useNavigate();
-  const [selected, setSelected] = useState([]);
-  const [loading,setLoading] = useState(false)
-  const productsArray = Object.values(products);
-  console.log(productsArray)
 
-// Handle checkbox selection
-const handleSelectChange = (e) => {
-  const value = e.target.value;
-  setSelected((prevSelected) =>
-    prevSelected.includes(value)
-      ? prevSelected.filter((item) => item !== value) // Deselect if already selected
-      : [...prevSelected, value] // Select if not already selected
-  );
-};
-
-
-  const OfferLoan = async () => {
-    try {
-      console.log(approvedDetails)
-      console.log(selected)
-      const response = await axiosInstance.put('/admin/classic/Offers',{
-        "data" : {
-        "Request": loanId ,
-        "Products": selected
-    }
-      })
-      if(response.status == 200){
-        alert("Loan Offered")
-      }
-      
-    } catch (error) {
-      console.error("Request failed: ", error)
-    }
-  }
 
   const onViewClick = (url) => {
     const fileurl = getFullUrl(url)
@@ -54,50 +21,16 @@ const handleSelectChange = (e) => {
   };
   
 
-  const deny = async () => {
-    try {
-      const response = await axiosInstance.put('admin/classic/Reject', {
-        "data" : {
-            "Request":id
-        }
-      })
-      console.log(response)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const approve = async () => {
-    try {
-      setLoading(true)
-      const response = await axiosInstance.post('admin/classic/Create-Loan', {
-        "data" : {
-            "Request":id
-        }
-      })
-      setLoading(false)
-      console.log(response)
-      alert('Loan Approved Successfully')
-      navigate('/admin/loanRequest')
-    } catch (error) {
-      setLoading(false)
-      console.error(error)
-      alert("Customer didn't accept the offer")
-    }
-  }
-
-  console.log(users)
-  console.log(userData)
+  
   
 
   // Function to get and merge data
   const getMergedData = () => {
     const usersArray = Object.values(users);
     const userDataArray = Object.values(userData);
-    const requestsArray = Object.values(requests);
+    const loansArray = Object.values(loans);
     const accountsArray = Object.values(accounts);
 
-    console.log(usersArray)
 
     // Ensure userId is defined and valid
     if (!userId) return null;
@@ -105,7 +38,7 @@ const handleSelectChange = (e) => {
     // Find the user and userData by userId
     const filteredUser = usersArray.find((user) => user.Identifier === userId);
     const filteredUserData = userDataArray.find((data) => data.Identifier === userId);
-    const filteredLoanData = requestsArray.find((loan)=> loan.Identifier === userId && loan.Request === loanId)
+    const filteredLoanData = loansArray.find((loan)=> loan.Identifier === userId && loan.Loan === loanId)
     const filteredAccountData = accountsArray.find((account) => account.Identifier === userId);
     // Combine the data if both are available
     const mergedData = filteredUser && filteredUserData && filteredLoanData ? {
@@ -120,7 +53,7 @@ const handleSelectChange = (e) => {
 
   // Call the function to get the merged data
   let data;
-  if(users){
+  if(users.length != 0){
     data = getMergedData();
   }
   
@@ -146,22 +79,6 @@ const handleSelectChange = (e) => {
     
     return age;
   }
-  
-  // async function approve(){
-  //   try {
-  //     const res = await axios.post(`${import.meta.env.VITE_API_URL}/admin/user/account/requests/${userId}`);
-  //     const user = res.data.data;
-  //     console.log(user);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
-  useEffect(() => {
-    if (data?.loanInfo?.Products) {
-      setSelected(data.loanInfo.Products); // Set the initial selected state to Products from loanInfo
-    }
-  }, []);
 
   
 
@@ -182,10 +99,10 @@ const handleSelectChange = (e) => {
             />
             <div className="flex-1 flex flex-col items-start justify-start gap-2 min-w-[5.063rem]">
               <div className="font-medium min-w-[6.5rem] mq450:text-[1rem]">
-                {data.Name} | {calculateAge(data.Birth)}
+                {data?.Name} | {calculateAge(data?.Birth)}
               </div>
               <div className="text-[1rem] font-medium min-w-[7.813rem]">
-              {data.Number} | {data.Mail}
+              {data?.Number} | {data?.Mail}
               </div>
             </div>
           </div>
@@ -212,11 +129,19 @@ const handleSelectChange = (e) => {
             </div>
           </div>
           <div className="flex flex-col items-start justify-start gap-2 w-full">
-            <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">Applied Loan Details</div>
+            <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">Loan Details</div>
             <div className="flex flex-wrap w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
             <InputComponent label={"Loan Type"}  value={data.loanInfo.Type}/>
-            <InputComponent label={"Applied Loan"} value={data.loanInfo.Amount}/>
+            <InputComponent label={"Loan Amount"} value={data.loanInfo.Amount}/>
+            <InputComponent label={"Loan Id"} value={data.loanInfo.Loan}/>
             <InputComponent label={"Purpose of Loan"} value={data.loanInfo.Purpose}/>
+            <InputComponent label={"Interest Rate"} value={data.loanInfo.Interest}/>
+            <InputComponent label={"Mode"} value={data.loanInfo.Mode}/>
+            <InputComponent label={"EMI"} value={data.loanInfo.Emi}/>
+            <InputComponent label={"Date of fulfilment"} value={data.loanInfo.Fullfilment}/>
+            <InputComponent label={"Next Installment Due on"} value={data.loanInfo.Installment}/>
+            <InputComponent label={"Tenure in weeks"} value={data.loanInfo.Tenure}/>
+            
             </div>
             
           
@@ -284,42 +209,6 @@ const handleSelectChange = (e) => {
           </div>
         </div>
       )}
-
-
-<div className="flex flex-col items-start justify-start gap-2 w-full">
-      <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">
-        Offer Products
-      </div>
-      <div>
-      {productsArray.map((product) => (
-          <div key={product.Product}>
-            <label className="flex items-center gap-2 cursor-pointer text-black hover:bg-blue-100 p-2 rounded">
-              <input
-                type="checkbox"
-                value={product.Product}
-                checked={selected.includes(product.Product)}
-                onChange={handleSelectChange}
-              />
-              Amount: {product.Amount}, 
-              EMI: {product.Emi}, 
-              Interest: {product.Interest}, 
-              Mode: {product.Mode}, 
-              Product: {product.Product}, 
-              Tenure: {product.Tenure}, 
-              Type: {product.Type}
-            </label>
-          </div>
-        ))}
-      </div>
-      <div className='flex flex-row w-full items-end justify-end'>
-        <RedButton label="Offer a Loan" onClick={()=>OfferLoan()} />
-      </div>
-    </div>
-        
-            
-            
-          
-        
         <div className="flex flex-col items-start justify-start gap-2 w-full">
             <div className="tracking-tight text-[20px] leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">Bank Details</div>
             <div className="flex flex-wrap w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
@@ -330,33 +219,24 @@ const handleSelectChange = (e) => {
             
           
         </div>
-        <div className="flex flex-col items-start justify-start gap-2 w-full">
+        {data.loanInfo?.Guarantor && (<div className="flex flex-col items-start justify-start gap-2 w-full">
             <div className="tracking-tight leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap text-[20px] mq450:text-[1rem] mq450:leading-[1.5rem]">Guarantor Details</div>
             <div className="flex flex-wrap w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
-            <InputComponent label={"Name"} value={data.loanInfo.Guarantor[0]?.Name || "Value"}/>
-            <InputComponent label={"Mail"} value={data.loanInfo.Guarantor[0]?.Mail || "Value"}/>
-            <InputComponent label={"Phone"} value={data.loanInfo.Guarantor[0]?.Phone || "Value"}/>
-            <InputComponent label={"PAN Number"} value={data.loanInfo.Guarantor[0]?.Pan || "Value"}/>
+            <InputComponent label={"Name"} value={data.loanInfo?.Guarantor[0]?.Name || "Value"}/>
+            <InputComponent label={"Mail"} value={data.loanInfo?.Guarantor[0]?.Mail || "Value"}/>
+            <InputComponent label={"Phone"} value={data.loanInfo?.Guarantor[0]?.Phone || "Value"}/>
+            <InputComponent label={"PAN Number"} value={data.loanInfo?.Guarantor[0]?.Pan || "Value"}/>
             
             <InputComponent label={"Relation"} value={data.loanInfo.Guarantor[0]?.Relation || "Value"}/>
             <InputComponent label={"Address"} value={data.loanInfo.Guarantor[0]?.Address || "Value"}/>
               </div>
             
           
-        </div>
-        </div>
-        
-        <div className="flex flex-row w-full items-end justify-end gap-6 text-[1rem] text-foundation-red-normal font-roboto">
-        <OutlinedButton label="Cancel" onClick={()=>navigate('/admin/loanRequest')} />
-        
-        <RedButton
-            label={"Approve"}
-            onClick={()=>approve()}
-            loading={loading}/>
+        </div>)}
         </div>
       </div>
     </div>
   );
 }
 
-export default LoanDetails;
+export default LoanInfoPage;

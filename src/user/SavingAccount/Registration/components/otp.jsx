@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useUserData } from '../context/UserDataContext';
 import { useNavigate } from 'react-router-dom';
 import RedButton from '../../../DesignSystem/RedButton';
-import { useUserSocket } from '../../../context/UserSocketContext';
+import { useUserSocket } from "../../../context/UserSocketContext";
+
 
 export const Otp = ({ length = 4 }) => {
     const [finalOtp, setFinalOtp] = useState('');
@@ -86,8 +87,16 @@ export const Otp = ({ length = 4 }) => {
         }
     };
 
+    
+
     return (
-        <div className="h-[896px] flex flex-col w-full">
+        <div className="w-full relative bg-white overflow-y-auto flex flex-col items-end justify-start px-[4rem] box-border gap-[1.5rem] leading-[normal] tracking-[normal] mq750:pl-[2rem] mq750:pr-[2rem] mq750:box-border">
+      <main className="self-stretch flex flex-row items-center justify-center gap-[2rem] max-w-full text-left text-[2rem] text-black1 font-roboto lg:flex-wrap mq750:flex-col mq750:gap-[1rem]">
+        <div className="h-auto flex-1 relative rounded-3xl bg-whitesmoke box-border max-w-full border-[4px] border-solid border-white lg:flex-1 mq750:min-w-full">
+          <img src='/otp.svg' alt="Loading" />
+        </div>
+        <div className='rounded-3xl box-border flex flex-col justify-between p-[58px] w-full border-[1px] border-solid border-foundation-white-normal-hover px-[4rem] gap-[32px]'>
+        <div className=" flex flex-col w-full">
             <div className="flex flex-col w-full flex-grow gap-[32px] mq750:gap-[1rem]">
                 <div className="flex flex-row items-center justify-start gap-[1.5rem] mq450:flex-wrap">
                     <img
@@ -127,12 +136,15 @@ export const Otp = ({ length = 4 }) => {
             <div className="self-stretch flex justify-end">
                 <RedButton
                     label="Verify OTP"
-                    onClick={handleSubmit}
+                    onClick={()=>handleSubmit()}
                     className="w-[100%]"
                     loading={loading} // Pass loading state to RedButton
                     disabled={loading || finalOtp.length != 4} // Disable button while loading
                 />
             </div>
         </div>
+        </div>
+      </main>
+    </div>
     );
 };

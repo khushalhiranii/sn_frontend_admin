@@ -85,7 +85,7 @@ function AgentMngmt() {
           </div>
 
           {/* Display filtered and merged data */}
-          <div className="flex flex-row flex-wrap w-full items-start justify-between gap-[16px] px-[16px] box-border">
+          <div className="w-full grid grid-cols-3 mq1275:grid-cols-2 mq850:grid-cols-1 items-center px-[24px] gap-6 box-border">
             {mergedAccounts.map((account, index) => (
               <AgentInfo
                 key={index}

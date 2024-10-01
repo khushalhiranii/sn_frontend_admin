@@ -4,12 +4,14 @@ import { useParams } from 'react-router-dom';
 import { useAdminSocket } from '../../context/AdminSocketContext';
 import { getFullUrl } from '../../utils';
 import axiosInstance from '../../../../axios.utils';
+import OutlinedButton from '../../components/OutlinedButton';
 
 function ClientDetails() {
   const { userId } = useParams(); // Get the userId from the URL
   const { users, userData, accounts } = useAdminSocket();
   const [ status, setStatus ] = useState(null);
   const [ data, setData ] = useState(null);
+  const [ loading, setLoading ] = useState(false);
 
   console.log(users)
   console.log(userData)
@@ -78,28 +80,36 @@ function ClientDetails() {
     return age;
   }
   
-  function approve(verify){
+  async function approve(verify) {
+    try {
+      setLoading(true)
       let res;
-      if(status){ 
-        res = axiosInstance.put('admin/classic/Saving', {
-          "data" : {
-              "Status" : verify,
-              "Account" : data.Account.Account
-            }
-        })
-      }else{
-      res = axiosInstance.put('admin/classic/Data', {
-        "data" : {
-            "Verification" : verify,
-            "Identifier" : userId
+      if (status) { 
+        res = await axiosInstance.put('admin/classic/Saving', {
+          "data": {
+            "Status": verify,
+            "Account": data.Account.Account
           }
-      })
-    
-    
-      
-      console.log(res);
-    } 
+        });
+      } else {
+        res = await axiosInstance.put('admin/classic/Data', {
+          "data": {
+            "Verification": verify,
+            "Identifier": userId
+          }
+        });
+      }
+      setLoading(false)
+      console.log(res); // Log response after the API call
+      alert('Approved Successfully')
+      navigate('/admin/savingAccount')
+    } catch (error) {
+      setLoading(false)
+      console.error("Error occurred during approval:", error); // Log error for debugging
+      // You can also show an error message or handle the error in the UI
+    }
   }
+  
 
   
 
@@ -327,16 +337,11 @@ function ClientDetails() {
       </div>
     </div>
         <div className="flex flex-row items-center justify-center gap-6 text-[1rem] text-foundation-red-normal font-roboto ">
-          <div onClick={()=>approve("Rejected")} className="flex-[0.8333] flex items-center justify-center py-[0.906rem] px-6 border border-solid border-foundation-red-normal rounded cursor-pointer">
-            <div className="font-medium">
-              Cancel
-            </div>
-          </div>
-          <div onClick={()=>approve("Verified")} className=" flex-1 flex items-center justify-center py-[0.906rem] px-5 bg-foundation-red-normal text-white rounded cursor-pointer">
-            <div className="font-medium">
-              Approve
-            </div>
-          </div>
+          <OutlinedButton onClick={()=>approve("Rejected")} label={"Cancel"} />
+          <RedButton
+            label={"Approve"}
+            onClick={()=>approve("Verified")}
+            loading={loading}/>
         </div>
       </div>
     </div>

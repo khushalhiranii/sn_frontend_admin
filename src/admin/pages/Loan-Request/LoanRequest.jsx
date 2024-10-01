@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Briefcase from '../../assets/briefcase';
 import Hr from '../../assets/hr-person';
 import Time from '../../assets/time';
@@ -14,33 +14,20 @@ function LoanRequest() {
     setSelectedLoanType(loanType);
   };
 
-  const getMergedData = () => {
+  const getMergedData = useMemo(() => {
     const usersArray = Object.values(users);
     const userDataArray = Object.values(userData);
-    const loansArray = Object.values(loans);
     const requestsArray = Object.values(requests);
 
-    // Filter loans by status and selectedLoanType
-    const filteredLoans = requestsArray.filter((loan) => {
-      // If "Business Loan" is selected, include both "Self Business" and "Joint Business"
-      if (selectedLoanType === 'Business') {
-        return loan.Status !== 'Active' && loan.Status !== 'Rejected' && (loan.Type === 'Self Business' || loan.Type === 'Joint Business');
-      }
-
-      // For other loan types, just match with selectedLoanType
-      return loan.Status !== 'Active' && loan.Status !== 'Rejected' && loan.Type === selectedLoanType;
-    });
-
-    // Merge the data based on the "Identifier"
-    const mergedData = filteredLoans.map((loan) => {
+    // Filter and merge data
+    const mergedData = requestsArray.map((loan) => {
       const user = usersArray.find((u) => u.Identifier === loan.Identifier);
       const data = userDataArray.find((d) => d.Identifier === loan.Identifier);
 
-      // Merge addresses if there are multiple entries
       const mergedAddress = data ? Object.values(data.Address.Address).join(', ') : '';
 
       return {
-        ...loan, // Include loan details
+        ...loan,
         Name: user?.Name,
         Number: user?.Number,
         Address: mergedAddress,
@@ -49,11 +36,29 @@ function LoanRequest() {
     });
 
     return mergedData;
-  };
+  }, [users, userData, requests]);
 
-  // Get filtered and merged data
-  const mergedAccounts = getMergedData();
-  console.log(mergedAccounts)
+  // Count loan types
+  const loanCounts = useMemo(() => {
+    const counts = { Property: 0, Instant: 0, Personal: 0, Business: 0 };
+
+    getMergedData.forEach((loan) => {
+      if (loan.Type === 'Property') counts.Property++;
+      if (loan.Type === 'Instant') counts.Instant++;
+      if (loan.Type === 'Personal') counts.Personal++;
+      if (loan.Type === 'Self Business' || loan.Type === 'Joint Business') counts.Business++;
+    });
+
+    return counts;
+  }, [getMergedData]);
+
+  // Get filtered and merged data based on the selected loan type
+  const filteredAccounts = getMergedData.filter((loan) => {
+    if (selectedLoanType === 'Business') {
+      return loan.Status !== 'Active' && loan.Status !== 'Rejected' && (loan.Type === 'Self Business' || loan.Type === 'Joint Business');
+    }
+    return loan.Status !== 'Active' && loan.Status !== 'Rejected' && loan.Type === selectedLoanType;
+  });
 
   return (
     <div className="flex-1 flex flex-col items-start justify-start pt-[0.5rem] px-[0rem] pb-[0rem] box-border max-w-[calc(100%_-_344px)] text-[1rem] text-white mq850:h-auto mq850:max-w-full">
@@ -62,31 +67,31 @@ function LoanRequest() {
           <div className="w-full flex flex-row items-center justify-between max-w-full [row-gap:20px] border-solid border-b-[1px] border-[#E6E6E6]">
             {/* Loan type buttons */}
             <div className="flex-auto flex flex-row items-center justify-center text-[16px] font-normal gap-[0.5rem] w-full text-black">
-              <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border text-[16px] font-normal gap-[0.5rem] w-full text-black">  
+              <div className="flex-auto flex flex-row items-center justify-center">
                 <button onClick={() => handleButtonClick('Property')} className={`navlink2 ${selectedLoanType === 'Property' ? 'active' : ''}`}>
-                  <Apartment /> Property Loan
+                  <Apartment /> Property Loan ({loanCounts.Property})
                 </button>
               </div>
-              <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border text-[16px] font-normal gap-[0.5rem] w-full text-black">
+              <div className="flex-auto flex flex-row items-center justify-center">
                 <button onClick={() => handleButtonClick('Instant')} className={`navlink2 ${selectedLoanType === 'Instant' ? 'active' : ''}`}>
-                  <Time /> Instant Loan
+                  <Time /> Instant Loan ({loanCounts.Instant})
                 </button>
               </div>
-              <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border text-[16px] font-normal gap-[0.5rem] w-full text-black">
+              <div className="flex-auto flex flex-row items-center justify-center">
                 <button onClick={() => handleButtonClick('Personal')} className={`navlink2 ${selectedLoanType === 'Personal' ? 'active' : ''}`}>
-                  <Hr /> Personal Loan
+                  <Hr /> Personal Loan ({loanCounts.Personal})
                 </button>
               </div>
-              <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border text-[16px] font-normal gap-[0.5rem] w-full text-black">
-                <button onClick={() => handleButtonClick('Business')} className={`navlink2 ${selectedLoanType === 'Self Business' ? 'active' : ''}`}>
-                  <Briefcase /> Business Loan
+              <div className="flex-auto flex flex-row items-center justify-center">
+                <button onClick={() => handleButtonClick('Business')} className={`navlink2 ${selectedLoanType === 'Business' ? 'active' : ''}`}>
+                  <Briefcase /> Business Loan ({loanCounts.Business})
                 </button>
               </div>
             </div>
           </div>
           {/* Display filtered and merged data */}
-          <div className="w-full flex flex-row flex-wrap gap-[16px] items-center justify-between px-[16px] box-border">
-            {mergedAccounts.map((account, index) => (
+          <div className="w-full grid grid-cols-3 mq1275:grid-cols-2 mq850:grid-cols-1 items-center px-[24px] gap-6 box-border">
+            {filteredAccounts.map((account, index) => (
               <LoanCard
                 key={index}
                 phoneno={account.Number}

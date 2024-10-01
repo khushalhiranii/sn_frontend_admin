@@ -128,14 +128,14 @@ export const UserSocketProvider = ({ children }) => {
 
     // Cleanup event listeners when the component unmounts
     return () => {
-      socket.off('0280777F37D4F4E7C478D21CEC701463', handleUserEvent);
-      socket.off('764723AD6458ACC527B82A04ED5C5BC2', handleUserDataEvent);
-      socket.off('02A1F60DB26C4A78CAA677A35D1B452B', handleAccountsEvent);
-      socket.off('97A70F223BA2A5F5C4E04E2235AE3553', handleLoansEvent);
-      socket.off('6E6ED2EDEE685CF214DD64167EEDCC2C', handleSchemesEvent);
-      socket.off('B5EC69CF4C7328EE8CABF3851E284EE3', handleNotificationsEvent);
-      socket.off('97A70F223BA2A5F5C4E04E2235AE3R53', handleLoanRequestsEvent);
-      socket.off('7712D5EQDA9F00F842E470D02D381F9P', handleProductsEvent);
+      // socket.off('0280777F37D4F4E7C478D21CEC701463', handleUserEvent);
+      // socket.off('764723AD6458ACC527B82A04ED5C5BC2', handleUserDataEvent);
+      // socket.off('02A1F60DB26C4A78CAA677A35D1B452B', handleAccountsEvent);
+      // socket.off('97A70F223BA2A5F5C4E04E2235AE3553', handleLoansEvent);
+      // socket.off('6E6ED2EDEE685CF214DD64167EEDCC2C', handleSchemesEvent);
+      // socket.off('B5EC69CF4C7328EE8CABF3851E284EE3', handleNotificationsEvent);
+      // socket.off('97A70F223BA2A5F5C4E04E2235AE3R53', handleLoanRequestsEvent);
+      // socket.off('7712D5EQDA9F00F842E470D02D381F9P', handleProductsEvent);
     };
   }, [
     socket,

@@ -1,18 +1,38 @@
 // SchemeRequest.js
-import React from 'react';
+import React, { useMemo } from 'react';
 import WeeklyD from '../../assets/WeeklyD';
 import MonthlyI from '../../assets/MonthlyI';
 import FixedD from '../../assets/FixedD';
 import RecurringD from '../../assets/RecurringD';
 import SchemeCard from '../../components/SchemeCard';
 import { useSchemeContext } from './SchemeContext'; 
+import { useAdminSocket } from '../../context/AdminSocketContext';
 
 function SchemeRequest() {
   const { mergedAccounts, selectedLoanType, setSelectedLoanType } = useSchemeContext();
+  const { schemes } = useAdminSocket();
+
+  const filteredSchemes = Object.values(schemes).filter(
+    (scheme) => scheme.Status === 'Pending'
+  );
 
   const handleButtonClick = (loanType) => {
     setSelectedLoanType(loanType);
   };
+  console.log(filteredSchemes)
+
+  const schemeCounts = useMemo(() => {
+    const counts = { Weekly: 0, Monthly: 0, Fixed: 0, Recurring: 0 };
+    
+    filteredSchemes.forEach((scheme) => {
+        if (scheme.Type === 'Weekly') counts.Weekly++;
+        if (scheme.Type === 'Monthly') counts.Monthly++;
+        if (scheme.Type === 'Fixed') counts.Fixed++;
+        if (scheme.Type === 'Recurring') counts.Recurring++;
+    });
+
+    return counts;
+}, [filteredSchemes]);
 
   return (
     <div className="flex-1 flex flex-col items-start justify-start pt-[0.5rem] px-[0rem] pb-[0rem] box-border max-w-[calc(100%_-_344px)] text-[1rem] text-white mq850:h-auto mq850:max-w-full">
@@ -25,7 +45,7 @@ function SchemeRequest() {
                 className={`navlink2 ${selectedLoanType === 'Weekly' ? 'active' : ''}`}
               >
                 <WeeklyD />
-                Weekly Deposit
+                Weekly Deposit ({schemeCounts.Weekly})
               </button>
             </div>
             <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border gap-[0.5rem] w-full text-black">
@@ -34,7 +54,7 @@ function SchemeRequest() {
                 className={`navlink2 ${selectedLoanType === 'Monthly' ? 'active' : ''}`}
               >
                 <MonthlyI />
-                Monthly Income
+                Monthly Income ({schemeCounts.Monthly})
               </button>
             </div>
             <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border gap-[0.5rem] w-full text-black">
@@ -43,7 +63,7 @@ function SchemeRequest() {
                 className={`navlink2 ${selectedLoanType === 'Fixed' ? 'active' : ''}`}
               >
                 <FixedD />
-                Fixed Deposit
+                Fixed Deposit ({schemeCounts.Fixed})
               </button>
             </div>
             <div className="flex-auto rounded-tl-xl rounded-tr-xl overflow-x-hidden flex flex-row items-center justify-center box-border gap-[0.5rem] w-full text-black">
@@ -52,11 +72,11 @@ function SchemeRequest() {
                 className={`navlink2 ${selectedLoanType === 'Recurring' ? 'active' : ''}`}
               >
                 <RecurringD />
-                Recurring Deposit
+                Recurring Deposit ({schemeCounts.Recurring})
               </button>
             </div>
           </div>
-          <div className="w-full flex flex-row flex-wrap gap-[16px] items-center justify-between px-[16px] box-border">
+          <div className="w-full grid grid-cols-3 items-center justify-between px-[16px] box-border">
           {mergedAccounts.map((account, index) => (
             <SchemeCard
               key={index}

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 const Loan = ({ className = "", home22, loanRequests, count }) => {
   return (
     <div
-      className={`loan-component w-full rounded bg-off-white flex flex-row justify-between p-[12px] box-border min-w-[9.5rem] text-left text-[1rem] text-black1 font-roboto ${className}`}
+      className={`loan-component w-full rounded bg-off-white flex flex-row justify-between pl p-[12px] box-border min-w-[9.5rem] text-left text-[1rem] text-black1 font-roboto ${className}`}
     >
       <div className="flex flex-col items-center justify-end pt-[0rem] px-[0rem]">
         <div className="flex flex-col items-stretch justify-center gap-[0.25rem]">

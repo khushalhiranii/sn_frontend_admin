@@ -1,10 +1,19 @@
 import React from 'react';
 
-const RedButton = ({ label, type, onClick, className = '', disabled, loading = false, ...props }) => {
+const RedButton = ({
+  label,
+  type,
+  onClick,
+  className = '',
+  disabled,
+  loading = false,
+  padding = 'py-[12px] px-[24px]', // Default padding
+  ...props
+}) => {
   return (
     <button
-    type={type}
-      className={`cursor-pointer [border:none] py-[12px] px-[24px] bg-foundation-red-normal rounded-lg flex flex-row items-center justify-center whitespace-nowrap hover:bg-mediumvioletred ${disabled && 'opacity-50 cursor-not-allowed'} ${className}`}
+      type={type}
+      className={`${className} cursor-pointer [border:none] ${padding} bg-foundation-red-normal  rounded flex flex-row items-center justify-center whitespace-nowrap hover:bg-mediumvioletred-100 ${disabled && 'opacity-50 cursor-not-allowed'} ${className}`}
       onClick={onClick}
       disabled={disabled} // Disable button when loading
       {...props}
@@ -14,7 +23,7 @@ const RedButton = ({ label, type, onClick, className = '', disabled, loading = f
           <div className="spinner-border spinner-border-sm border-solid border-white border-t-transparent border-4 rounded-full w-4 h-4 animate-spin"></div>
         </div>
       ) : (
-        <div className="relative text-base font-medium font-roboto text-white text-left inline-block">
+        <div className="relative text-base font-medium font-roboto text-white text-left inline-block ">
           {label}
         </div>
       )}
