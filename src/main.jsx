@@ -68,6 +68,7 @@ import UserNotifications from './user/SavingAccount/Registration/pages/UserNotif
 import UserInfoPage from './user/SavingAccount/Registration/pages/UserInfoPage.jsx';
 import { AccountApplied } from './user/SavingAccount/Registration/components/AccountApplied.jsx';
 import LoanInfoPage from './admin/pages/Loan-Info/LoanInfoPage.jsx';
+import AgentInfoPage from './admin/pages/Agent-Mngmt/AgentInfoPage.jsx';
 
 
 const RenderSocketProvider = ({ children }) => {
@@ -199,6 +200,7 @@ const AppRouter = () => {
       <Route path="schemeInfo/:userId/:schemeId" element={<SchemeDetails1 />} />
       <Route path='loanInfo/ApprovedLoans' element={<ApprovedLoans/>} />
       <Route path='loanInfo/ApprovedLoans/:userId/:loanId' element={<LoanInfoPage/>} />
+      <Route path="agmgmt/:userId" element={<AgentInfoPage />} />
       <Route path='AdminInfo' element={<AdminInfo/>} />
       <Route path="*" element={<Navigate to="/admin" replace />} />
     </Route>

@@ -48,7 +48,7 @@ const AgentInfo = ({
           <div className="self-stretch flex flex-col items-start justify-start gap-[0.75rem]">
           <div className="relative text-gray-100">
               <span className="font-medium">
-                <span className="text-black1">Customer id :</span>
+                <span className="text-black1">Agent id :</span>
                 <span>{` `}</span>
               </span>
               <span>
@@ -88,7 +88,7 @@ const AgentInfo = ({
             </div>
           </div>
           {Role ==="User" && <RedButton label={"Add as Agent"} onClick={()=> AddAgent()} className="w-full" />}
-          <OutlinedButton label={"View Full Details"} className="w-full" onClick={() => navigate(`/admin/cusmgmt/${key1}`)} />
+          <OutlinedButton label={"View Full Details"} className="w-full" onClick={() => navigate(`/admin/agmgmt/${key1}`)} />
         </div>
       </div>
     </div>

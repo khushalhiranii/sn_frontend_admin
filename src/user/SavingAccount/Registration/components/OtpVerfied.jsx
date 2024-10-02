@@ -2,9 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import RedButton from "../../../DesignSystem/RedButton";
+import { useUserSocket } from "../../../context/UserSocketContext";
 
 export const OtpVerified = ({ className = "" }) => {
   const navigate = useNavigate();
+  const { account } = useUserSocket()
 
   return (
     <div className="w-full relative bg-white overflow-y-auto flex flex-col items-end justify-start px-[4rem] box-border gap-[1.5rem] leading-[normal] tracking-[normal] mq750:pl-[2rem] mq750:pr-[2rem] mq750:box-border">
@@ -38,11 +40,15 @@ export const OtpVerified = ({ className = "" }) => {
               </div>
             </div>
             <div className="self-stretch flex flex-col items-center justify-center gap-6">
-              <RedButton
+              {account.Status != "Verified" ? (<RedButton
                 label={"Open Saving Account"}
                 onClick={() => navigate('/register/openAcc')} // Wrap in an anonymous function
                 className="w-full"
-              />
+              />) : (<RedButton
+                label={"Saving Account Details"}
+                onClick={() => navigate('/saving-account')} // Wrap in an anonymous function
+                className="w-full"
+              />) }
               <button
                 onClick={() => navigate('/')} // Wrap in an anonymous function
                 className="w-full py-[12px] px-[24px] text-base font-medium bg-transparent border border-solid border-blue-500 text-blue-500 rounded-lg hover:bg-blue-100 focus:outline-none"

@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import InputComponent from '../../components/InputComponent';
 import { useAdminSocket } from '../../context/AdminSocketContext';
 import { getFullUrl } from '../../utils';
 import Loader from '../../../LoadingIndicator/Loader';
 import RedButton from '../../../user/DesignSystem/RedButton';
+import axiosInstance from '../../../../axios.utils';
 
 function CustomerInfoPage() {
   const { userId } = useParams(); // Get the userId from the URL
   const { users, userData, schemes, loans, accounts } = useAdminSocket();
+  
 
   // Function to get and merge data
   const getMergedData = () => {
@@ -85,11 +87,32 @@ function CustomerInfoPage() {
     return <Loader/>;
   }
 
+  
+  const agentArray = Object.values(users).filter(user => user.Role === "Agent");
+  const [selectedAgent, setSelectedAgent] = useState(data?.Agent || ""); // State to manage the selected agent ID
+  const assignAgent = async () => {
+    try {
+      const res = await axiosInstance.put('admin/classic/Update', {
+        "data": {
+          "Identifier": data.Identifier,
+          "Key": "Agent",
+          "Value": selectedAgent // Send the selected agent ID to the backend
+        }
+      });
+      console.log('Agent assigned successfully:', res.data);
+      alert('Agent assigned successfully')
+    } catch (error) {
+      console.error('Error assigning agent:', error);
+    }
+  };
+  const agent = () => {
+    return agentArray.find(ag => ag.Identifier === data.Agent);
+  };
   return (
     <div className="overflow-y-auto flex flex-col items-start justify-start px-4 py-8 w-[calc(100%_-_344px)] text-left text-white font-inter mq850:max-w-full">
       <div className="flex flex-col items-center justify-center gap-6 w-full">
-        <div className="flex flex-col items-start justify-start gap-4 w-full">
-          <div className="flex flex-row flex-wrap items-center justify-start py-4 pl-4 w-full gap-4 bg-[#F5F5F5] rounded-lg text-black font-roboto mq450:pr-5 mq725:pr-[12.313rem] mq1025:pr-[24.625rem]">
+        <div className="flex flex-col items-start justify-between gap-4 w-full">
+          <div className="flex flex-row flex-wrap items-center justify-start py-4 px-4 box-border w-full gap-4 bg-[#F5F5F5] rounded-lg text-black font-roboto mq450:pr-5 mq725:pr-[12.313rem] mq1025:pr-[24.625rem]">
             <img
               className="h-[5rem] w-[5rem] rounded-lg object-cover"
               loading="lazy"
@@ -103,8 +126,38 @@ function CustomerInfoPage() {
               <div className="text-[1rem] font-medium min-w-[7.813rem]">
               {data.Number} | {data.Mail}
               </div>
+              <div className="text-[1rem] font-medium min-w-[7.813rem]">
+              Assigned Agent: {agent()?.Name || "Not Assigned Yet"}
+              </div>
+            </div>
+            <div className='text-black flex flex-col'>
+              <div className='text-[16px] font-semibold'>Assign Agent</div>
+              {/* Dropdown to select agent */}
+              <select
+                value={selectedAgent}
+                onChange={(e) => setSelectedAgent(e.target.value)} // Update state on selection
+                className='mt-2 p-2 h-8 border rounded'
+              >
+                <option value="">Select Agent</option>
+                {agentArray.map((agent) => (
+                  <option key={agent.Identifier} value={agent.Identifier}>
+                    {agent.Name}
+                  </option>
+                ))}
+              </select>
+
+              {/* Assign button */}
+              <RedButton 
+                label={"Assign"} 
+                onClick={assignAgent} 
+                disabled={!selectedAgent} // Disable button if no agent is selected
+                className='mt-2 h-8'
+              />
+
+              
             </div>
           </div>
+          
         </div>
 
         {/* Government ID Details */}
