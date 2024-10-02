@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 const FormInput = ({ label, placeholder, type = "text", value, onChange, className = "", inputClassName = "" }) => {
     return (
-      <div className={`flex-1 flex flex-col items-start justify-center max-w-[306px] gap-[8px] min-w-[306px] ${className}`}>
+      <div className={`flex-1 flex flex-col items-start justify-center max-w-[306px] gap-[8px] min-w-[106px] ${className}`}>
         <div className="relative text-sm font-medium font-roboto text-black text-left inline-block min-w-[66px]">
           {label}
         </div>

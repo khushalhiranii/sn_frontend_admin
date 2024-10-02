@@ -105,7 +105,7 @@ const SchemePage = ({ className = "" }) => {
               </div>
             </div>
 
-            <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
+            <div className="self-stretch grid grid-cols-4 mq675:grid mq675:grid-cols-2 items-start justify-between gap-[16px_14.7px] min-h-[15px]">
             <FormInput label="Name" value= {user.Name} />
               <FormInput label="Aadhar" value={userData.Aadhar_Number} />
               <FormInput label="PAN" value={userData.Pan_Number} />
@@ -118,7 +118,7 @@ const SchemePage = ({ className = "" }) => {
             <h3 className="m-0 relative text-xl font-medium font-roboto text-text-primary text-left mq450:text-base">
               Bank Details
             </h3>
-            <div className="self-stretch w-full flex flex-row flex-wrap items-start justify-start py-0 pr-[332px] pl-0 gap-[16px] lg:pr-[166px] lg:box-border mq450:pr-5 mq450:box-border mq750:pr-[83px] mq750:box-border">
+            <div className="self-stretch w-full grid grid-cols-4 mq675:grid mq675:grid-cols-2 items-start justify-start py-0 pr-[332px] pl-0 gap-[16px] lg:pr-[166px] lg:box-border mq450:pr-5 mq450:box-border mq750:pr-[83px] mq750:box-border">
             <FormInput label="Account No" value={account.Account} />
               <FormInput label="IFSC Code" placeholder="Value" />
               <div className="flex-1 flex flex-col items-start justify-start gap-[8px] min-w-[126px] max-w-[335px]">
@@ -138,7 +138,7 @@ const SchemePage = ({ className = "" }) => {
             <h3 className="m-0 relative text-xl font-medium font-roboto text-text-primary text-left mq450:text-base">
               Scheme Details
             </h3>
-            <div className="self-stretch w-full flex flex-row flex-wrap items-start justify-start py-0 pr-[332px] pl-0 gap-[16px] lg:pr-[166px] lg:box-border mq450:pr-5 mq450:box-border mq750:pr-[83px] mq750:box-border">
+            <div className="self-stretch w-full grid grid-cols-4 mq675:grid mq675:grid-cols-2 items-start justify-start py-0 pr-[332px] pl-0 gap-[16px] lg:pr-[166px] lg:box-border mq450:pr-5 mq450:box-border mq750:pr-[83px] mq750:box-border">
               <FormInput label="Enter Your Amount" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Amount', 'scheme')} />
               <FormInput label="Tenure" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Tenure', 'scheme')} />
               <FormInput label="Maturity Amount" placeholder="Value" />
@@ -157,7 +157,7 @@ const SchemePage = ({ className = "" }) => {
               </div>
             </div>
 
-            <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
+            <div className="self-stretch grid grid-cols-4 mq675:grid mq675:grid-cols-2 items-start justify-between gap-[16px_14.7px] min-h-[15px]">
               <FormInput label="Nominee Name" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Name', 'nominee')} />
               <FormInput label="Date of Birth" placeholder="Value" type="date" onChange={(e)=> handleInputChange(e, 'Birth', 'nominee')} />
               <FormInput label="Relation" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Relation', 'nominee')} />

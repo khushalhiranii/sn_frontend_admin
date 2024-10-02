@@ -48,8 +48,8 @@ function UserInfoPage() {
   }
 
   return (
-    <div className="flex flex-row justify-center items-center">
-      <div className="flex flex-col items-center justify-center px-4 py-8 max-w-[calc(100%_-_128px)] gap-6 text-left font-inter min-h-screen">
+    <div className="flex flex-row justify-center items-center w-full">
+      <div className="flex flex-col items-center justify-center px-4 py-8 gap-6 text-left font-inter min-h-screen box-border">
         {/* Saving Account Header */}
         <div className="flex flex-col items-start justify-start gap-4 w-full">
           <SavingAccHeader />
@@ -58,7 +58,7 @@ function UserInfoPage() {
         {/* Government ID Details */}
         <div className="flex flex-col items-start justify-start gap-2 w-full">
           <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap">Government ID Details</div>
-          <div className="grid grid-cols-4 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+          <div className="grid grid-cols-4 mq675:grid mq675:grid-cols-2 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
             <InputComponent label="Aadhaar" value={userData?.Aadhar_Number} />
             <InputComponent label="PAN" value={userData?.Pan_Number} />
             <InputComponent label="Voter ID" />
@@ -68,7 +68,7 @@ function UserInfoPage() {
         {/* Employment ID Details */}
         <div className="flex flex-col items-start justify-start gap-2 w-full">
           <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap">Employment ID Details</div>
-          <div className="grid grid-cols-4 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+          <div className="grid grid-cols-4 mq675:grid mq675:grid-cols-2 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
             <InputComponent label="Employment Type" value={userData?.Employment} />
             <InputComponent label="Company Name" />
             <InputComponent label="Employee ID" />
@@ -80,7 +80,7 @@ function UserInfoPage() {
         {schemesArray.map((scheme, index) => (
           <div key={index} className="flex flex-col items-start justify-start gap-2 w-full">
             <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap">Scheme Details (Pending)</div>
-            <div className=" grid grid-cols-4 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+            <div className=" grid grid-cols-4 mq675:grid mq675:grid-cols-2 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
               <InputComponent label="Scheme Type" value={scheme.Type} />
               <InputComponent label="Applied Scheme" value={scheme.Income} />
               <InputComponent label="Deposit Amount" value={scheme.Amount} />
@@ -95,7 +95,7 @@ function UserInfoPage() {
         {loansArray.map((loan, index) => (
           <div key={index} className="flex flex-col items-start justify-start gap-2 w-full">
             <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap">Loan Details</div>
-            <div className="grid grid-cols-4 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+            <div className="grid grid-cols-4 mq675:grid mq675:grid-cols-2 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
               <InputComponent label="Loan Type" value={loan.Type} />
               <InputComponent label="Loan Status" value={loan.Status} />
               <InputComponent label="Applied Loan" value={loan.Amount} />
@@ -109,7 +109,7 @@ function UserInfoPage() {
             {loan.Type === 'Property' && (
               <div className="flex flex-col items-start justify-start gap-2 w-full">
                 <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap">Property Details</div>
-                <div className=" grid grid-cols-4 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+                <div className=" grid grid-cols-4 mq675:grid mq675:grid-cols-2 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
                   <InputComponent label="Property Type" value={loan.Nature} />
                   <InputComponent label="Property Address" value={loan.Address} />
                   <InputComponent label="Property Value (On purchase)" value={loan.Value} />
@@ -121,7 +121,7 @@ function UserInfoPage() {
             {loan.Type === 'Business' && (
               <div className="flex flex-col items-start justify-start gap-2 w-full">
                 <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap">Business Details</div>
-                <div className="grid grid-cols-4 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+                <div className="grid grid-cols-4 mq675:grid mq675:grid-cols-2 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
                   <InputComponent label="Business Type" value={loan.Nature} />
                   <InputComponent label="Firm Name" value={loan.Name} />
                   <InputComponent label="Business Profit" value={loan.Profit} />
@@ -135,7 +135,7 @@ function UserInfoPage() {
         {requestsArray.map((loan, index) => (
           <div key={index} className="flex flex-col items-start justify-start gap-2 w-full">
             <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap">Pending Loan Details</div>
-            <div className="grid grid-cols-4 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+            <div className="grid grid-cols-4 mq675:grid mq675:grid-cols-2 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
               <InputComponent label="Loan Type" value={loan.Type} />
               <InputComponent label="Loan Status" value={loan.Status} />
               <InputComponent label="Applied Loan" value={loan.Amount} />

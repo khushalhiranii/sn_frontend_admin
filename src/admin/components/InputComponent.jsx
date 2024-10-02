@@ -2,7 +2,7 @@ import React from 'react'
 
 function InputComponent({ label, value, onChange }) {
   return (
-    <div className="flex flex-col w-[333px] box-border items-start justify-normal p-1 gap-2 ">
+    <div className="flex flex-col max-w-[306px] min-w-[106px] box-border items-start justify-normal p-1 gap-2 ">
                 <div className="tracking-tight text-[14px] leading-[150%] font-medium min-w-[6.438rem]">
                   {label}
                 </div>
