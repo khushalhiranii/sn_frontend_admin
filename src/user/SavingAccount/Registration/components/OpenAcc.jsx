@@ -23,6 +23,11 @@ function OpenAcc() {
 
     return () => clearTimeout(timer); // Cleanup the timer
   }, []);
+  if (loading) {
+    return (
+      <Loader/>
+    );
+  }
 
   // Function to display the correct step component
   function showStep(step) {
@@ -39,11 +44,7 @@ function OpenAcc() {
   }
 
   // If loading is true, show the loading message
-  if (loading) {
-    return (
-      <Loader/>
-    );
-  }
+  
 
   // If the user is not fetched or not verified, navigate to login
   if (!user || user?.Verification !== true) {

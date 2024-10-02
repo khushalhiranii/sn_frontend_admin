@@ -67,22 +67,27 @@ const handleSelectChange = (e) => {
     }
   }
 
+  const config = {
+    "data" : {
+        "Request":loanId
+    }
+  }
+
   const approve = async () => {
+    console.log(config)
     try {
       setLoading(true)
-      const response = await axiosInstance.post('admin/classic/Create-Loan', {
-        "data" : {
-            "Request":id
-        }
-      })
-      setLoading(false)
+      const response = await axiosInstance.post('admin/classic/Create-Loan', config )
+      
       console.log(response)
       alert('Loan Approved Successfully')
       navigate('/admin/loanRequest')
     } catch (error) {
-      setLoading(false)
+      
       console.error(error)
       alert("Customer didn't accept the offer")
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -145,6 +150,15 @@ const handleSelectChange = (e) => {
     }
     
     return age;
+  }
+
+  const acceptedProduct = () => {
+    if(data?.loanInfo?.Status === "Accepted"){
+      const product = products.find(p => p.Product === data.loanInfo.Product)
+      return product;
+    }else{
+      return null;
+    }
   }
   
   // async function approve(){
@@ -315,6 +329,23 @@ const handleSelectChange = (e) => {
         <RedButton label="Offer a Loan" onClick={()=>OfferLoan()} />
       </div>
     </div>
+
+    {data.loanInfo.Status === "Accepted" && (
+      <div className="flex flex-col items-start justify-start gap-2 w-full">
+        <div className="tracking-tight text-[20px] leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">
+          Approved Loan Product
+        </div>
+        <div className="flex flex-wrap w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+          <InputComponent label={"Product"} value={acceptedProduct().Product} />
+          <InputComponent label={"Loan Type"} value={acceptedProduct().Type} />
+          <InputComponent label={"Loan Amount"} value={acceptedProduct().Amount} />
+          <InputComponent label={"Tenure (in weeks)"} value={acceptedProduct().Tenure} />
+          <InputComponent label={"Emi in Rs"} value={acceptedProduct().Emi} />
+          <InputComponent label={"Interest Rate"} value={acceptedProduct().Interest} />
+          <InputComponent label={"Interest Type"} value={acceptedProduct().Mode} />
+        </div>
+      </div>
+    )}
         
             
             
