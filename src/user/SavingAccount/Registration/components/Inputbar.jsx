@@ -55,7 +55,7 @@ export const Inputbar = () => {
     <div className="w-full relative bg-white overflow-y-auto flex flex-col items-end justify-start px-[4rem] box-border gap-[1.5rem] leading-[normal] tracking-[normal] mq750:pl-[2rem] mq750:pr-[2rem] mq750:box-border">
       <main className="self-stretch flex flex-row items-center justify-center gap-[2rem] max-w-full text-left text-[2rem] text-black1 font-roboto lg:flex-wrap mq750:flex-col mq750:gap-[1rem]">
         <div className="h-auto flex-1 relative rounded-3xl bg-whitesmoke box-border max-w-full border-[4px] border-solid border-white lg:flex-1 mq750:min-w-full">
-          <img src='login.svg' />
+          <img src='/login.svg' />
         </div>
         <div className='rounded-3xl box-border flex flex-col justify-between p-[58px] w-full border-[1px] border-solid border-foundation-white-normal-hover px-[4rem] gap-[32px]'>
 
@@ -120,7 +120,7 @@ export const Inputbar = () => {
               className="w-[100%]"
             />
           </div>
-          <div className='text-[16px] flex flex-col items-center'>
+          <div className='text-sm flex flex-col items-center'>
             Already registered to Subandhan Nidhi? <NavLink to={'/login'}>Login Now</NavLink>
           </div>
         </div>

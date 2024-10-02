@@ -134,18 +134,11 @@ const AppRouter = () => {
       
       
     </Route>
-    <Route path='/register' element={<Inputbar/>}>
-      {/* <Route index element={<Inputbar/>}/> */}
-      {/* <Route path='otp' element={<PrivateRoute component={Otp} />}/> */}
-      
-      {/* <Route path='otpverified' element={<PrivateRoutes component={OtpVerified}/>}/> */}
-      {/* <Route path='otpverified' element={<OtpVerified/>}/> */}
-      {/* <Route path='openAcc' element={<PrivateRoute2 component={OpenAcc}/>}/> */}
-      <Route path='openAcc' element={<OpenAcc/>}/>
-      <Route path='verified' element={<AccountApplied/>}/>
-    </Route>
+    <Route path='/register' element={<Inputbar/>}/>
     <Route path='/register/otp' element={<Otp/>}/>
     <Route path='/register/otpverified' element={<OtpVerified/>}/>
+    <Route path='/register/openAcc' element={<OpenAcc/>}/>
+    <Route path='/register/verified' element={<AccountApplied/>}/>
     <Route path='/login' element={<Login/>}/>
     <Route path='/login/otp' element={<Otp/>}/>
     <Route path='/login/otpverified' element={<OtpVerified/>}/>

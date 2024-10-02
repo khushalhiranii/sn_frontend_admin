@@ -9,6 +9,7 @@ import RedButton from '../../../user/DesignSystem/RedButton';
 function AdminInfo() {
     const [approvedDetails, setApprovedDetails] = useState({});
     const [selected, setSelected] = useState([]); // Assuming this was part of your context/state
+    const [loading, setLoading] = useState(false);
     
     // Function to update approvedDetails state
     const appendApprovedDetails = (field, value) => {
@@ -20,6 +21,7 @@ function AdminInfo() {
 
     // Function to submit loan offer
     const OfferLoan = async () => {
+        setLoading(true);
         try {
             console.log(approvedDetails);
             console.log(selected); // If selected is relevant to this function
@@ -29,10 +31,13 @@ function AdminInfo() {
             });
 
             if (response.status === 200) {
+                
                 alert("Product Added");
             }
         } catch (error) {
             console.error("Request failed: ", error);
+        }finally{
+            setLoading(false);
         }
     };
 
@@ -87,7 +92,7 @@ function AdminInfo() {
             </div>
 
             <div className="flex flex-row w-full items-end justify-end">
-                <RedButton label="Create a Product" onClick={OfferLoan} />
+                <RedButton label="Create a Product" onClick={OfferLoan} loading={loading} />
             </div>
         </div>
     );

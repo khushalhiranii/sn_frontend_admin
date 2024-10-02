@@ -13,11 +13,11 @@ const ThirdStep = () => {
   const [userPhotoFile, setUserPhotoFile] = useState(null);
   const [signatureFile, setSignatureFile] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [loading, setLoading] = useState(false); // Loading state for file upload
+  const [loading, setLoading] = useState(false); 
   const [uploadError, setUploadError] = useState('');
   const [uploadSuccess, setUploadSuccess] = useState('');
-  const [apiRes, setApiRes] = useState(false)
-  const [finalRes, setFinalRes] = useState("")
+  const [apiRes, setApiRes] = useState(false);
+  const [finalRes, setFinalRes] = useState("");
   const navigate = useNavigate();
 
   const [uploadAttempted, setUploadAttempted] = useState({
@@ -27,21 +27,24 @@ const ThirdStep = () => {
     signature: false,
   });
 
+  const [panError, setPanError] = useState(''); // PAN validation error
+  const [aadharError, setAadharError] = useState(''); // Aadhar validation error
+
   const { submitData, userData, setUserData } = useContext(multiStepContext);
 
-  const submit = async () =>{
+  const submit = async () => {
     try {
       setApiRes(true);
       const res = await submitData();
-      if(res.status === 200){
+      if (res.status === 200) {
         setApiRes(false);
-        setFinalRes(res.response.data.data.message)
-        navigate('/register/verified')
+        setFinalRes(res.response.data.data.message);
+        navigate('/register/verified');
       }
     } catch (error) {
-      setApiRes(error.response.data.data.message)
+      setApiRes(error.response.data.data.message);
     }
-  }
+  };
 
   const panCardInputRef = useRef(null);
   const aadharCardInputRef = useRef(null);
@@ -49,21 +52,20 @@ const ThirdStep = () => {
   const signatureInputRef = useRef(null);
 
   useEffect(() => {
-    if (panNumber && aadharNumber && aadharCardFile && panCardFile && userPhotoFile && signatureFile) {
+    if (panNumber && aadharNumber && aadharCardFile && panCardFile && userPhotoFile && signatureFile && !panError && !aadharError) {
       setIsFormValid(true);
     } else {
       setIsFormValid(false);
     }
-  }, [panNumber, aadharNumber, aadharCardFile, panCardFile, userPhotoFile, signatureFile]);
+  }, [panNumber, aadharNumber, aadharCardFile, panCardFile, userPhotoFile, signatureFile, panError, aadharError]);
 
   const handleFileChange = async (event, setFile, field, type) => {
     const file = event.target.files[0];
-    const fileSizeLimit = 5 * 1024 * 1024; // 5MB size limit
+    const fileSizeLimit = 5 * 1024 * 1024; 
 
-    // Reset error and success messages for the specific file type
     setUploadError('');
     setUploadSuccess('');
-    setUploadAttempted(prev => ({ ...prev, [type]: true })); // Mark upload attempt
+    setUploadAttempted(prev => ({ ...prev, [type]: true })); 
 
     if (file.size > fileSizeLimit) {
       setUploadError('File size exceeds the 5MB limit.');
@@ -81,13 +83,13 @@ const ThirdStep = () => {
     const Identifier = sessionStorage.getItem('Identifier');
 
     try {
-      setLoading(true); // Set loading to true while uploading
+      setLoading(true); 
       const response = await axiosInstance.post(`client/classic/Docs?Identifier=${Identifier}&Field=${field}`, formData);
-      setLoading(false); // Stop loading
+      setLoading(false); 
       setUploadSuccess('File uploaded successfully.');
       console.log(response);
     } catch (error) {
-      setLoading(false); // Stop loading on error
+      setLoading(false); 
       setUploadError('Error uploading the file. Please try again.');
       console.error(error);
     }
@@ -95,8 +97,8 @@ const ThirdStep = () => {
 
   const handleRemoveFile = (setFile, type) => {
     setFile(null);
-    setUploadSuccess(''); // Clear success message on file removal
-    setUploadAttempted(prev => ({ ...prev, [type]: false })); // Reset upload attempt flag
+    setUploadSuccess(''); 
+    setUploadAttempted(prev => ({ ...prev, [type]: false })); 
   };
 
   const handleViewImage = (file) => {
@@ -107,15 +109,36 @@ const ThirdStep = () => {
     inputRef.current.click();
   };
 
+  const validatePanNumber = (pan) => {
+    const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+    if (!panRegex.test(pan)) {
+      setPanError('Invalid PAN number. Format: 5 alphabets, 4 numbers, 1 alphabet.');
+    } else {
+      setPanError('');
+    }
+  };
+
+  const validateAadharNumber = (aadhar) => {
+    const aadharRegex = /^\d{12}$/;
+    if (!aadharRegex.test(aadhar)) {
+      setAadharError('Aadhar number must be 12 digits.');
+    } else {
+      setAadharError('');
+    }
+  };
+
   const renderUploadSection = (label, placeholder, value, onChange, file, setFile, inputRef, field, type) => (
     <div className="flex flex-col gap-[16px]">
-      <InputReg
+      {(label === "Pan Card" || label === "Aadhar Card") && <InputReg
         label={label}
         type="text"
         placeholder={placeholder}
         value={value}
+        onBlur={() => { if (label === 'Pan Card') validatePanNumber(value); if (label === 'Aadhar Card') validateAadharNumber(value); }} 
         onChange={onChange}
-      />
+      />}
+      {label === "Pan Card" && panError && <div className="text-red-500 text-sm">{panError}</div>}
+      {label === "Aadhar Card" && aadharError && <div className="text-red-500 text-sm">{aadharError}</div>}
       <div className="font-normal text-sm">* Upload a file below (max 5MB)</div>
       <input
         accept="image/*,application/pdf"
@@ -128,11 +151,11 @@ const ThirdStep = () => {
       <div className="flex flex-row justify-between w-full items-center">
         {!file ? (
           <button
-            className="py-[14px] rounded-lg bg-[#B0D0F7] text-white text-[17px] font-medium w-full"
+            className="py-[14px] rounded-lg bg-[#3b78c3] text-white text-[17px] font-medium w-full"
             onClick={() => triggerFileInput(inputRef)}
-            disabled={loading} // Disable button during loading
+            disabled={loading}
           >
-            {loading ? 'Uploading...' : `Upload Original ${label}`} {/* Show loading text */}
+            {loading ? 'Uploading...' : `Upload Original ${label}`}
           </button>
         ) : (
           <div className="w-full flex flex-row justify-between">
@@ -154,14 +177,13 @@ const ThirdStep = () => {
           </div>
         )}
       </div>
-      {/* Show messages only if upload has been attempted */}
       {uploadAttempted[type] && uploadError && <div className="text-red-500 text-sm">{uploadError}</div>}
       {uploadAttempted[type] && uploadSuccess && <div className="text-green-500 text-sm">{uploadSuccess}</div>}
     </div>
   );
 
   return (
-    <div className="flex flex-col w-full min-h-screen">
+    <div className="flex flex-col w-full">
       {finalRes && <div className="text-red-500 text-sm">{apiRes}</div>}
       <div className="flex flex-col gap-[32px] w-full">
         <div className="text-2xl font-bold">Upload Documents</div>
@@ -175,7 +197,7 @@ const ThirdStep = () => {
             setPanCardFile,
             panCardInputRef,
             "Pan",
-            "panCard" // type for tracking
+            "panCard" 
           )}
           {renderUploadSection(
             "Aadhar Card",
@@ -186,7 +208,7 @@ const ThirdStep = () => {
             setAadharCardFile,
             aadharCardInputRef,
             "Aadhar",
-            "aadharCard" // type for tracking
+            "aadharCard" 
           )}
           <div className={`flex ${!userPhotoFile || !signatureFile ? 'flex-row' : 'flex-col'} gap-[16px]`}>
             <div className={`${!userPhotoFile ? 'w-[50%]' : 'w-full'}`}>
@@ -199,7 +221,7 @@ const ThirdStep = () => {
                 setUserPhotoFile,
                 userPhotoInputRef,
                 "Photo",
-                "userPhoto" // type for tracking
+                "userPhoto" 
               )}
             </div>
             <div className={`${!signatureFile ? 'w-[50%]' : 'w-full'}`}>
@@ -212,7 +234,7 @@ const ThirdStep = () => {
                 setSignatureFile,
                 signatureInputRef,
                 "Signature",
-                "signature" // type for tracking
+                "signature" 
               )}
             </div>
           </div>
@@ -221,7 +243,7 @@ const ThirdStep = () => {
       <RedButton
         label={"Continue"}
         onClick={submit}
-        disabled={!isFormValid || loading} // Disable button while form is invalid or loading
+        disabled={!isFormValid || loading}
         className={`${(!aadharCardFile && !panCardFile && !userPhotoFile && !signatureFile) ? 'mt-[24px]' : 'mt-5'}`}
         loading={apiRes}
       />

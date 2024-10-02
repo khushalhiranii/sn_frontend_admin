@@ -61,8 +61,7 @@ function FirstStep() {
   }
 
   return (
-    <div className="h-[744px] w-full flex flex-col gap-[170px]">
-      <div className='flex flex-col gap-[32px]'>
+      <div className='flex flex-col gap-[32px] w-full'>
         <div className='text-2xl font-bold'>
           Address
         </div>
@@ -125,11 +124,10 @@ function FirstStep() {
             value={userData.zip || ''}
           />
         </div>
-      </div>
-      <div className="self-stretch flex justify-end">
+      
         <RedButton label={"Next"} onClick={handleSubmit} disabled={!isFormValid} className={`${!isFormValid && 'opacity-50 cursor-not-allowed'} w-full`} />
       </div>
-    </div>
+    
   );
 }
 

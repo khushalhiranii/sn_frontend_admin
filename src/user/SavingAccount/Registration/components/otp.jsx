@@ -63,7 +63,7 @@ export const Otp = ({ length = 4 }) => {
 	};
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         setLoading(true); // Set loading to true when submitting
         setErrorMessage(''); // Reset error message
 

@@ -88,7 +88,7 @@ const SecondStep = () => {
   };
 
   return (
-    <div className='flex flex-col gap-5 w-full'>
+    <div className='flex flex-col w-full'>
       <div className='flex flex-col gap-[24px] w-full mt-[74px] mb-[106px] text-2xl font-bold'>
         Employment Details
       <FormControl component='fieldset'>
