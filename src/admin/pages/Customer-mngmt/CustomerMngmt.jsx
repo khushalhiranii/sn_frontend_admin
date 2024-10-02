@@ -7,7 +7,7 @@ import { useAdminSocket } from '../../context/AdminSocketContext';
 import CustomerInfo from './CustomerInfo';
 
 function CustomerMngmt() {
-  const [selectedLoanType, setSelectedLoanType] = useState('Loan');
+  const [selectedLoanType, setSelectedLoanType] = useState('Clients');
   const { users, userData, accounts, loans, schemes } = useAdminSocket();
 
   // Function to filter data based on the selected loan type
