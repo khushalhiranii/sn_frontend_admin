@@ -18,15 +18,19 @@ const LoanPage = ({ className = "" }) => {
   const [documents, setDocuments] = useState(null);  // For file uploads
   const [loading, setLoading]= useState(true)
   const [api, setApi] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
     // Simulate loading effect after a brief delay
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 5000); // Adjust delay as needed
+    }, 2000); // Adjust delay as needed
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    validateForm();  // Validate form on every change of loan or guarantor details
+  }, [loanDetails, guarantorDetails, documents]);
 
   const handleInputChange = (e, key, section) => {
     const value = e.target.value;
@@ -121,8 +125,41 @@ const LoanPage = ({ className = "" }) => {
     }
   };
   
+  const validateForm = () => {
+    let isValid = true;
 
-  console.log(selectedLoan);
+    // Check basic loan details
+    if (!loanDetails.Amount || !loanDetails.Tenure || !loanDetails.Purpose) {
+      isValid = false;
+    }
+
+    // Loan-specific validation
+    if (selectedLoan === 'Micro Finance') {
+      if (!loanDetails.Name || !loanDetails.Nature || !loanDetails.Address || !loanDetails.Age || !loanDetails.Profit) {
+        isValid = false;
+      }
+    } else if (selectedLoan === 'Property') {
+      if (!loanDetails.Address || !loanDetails.Nature || !loanDetails.Purchased || !loanDetails.Value) {
+        isValid = false;
+      }
+    } else if (selectedLoan === 'Business') {
+      if (!loanDetails.Name || !loanDetails.Nature || !loanDetails.Zip || !loanDetails.Profit || !loanDetails.Phone || !loanDetails.Mail || !loanDetails.Pan || !loanDetails.Udhyam || !loanDetails.Gst) {
+        isValid = false;
+      }
+    }
+
+    // Guarantor details validation
+    if (!guarantorDetails.Name || !guarantorDetails.Phone || !guarantorDetails.Mail || !guarantorDetails.Address || !guarantorDetails.Relation || !guarantorDetails.Pan) {
+      isValid = false;
+    }
+
+    // File upload validation (for property loans)
+    if (selectedLoan === 'Property' && !documents) {
+      isValid = false;
+    }
+
+    setIsFormValid(isValid);
+  };
   if(loading){
     return(
       <Loader/>
@@ -157,16 +194,12 @@ const LoanPage = ({ className = "" }) => {
               </div>
             </div>
 
-            <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
+            <div className="self-stretch flex flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
               <FormInput label="Name" value= {user.Name} />
               <FormInput label="Aadhar" value={userData.Aadhar_Number} />
               <FormInput label="PAN" value={userData.Pan_Number} />
               <FormInput label="Annual Income" value={userData.Salary} />
               <FormInput label="Employment Type" value={userData.Employment}/>
-            </div>
-
-            <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
-              
             </div>
           </div>
 
@@ -174,7 +207,7 @@ const LoanPage = ({ className = "" }) => {
             <h3 className="m-0 relative text-xl font-medium font-roboto text-text-primary text-left mq450:text-base">
               Bank Details
             </h3>
-            <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
+            <div className="self-stretch grid grid-cols-4 items-start justify-between gap-[16px_14.7px] min-h-[15px]">
               <FormInput label="Account No" value={account.Account} />
               <FormInput label="IFSC Code" placeholder="Value" />
               <div className="flex-1 flex flex-col items-start justify-start gap-[8px] min-w-[126px] max-w-[306px]">
@@ -194,7 +227,7 @@ const LoanPage = ({ className = "" }) => {
             <h3 className="m-0 relative text-xl font-medium font-roboto text-text-primary text-left mq450:text-base">
               Loan Details
             </h3>
-            <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
+            <div className="self-stretch grid grid-cols-4 items-start justify-between gap-[16px_14.7px] min-h-[15px]">
               <FormInput label="Enter Your Amount" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Amount', 'loan')} />
               <FormInput label="Tenure" placeholder="in weeks" onChange={(e)=> handleInputChange(e, 'Tenure', 'loan')} />
               <FormInput label="Purpose of Loan" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Purpose', 'loan')} />
@@ -216,7 +249,7 @@ const LoanPage = ({ className = "" }) => {
           <h3 className="m-0 relative text-xl font-medium font-roboto text-text-primary text-left mq450:text-base">
             Property Details
           </h3>
-          <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
+          <div className="self-stretch grid grid-cols-4 items-start justify-between gap-[16px_14.7px] min-h-[15px]">
             <FormInput label="Property Address" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Address', 'loan')} />
             <FormInput label="Property Type" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Nature', 'loan')} />
             <FormInput label="Purchase Date" type='date' onChange={(e)=> handleInputChange(e, 'Purchased', 'loan')} />
@@ -231,7 +264,7 @@ const LoanPage = ({ className = "" }) => {
           <h3 className="m-0 relative text-xl font-medium font-roboto text-text-primary text-left mq450:text-base">
             Business Details
           </h3>
-          <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
+          <div className="self-stretch grid grid-cols-4 items-start justify-between gap-[16px_14.7px] min-h-[15px]">
             <FormInput label="Name" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Name', 'loan')} />
             <FormInput label="Nature" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Nature', 'loan')} />
             {/* <FormInput label="Age" placeholder="Value"  /> */}
@@ -256,7 +289,7 @@ const LoanPage = ({ className = "" }) => {
               </div>
             </div>
 
-            <div className="self-stretch flex flex-row flex-wrap items-start justify-between gap-[16px_14.7px] min-h-[15px]">
+            <div className="self-stretch grid grid-cols-4 items-start justify-between gap-[16px_14.7px] min-h-[15px]">
               <FormInput label="Guarantor Name" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Name', 'guarantor')} />
               <FormInput label="Phone No" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Phone', 'guarantor')} />
               <FormInput label="Mail" placeholder="Value" onChange={(e)=> handleInputChange(e, 'Mail', 'guarantor')} />
@@ -293,7 +326,7 @@ const LoanPage = ({ className = "" }) => {
 
       <div className="flex flex-row items-start justify-start gap-[24px] max-w-full mq450:flex-wrap">
         <OutlinedButton label={"Cancel"} />
-        <RedButton label={"Apply Now"} type={"submit"} loading={api} />
+        <RedButton label={"Apply Now"} type={"submit"} loading={api} disabled={!isFormValid} />
       </div>
     </form>
   );
