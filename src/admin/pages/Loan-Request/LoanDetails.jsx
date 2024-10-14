@@ -7,6 +7,7 @@ import OutlinedButton from '../../components/OutlinedButton';
 import { useAdminSocket } from '../../context/AdminSocketContext';
 import { getFullUrl } from '../../utils';
 import axiosInstance from '../../../../axios.utils';
+import Loader from '../../../LoadingIndicator/Loader';
 
 function LoanDetails() {
   const { userId, loanId } = useParams(); // Get the userId from the URL
@@ -180,7 +181,7 @@ const handleSelectChange = (e) => {
   
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <Loader/>;
   }
 
   return (
@@ -209,25 +210,25 @@ const handleSelectChange = (e) => {
             <div className="tracking-tight text-[20px] text-slate-800 leading-[150%] font-semibold min-w-[4.875rem] mq450:text-[1rem] mq450:leading-[1.5rem]">
               Government ID's Details
             </div>
-            <div className="flex flex-wap items-start justify-between gap-4 w-full text-[1rem] text-gray-400 font-roboto ">
+            <div className="grid grid-cols-4 mq675:grid mq675:grid-cols-2 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
             <InputComponent label={"PAN No"} value={data.Pan_Number}/>
             <InputComponent label={"Aadhar No"} value={data.Aadhar_Number}/>
-            <InputComponent label={"Voter ID"}/>
+            {/* <InputComponent label={"Voter ID"}/> */}
               
               
             </div>
         </div>
         <div className="flex flex-col items-start justify-start gap-2 w-full">
             <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">Employment ID's Details</div>
-            <div className="flex flex-wrap w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+            <div className="grid grid-cols-4 mq675:grid mq675:grid-cols-2 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
             <InputComponent label={"Employment Type"} value={data.Employment}/>
             <InputComponent label={"Income"} value={data.Salary}/>
-            <InputComponent label={"Employee ID"}/>
+            {/* <InputComponent label={"Employee ID"}/> */}
             </div>
           </div>
           <div className="flex flex-col items-start justify-start gap-2 w-full">
             <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">Applied Loan Details</div>
-            <div className="flex flex-wrap w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+            <div className="grid grid-cols-4 mq675:grid mq675:grid-cols-2 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
             <InputComponent label={"Loan Type"}  value={data.loanInfo.Type}/>
             <InputComponent label={"Applied Loan"} value={data.loanInfo.Amount}/>
             <InputComponent label={"Purpose of Loan"} value={data.loanInfo.Purpose}/>
@@ -236,116 +237,116 @@ const handleSelectChange = (e) => {
           
         </div>
         {data.loanInfo.Type === "Property" && (
-  <div className="flex flex-col items-start justify-start gap-2 w-full">
-    {/* Header for Property Details */}
-    <div className="tracking-tight leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap mq450:text-[1rem] text-[20px] mq450:leading-[1.5rem]">
-      Property Details
-    </div>
-    
-    {/* Inputs for Property Information */}
-    <div className="flex flex-wrap w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
-      <InputComponent label="Property Type" value={data.loanInfo.Nature} />
-      <InputComponent label="Property Address" value={data.loanInfo.Address} />
-      <InputComponent label="Property Value (On purchase)" value={data.loanInfo.Value}/>
-      <InputComponent label="Date of Purchase" value={data.loanInfo.Purchased}/>
-      <InputComponent label="Verification by Agent" value={data.loanInfo.Verification}/>
-      <InputComponent label="Document of Purchase" />
-      <div className="flex flex-col w-[333px] box-border items-start justify-normal p-1 gap-2">
-        <div className="tracking-tight text-[14px] leading-[150%] font-medium min-w-[6.438rem]">
-          Document of Purchase
-        </div>
-        {/* <input
-          className="w-full box-border outline-none text-[1rem] placeholder:text-black1 font-medium border-[#E3E3E3] rounded-[4px] border-[1px] border-solid p-[12px]"
-          placeholder="Value"
-          type="text"
-          value={value}
-          onChange={onChange}
-        /> */}
-        
-        <button
-          className="w-full box-border outline-none text-[1rem] font-medium border-[#E3E3E3] rounded-[4px] border-[1px] border-solid p-[12px] text-center bg-white hover:bg-blue-200"
-          onClick={()=>onViewClick(data.loanInfo.Document)}
-        >
-          View
-        </button>
-      </div>
+          <div className="flex flex-col items-start justify-start gap-2 w-full">
+            {/* Header for Property Details */}
+            <div className="tracking-tight leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap mq450:text-[1rem] text-[20px] mq450:leading-[1.5rem]">
+              Property Details
+            </div>
+            
+            {/* Inputs for Property Information */}
+            <div className="grid grid-cols-4 mq675:grid mq675:grid-cols-2 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+              <InputComponent label="Property Type" value={data.loanInfo.Nature} />
+              <InputComponent label="Property Address" value={data.loanInfo.Address} />
+              <InputComponent label="Property Value (On purchase)" value={data.loanInfo.Value}/>
+              <InputComponent label="Date of Purchase" value={data.loanInfo.Purchased}/>
+              <InputComponent label="Verification by Agent" value={data.loanInfo.Verification}/>
+              {/* <InputComponent label="Document of Purchase" /> */}
+              <div className="flex flex-col w-[333px] box-border items-start justify-normal p-1 gap-2">
+                <div className="tracking-tight text-[14px] leading-[150%] font-medium min-w-[6.438rem]">
+                  Document of Purchase
+                </div>
+                {/* <input
+                  className="w-full box-border outline-none text-[1rem] placeholder:text-black1 font-medium border-[#E3E3E3] rounded-[4px] border-[1px] border-solid p-[12px]"
+                  placeholder="Value"
+                  type="text"
+                  value={value}
+                  onChange={onChange}
+                /> */}
+                
+                <button
+                  className="w-full box-border outline-none text-[1rem] font-medium border-[#E3E3E3] rounded-[4px] border-[1px] border-solid p-[12px] text-center bg-white hover:bg-blue-200"
+                  onClick={()=>onViewClick(data.loanInfo.Document)}
+                >
+                  View
+                </button>
+              </div>
 
-    </div>
+            </div>
 
-    {/* Inputs for Purchase Information */}
-    
-  </div>
-)}
-
-      {data.loanInfo.Type === "Business" && (
-        <div className="flex flex-col items-start justify-start gap-2 w-full">
-          <div className="tracking-tight leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap mq450:text-[1rem] text-[20px] mq450:leading-[1.5rem]">
-            Business Details
-          </div>
-          
-          {/* Inputs for Property Information */}
-          <div className="flex flex-wrap w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
-            <InputComponent label="Business Type" value={data.loanInfo.Nature} />
-            <InputComponent label="Firm Name" value={data.loanInfo.Name} />
-            <InputComponent label="Business Profit" value={data.loanInfo.Profit}/>
-            <InputComponent label="Udhyam" value={data.loanInfo.Udhyam}/>
-            <InputComponent label="GST" value={data.loanInfo.Gst}/>
-          </div>
-
-          {/* Inputs for Purchase Information */}
-          <div className="flex flex-row w-full items-start justify-self-start gap-4 text-[1rem] text-gray-400 font-roboto">
+            {/* Inputs for Purchase Information */}
             
           </div>
-        </div>
-      )}
+        )}
 
+        {data.loanInfo.Type === "Business" && (
+          <div className="flex flex-col items-start justify-start gap-2 w-full">
+            <div className="tracking-tight leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap mq450:text-[1rem] text-[20px] mq450:leading-[1.5rem]">
+              Business Details
+            </div>
+            
+            {/* Inputs for Property Information */}
+            <div className="grid grid-cols-4 mq675:grid mq675:grid-cols-2 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+              <InputComponent label="Business Type" value={data.loanInfo.Nature} />
+              <InputComponent label="Firm Name" value={data.loanInfo.Name} />
+              <InputComponent label="Business Profit" value={data.loanInfo.Profit}/>
+              <InputComponent label="Udhyam" value={data.loanInfo.Udhyam}/>
+              <InputComponent label="GST" value={data.loanInfo.Gst}/>
+            </div>
 
-<div className="flex flex-col items-start justify-start gap-2 w-full">
-      <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">
-        Offer Products
-      </div>
-      <div>
-      {productsArray.map((product) => (
-          <div key={product.Product}>
-            <label className="flex items-center gap-2 cursor-pointer text-black hover:bg-blue-100 p-2 rounded">
-              <input
-                type="checkbox"
-                value={product.Product}
-                checked={selected.includes(product.Product)}
-                onChange={handleSelectChange}
-              />
-              Amount: {product.Amount}, 
-              EMI: {product.Emi}, 
-              Interest: {product.Interest}, 
-              Mode: {product.Mode}, 
-              Product: {product.Product}, 
-              Tenure: {product.Tenure}, 
-              Type: {product.Type}
-            </label>
+            {/* Inputs for Purchase Information */}
+            <div className="flex flex-row w-full items-start justify-self-start gap-4 text-[1rem] text-gray-400 font-roboto">
+              
+            </div>
           </div>
-        ))}
-      </div>
-      <div className='flex flex-row w-full items-end justify-end'>
-        <RedButton label="Offer a Loan" onClick={()=>OfferLoan()} />
-      </div>
-    </div>
+        )}
 
-    {data.loanInfo.Status === "Accepted" && (
-      <div className="flex flex-col items-start justify-start gap-2 w-full">
-        <div className="tracking-tight text-[20px] leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">
-          Approved Loan Product
+
+        <div className="flex flex-col items-start justify-start gap-2 w-full">
+          <div className="tracking-tight leading-[150%] text-slate-800 font-semibold text-[20px] whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">
+            Offer Products
+          </div>
+          <div>
+          {productsArray.map((product) => (
+              <div key={product.Product}>
+                <label className="flex items-center gap-2 cursor-pointer text-black hover:bg-blue-100 p-2 rounded">
+                  <input
+                    type="checkbox"
+                    value={product.Product}
+                    checked={selected.includes(product.Product)}
+                    onChange={handleSelectChange}
+                  />
+                  Amount: {product.Amount}, 
+                  EMI: {product.Emi}, 
+                  Interest: {product.Interest}, 
+                  Mode: {product.Mode}, 
+                  Product: {product.Product}, 
+                  Tenure: {product.Tenure}, 
+                  Type: {product.Type}
+                </label>
+              </div>
+            ))}
+          </div>
+          <div className='flex flex-row w-full items-end justify-end'>
+            <RedButton label="Offer a Loan" onClick={()=>OfferLoan()} />
+          </div>
         </div>
-        <div className="flex flex-wrap w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
-          <InputComponent label={"Product"} value={acceptedProduct().Product} />
-          <InputComponent label={"Loan Type"} value={acceptedProduct().Type} />
-          <InputComponent label={"Loan Amount"} value={acceptedProduct().Amount} />
-          <InputComponent label={"Tenure (in weeks)"} value={acceptedProduct().Tenure} />
-          <InputComponent label={"Emi in Rs"} value={acceptedProduct().Emi} />
-          <InputComponent label={"Interest Rate"} value={acceptedProduct().Interest} />
-          <InputComponent label={"Interest Type"} value={acceptedProduct().Mode} />
-        </div>
-      </div>
-    )}
+
+        {data.loanInfo.Status === "Accepted" && (
+          <div className="flex flex-col items-start justify-start gap-2 w-full">
+            <div className="tracking-tight text-[20px] leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">
+              Approved Loan Product
+            </div>
+            <div className="flex flex-wrap w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+              <InputComponent label={"Product"} value={acceptedProduct().Product} />
+              <InputComponent label={"Loan Type"} value={acceptedProduct().Type} />
+              <InputComponent label={"Loan Amount"} value={acceptedProduct().Amount} />
+              <InputComponent label={"Tenure (in weeks)"} value={acceptedProduct().Tenure} />
+              <InputComponent label={"Emi in Rs"} value={acceptedProduct().Emi} />
+              <InputComponent label={"Interest Rate"} value={acceptedProduct().Interest} />
+              <InputComponent label={"Interest Type"} value={acceptedProduct().Mode} />
+            </div>
+          </div>
+        )}
         
             
             
@@ -353,7 +354,7 @@ const handleSelectChange = (e) => {
         
         <div className="flex flex-col items-start justify-start gap-2 w-full">
             <div className="tracking-tight text-[20px] leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap mq450:text-[1rem] mq450:leading-[1.5rem]">Bank Details</div>
-            <div className="flex flex-wrap w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+            <div className="grid grid-cols-4 mq675:grid mq675:grid-cols-2 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
               <InputComponent label={"Account No"} value={data.Account}/>
               <InputComponent label={"IFSC Code"}/>
               <InputComponent label={"Statement (last 6 months)"}/>
@@ -363,7 +364,7 @@ const handleSelectChange = (e) => {
         </div>
         <div className="flex flex-col items-start justify-start gap-2 w-full">
             <div className="tracking-tight leading-[150%] text-slate-800 font-semibold whitespace-pre-wrap text-[20px] mq450:text-[1rem] mq450:leading-[1.5rem]">Guarantor Details</div>
-            <div className="flex flex-wrap w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
+            <div className="grid grid-cols-4 mq675:grid mq675:grid-cols-2 w-full items-start justify-between gap-4 text-[1rem] text-gray-400 font-roboto">
             <InputComponent label={"Name"} value={data.loanInfo.Guarantor[0]?.Name || "Value"}/>
             <InputComponent label={"Mail"} value={data.loanInfo.Guarantor[0]?.Mail || "Value"}/>
             <InputComponent label={"Phone"} value={data.loanInfo.Guarantor[0]?.Phone || "Value"}/>

@@ -13,6 +13,7 @@ const CustomInput = ({ placeholder, iconSrc, className = '', onChange, ...props 
         className="bg-[transparent] text-[1.125rem] font-roboto placeholder:text-foundation-blue-normal text-foundation-blue-normal text-left focus:outline-none"
         placeholder={placeholder}
         onChange={onChange}
+        spellCheck="false"
         {...props}
       />
     </div>

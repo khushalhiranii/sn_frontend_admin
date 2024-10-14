@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-const Loan = ({ className = "", home22, loanRequests, count }) => {
+const Loan = ({ className = "", home22, loanRequests, count=0 }) => {
   return (
     <div
       className={`loan-component w-full rounded bg-off-white flex flex-row justify-between pl p-[12px] box-border min-w-[9.5rem] text-left text-[1rem] text-black1 font-roboto ${className}`}

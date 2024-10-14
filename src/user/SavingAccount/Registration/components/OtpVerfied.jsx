@@ -40,7 +40,7 @@ export const OtpVerified = ({ className = "" }) => {
               </div>
             </div>
             <div className="self-stretch flex flex-col items-center justify-center gap-6">
-              {account.Status != "Verified" ? (<RedButton
+              {account?.Status != "Verified" ? (<RedButton
                 label={"Open Saving Account"}
                 onClick={() => navigate('/register/openAcc')} // Wrap in an anonymous function
                 className="w-full"

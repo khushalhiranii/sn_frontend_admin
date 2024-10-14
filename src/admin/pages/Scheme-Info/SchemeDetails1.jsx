@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import InputComponent from '../../components/InputComponent';
 import { useAdminSocket } from '../../context/AdminSocketContext';
 import { getFullUrl } from '../../utils';
+import Loader from '../../../LoadingIndicator/Loader';
 
 function SchemeDetails1() {
   const { userId, schemeId } = useParams(); // Get the userId from the URL
@@ -94,7 +95,7 @@ function SchemeDetails1() {
   
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <Loader/>
   }
 
   return (

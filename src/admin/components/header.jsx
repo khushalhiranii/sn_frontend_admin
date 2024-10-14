@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CustomInput from "../../user/DesignSystem/CustomInput";
 import Bell from "../assets/bell";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -9,30 +9,38 @@ import User from "../assets/user";
 const Header = () => {
   const navigate = useNavigate();
   const [searchResults, setSearchResults] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
   const { users } = useAdminSocket();
-  // const users = {
-  //   0: { Name: "Khushal" },
-  //   1: { Name: "Harsh" },
-  //   2: { Name: "Vaibhav" },
-  // };
 
   const handleSearch = (e) => {
-    const searchValue = e.target.value.trim().toLowerCase();
-    if (searchValue === "") {
+    const value = e.target.value.trim().toLowerCase();
+    setSearchValue(value); // Set value first
+    if (!value) {
       setSearchResults([]); // Clear results if input is empty
       return;
     }
 
+    // Filter users based on the search value
     const filteredUsers = Object.values(users).filter((user) =>
-      user.Name.toLowerCase().includes(searchValue)
+      user.Name.toLowerCase().includes(value)
     );
 
+    // Check if any users matched or display no result message
     if (filteredUsers.length > 0) {
       setSearchResults(filteredUsers);
     } else {
       setSearchResults([{ message: "No user exists with such name" }]);
     }
   };
+
+  // Optionally, debounce the search function to reduce re-renders on every keypress.
+  useEffect(() => {
+    const debounceSearch = setTimeout(() => {
+      if (!searchValue) setSearchResults([]);
+    }, 300); // Adjust the debounce time as needed
+
+    return () => clearTimeout(debounceSearch);
+  }, [searchValue]);
 
   return (
     <header className="self-stretch shadow-md bg-white flex items-center justify-between py-[1rem] px-[4rem] top-[0] z-20 sticky gap-[1.25rem] max-w-full">
@@ -46,22 +54,37 @@ const Header = () => {
           <CustomInput
             placeholder="Search"
             iconSrc="/search.svg"
-            onChange={(e) => handleSearch(e)}
+            onChange={handleSearch} // Directly use the function here
             className="p-[14px]"
           />
 
           {/* Search Results */}
           {searchResults.length > 0 && (
             <ul
-              className="absolute top-[3rem] left-0 w-full text-[16px] font-roboto bg-white border border-gray-300 rounded-lg shadow-lg z-[9999] max-h-[200px] overflow-y-auto"
-              style={{ width: "85%" }} // Match width with input
+              className="absolute top-[3rem] left-0 text-[16px] font-roboto bg-white border border-gray-300 rounded-lg shadow-lg z-[9999] max-h-[200px] overflow-y-auto w-[85%]"
             >
               {searchResults[0]?.message ? (
                 <li className="text-red-500">{searchResults[0].message}</li>
               ) : (
                 searchResults.map((user, index) => (
-                  <li key={index} onClick={()=> navigate(`/admin/cusmgmt/${user.Identifier}`)} className="py-1 px-2 font-normal list-none text-base text-gray-800 cursor-pointer hover:bg-mediumvioletred-200">
-                    {user.Name}
+                  <li
+                    key={index}
+                    onClick={() => {
+                      if (user.Role === "User") {
+                        navigate(`/admin/cusmgmt/${user.Identifier}`);
+                      } else {
+                        navigate(`/admin/agmgmt/${user.Identifier}`);
+                      }
+                      setSearchValue(""); // Clear search value after navigation
+                    }}
+                    className="flex flex-row justify-between py-1 px-2 font-normal list-none text-base text-gray-800 cursor-pointer hover:bg-mediumvioletred-200"
+                  >
+                    <div>
+                      {user.Name}
+                    </div>
+                    <div className="text-[10px] text-[#9c99a2]">
+                      {user.Role}
+                    </div>
                   </li>
                 ))
               )}
@@ -93,7 +116,6 @@ const Header = () => {
         >
           <User />
         </NavLink>
-      
       </div>
     </header>
   );

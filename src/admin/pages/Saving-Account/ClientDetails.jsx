@@ -5,6 +5,7 @@ import { useAdminSocket } from '../../context/AdminSocketContext';
 import { getFullUrl } from '../../utils';
 import axiosInstance from '../../../../axios.utils';
 import OutlinedButton from '../../components/OutlinedButton';
+import Loader from '../../../LoadingIndicator/Loader';
 
 function ClientDetails() {
   const { userId } = useParams(); // Get the userId from the URL
@@ -114,7 +115,7 @@ function ClientDetails() {
   
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <Loader/>;
   }
 
   return (

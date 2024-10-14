@@ -13,7 +13,9 @@ const initialState = {
   schemes: {},
   notifications: {},
   products: {},
-  requests:{}
+  requests:{},
+  agents:{},
+  meta_data:{}
 };
 
 const socketReducer = (state, action) => {
@@ -36,6 +38,10 @@ const socketReducer = (state, action) => {
       return { ...state, products: action.payload };
     case 'SET_REQUESTS':
       return { ...state, requests: action.payload };
+    case 'SET_AGENTS':
+      return { ...state, agents: action.payload };
+    case 'SET_LOAN_META':
+      return { ...state, meta_data: action.payload };
     default:
       return state;
   }
@@ -60,6 +66,8 @@ export const SocketProvider = ({ children }) => {
   const handleNotificationsEvent = useCallback((data) => dispatch({ type: 'SET_NOTIFICATIONS', payload: data.data.details.notifications }), []);
   const handleProductsEvent = useCallback((data) => dispatch({ type: 'SET_PRODUCTS', payload: data.data.details.products }), []);
   const handleLoanRequestsEvent = useCallback((data) => dispatch({ type: 'SET_REQUESTS', payload: data.data.details.request }), []);
+  const handleAgentsEvent = useCallback((data) => dispatch({ type: 'SET_AGENTS', payload: data.data.details.agents }), []);
+  const handleLoanMetaData = useCallback((data)=> dispatch({type:'SET_LOAN_META', payload: data.data}), []);
 
   useEffect(() => {
     // Attach event listeners
@@ -70,7 +78,9 @@ export const SocketProvider = ({ children }) => {
     socket.on('B23CD2AE771A705F2F5EF60173743B5B', handleSchemesEvent);
     socket.on('09BAE709245B6148A2EC9215735DAE33', handleNotificationsEvent);
     socket.on('7712D5EQDA9F00F842E470D02D381F9P', handleProductsEvent);
-    socket.on('7712D5EQDA9F00F842E470D02D381F9R', handleLoanRequestsEvent)
+    socket.on('7712D5EQDA9F00F842E470D02D381F9R', handleLoanRequestsEvent);
+    socket.on('7712D5EQDA9F00F842E470DHUMNHI8J', handleAgentsEvent)
+    socket.on('test', handleLoanMetaData)
 
     // Cleanup event listeners when the component unmounts
     // return () => {
@@ -81,7 +91,7 @@ export const SocketProvider = ({ children }) => {
     //   socket.off('B23CD2AE771A705F2F5EF60173743B5B', handleSchemesEvent);
     //   socket.off('09BAE709245B6148A2EC9215735DAE33', handleNotificationsEvent);
     // };
-  }, [socket, handleUserEvent, handleUserDataEvent, handleAccountsEvent, handleLoansEvent, handleSchemesEvent, handleNotificationsEvent, handleLoanRequestsEvent, handleProductsEvent]);
+  }, [socket, handleUserEvent, handleUserDataEvent, handleAccountsEvent, handleLoansEvent, handleSchemesEvent, handleNotificationsEvent, handleLoanRequestsEvent, handleProductsEvent, handleAgentsEvent, handleLoanMetaData]);
 
   // Subscribe to an event dynamically
   const subscribeToEvent = useCallback((eventName, callback) => {

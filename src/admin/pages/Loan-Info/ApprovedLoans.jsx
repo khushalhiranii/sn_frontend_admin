@@ -35,7 +35,7 @@ function ApprovedLoans( className ) {
         (loan) =>
             loan.Loan.Type === Loan &&
             ((recovered === true && loan.Loan.Status === 'Closed') || 
-            (recovered === false && loan.Loan.Status === 'Active'))
+            (recovered === false && (loan.Loan.Status === 'Active' || loan.Loan.Status === 'Overdue')))
     );
 
     return (

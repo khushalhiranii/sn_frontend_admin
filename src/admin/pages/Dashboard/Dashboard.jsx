@@ -8,6 +8,7 @@ import Apartment from '../../assets/apartment';
 import { useAdminSocket } from '../../context/AdminSocketContext';
 import LoanInfoCard from '../../components/LoanInfoCard';
 import ApprovedLoans from '../Loan-Info/ApprovedLoans';
+import Loader from '../../../LoadingIndicator/Loader';
 
 function Dashboard() {
   // Set the default state to 'Property Loan'
@@ -81,7 +82,7 @@ function Dashboard() {
 
   if(!users){
     return(
-      <div>Loading</div>
+      <Loader/>
     )
   }
 

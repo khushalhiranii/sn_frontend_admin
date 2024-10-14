@@ -43,10 +43,10 @@ function LoanRequest() {
     const counts = { Property: 0, Instant: 0, Personal: 0, Business: 0 };
 
     getMergedData.forEach((loan) => {
-      if (loan.Type === 'Property') counts.Property++;
-      if (loan.Type === 'Instant') counts.Instant++;
-      if (loan.Type === 'Personal') counts.Personal++;
-      if (loan.Type === 'Self Business' || loan.Type === 'Joint Business') counts.Business++;
+      if (loan.Type === 'Property' && loan.Status !== 'Active' && loan.Status !== 'Rejected') counts.Property++;
+      if (loan.Type === 'Instant' && loan.Status !== 'Active' && loan.Status !== 'Rejected') counts.Instant++;
+      if (loan.Type === 'Personal' && loan.Status !== 'Active' && loan.Status !== 'Rejected') counts.Personal++;
+      if (loan.Type === 'Self Business' || loan.Type === 'Joint Business' && loan.Status !== 'Active' && loan.Status !== 'Rejected') counts.Business++;
     });
 
     return counts;

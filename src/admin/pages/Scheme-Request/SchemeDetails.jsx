@@ -7,6 +7,7 @@ import OutlinedButton from '../../components/OutlinedButton';
 import { useAdminSocket } from '../../context/AdminSocketContext';
 import axiosInstance from '../../../../axios.utils';
 import { getFullUrl } from '../../utils';
+import Loader from '../../../LoadingIndicator/Loader';
 
 function SchemeDetails() {
   const { userId, schemeId } = useParams(); // Get the userId from the URL
@@ -98,7 +99,7 @@ function SchemeDetails() {
   
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <Loader/>;
   }
 
   return (

@@ -69,6 +69,9 @@ import UserInfoPage from './user/SavingAccount/Registration/pages/UserInfoPage.j
 import { AccountApplied } from './user/SavingAccount/Registration/components/AccountApplied.jsx';
 import LoanInfoPage from './admin/pages/Loan-Info/LoanInfoPage.jsx';
 import AgentInfoPage from './admin/pages/Agent-Mngmt/AgentInfoPage.jsx';
+import AddAgent from './admin/pages/Agent-Mngmt/AddAgent.jsx';
+import UsersUnderAgent from './admin/pages/Agent-Mngmt/UsersUnderAgent.jsx';
+import AgentUserInfo from './admin/pages/Agent-Mngmt/AgentUserInfo.jsx';
 
 
 const RenderSocketProvider = ({ children }) => {
@@ -200,7 +203,10 @@ const AppRouter = () => {
       <Route path="schemeInfo/:userId/:schemeId" element={<SchemeDetails1 />} />
       <Route path='loanInfo/ApprovedLoans' element={<ApprovedLoans/>} />
       <Route path='loanInfo/ApprovedLoans/:userId/:loanId' element={<LoanInfoPage/>} />
-      <Route path="agmgmt/:userId" element={<AgentInfoPage />} />
+      <Route path="agmgmt/:agentId" element={<AgentInfoPage />} />
+      <Route path="agmgmt/:agentId/:filter" element={<UsersUnderAgent />} />
+      <Route path="agmgmt/:agentId/:filter/:userId/:loanId" element={<AgentUserInfo />} />
+      <Route path="agmgmt/addAgent" element={<AddAgent />} />
       <Route path='AdminInfo' element={<AdminInfo/>} />
       <Route path="*" element={<Navigate to="/admin" replace />} />
     </Route>
