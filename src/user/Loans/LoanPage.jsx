@@ -53,6 +53,7 @@ const LoanPage = ({ className = "" }) => {
 
   const submitLoanDetailsAPI = async (loanData) => {
     // API call for submitting loan details
+    console.log(user.Identifier)
     let response;
     if(selectedLoan === "Personal" || selectedLoan === "Instant"){
       response = await axiosInstance.post('/client/classic/Loan', {
