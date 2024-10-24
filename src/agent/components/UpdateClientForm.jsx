@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import RedButton from '../../user/DesignSystem/RedButton';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../../axios.utils';
