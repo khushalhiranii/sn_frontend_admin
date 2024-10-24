@@ -1,13 +1,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import useAxios from '../../axiosSetup';
 import InputComponent from '../../components/InputComponent';
-import RedButton from '../../../user/DesignSystem/RedButton';
-import OutlinedButton from '../../components/OutlinedButton';
 import { useAdminSocket } from '../../context/AdminSocketContext';
 import { getFullUrl } from '../../utils';
-import axiosInstance from '../../../../axios.utils';
 import Loader from '../../../LoadingIndicator/Loader';
 
 function LoanInfoPage() {
