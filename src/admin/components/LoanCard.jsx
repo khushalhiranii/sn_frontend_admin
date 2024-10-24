@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import useAxios from "../axiosSetup";
 import { getFullUrl } from "../utils";
 import axiosInstance from "../../../axios.utils";
 import RedButton from "../../user/DesignSystem/RedButton";
