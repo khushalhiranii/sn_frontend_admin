@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import useAxios from '../../axiosSetup';
 import InputComponent from '../../components/InputComponent';
 import RedButton from '../../../user/DesignSystem/RedButton';
 import OutlinedButton from '../../components/OutlinedButton';
