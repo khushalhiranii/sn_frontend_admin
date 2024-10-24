@@ -72,6 +72,8 @@ import AgentInfoPage from './admin/pages/Agent-Mngmt/AgentInfoPage.jsx';
 import AddAgent from './admin/pages/Agent-Mngmt/AddAgent.jsx';
 import UsersUnderAgent from './admin/pages/Agent-Mngmt/UsersUnderAgent.jsx';
 import AgentUserInfo from './admin/pages/Agent-Mngmt/AgentUserInfo.jsx';
+import { AgentSocketProvider } from './agent/context/AgentSocketContext.jsx';
+import ClientInfoAgent from './agent/pages/ClientInfoAgent.jsx';
 
 
 const RenderSocketProvider = ({ children }) => {
@@ -91,12 +93,12 @@ const RenderSocketProvider = ({ children }) => {
             </LoanInfoProvider>
           </SocketProvider>
         );
-        // case 'user':
-        //   return(
-        //     <UserSocketProvider>
-        //       {children}
-        //     </UserSocketProvider>
-        //   )
+        case 'agent':
+          return(
+            <AgentSocketProvider>
+              {children}
+            </AgentSocketProvider>
+          )
       default:
         return(
           <UserSocketProvider>
@@ -146,7 +148,7 @@ const AppRouter = () => {
     <Route path='/login' element={<Login/>}/>
     <Route path='/login/otp' element={<Otp/>}/>
     <Route path='/login/otpverified' element={<OtpVerified/>}/>
-    <Route path="/agent" element={<AgentLogin />} />
+    <Route path="/agent" element={<App />} />
     {/* <Route
       path="/admin/*"
       element={
@@ -164,20 +166,20 @@ const AppRouter = () => {
       }
     >
       <Route path="home" element={<HomeAgent />} />
+      <Route path="home/:userId/:loanId" element={<ClientInfoAgent />} />
       <Route path="due" element={<Due />} />
+      <Route path="due/:userId/:loanId" element={<ClientInfoAgent />} />
       <Route path="pending" element={<PendingAgent/>} />
+      <Route path="pending/:userId/:loanId" element={<ClientInfoAgent />} />
       <Route path="history" element={<HistoryAgent/>} />
+      <Route path="history/:userId/:loanId" element={<ClientInfoAgent />} />
       <Route path="profile" element={<ProfileAgent/>} />
+      <Route path='notifications' element={<Notifications/>}/>
+      <Route path="*" element={<Navigate to="/agent/home" replace />} />
     </Route>
+
+
     <Route path="/admin" element={<App />} />
-    {/* <Route
-      path="/admin/*"
-      element={
-        <PrivateRoute>
-          <Layout />
-        </PrivateRoute>
-      }
-    > */}
     <Route
       path="/admin/*"
       element={

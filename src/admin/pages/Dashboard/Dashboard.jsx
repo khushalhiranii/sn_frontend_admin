@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import Loan from './loan';
-import Card1 from '../../components/InfoCard';
-import Time from '../../assets/time';
-import Hr from '../../assets/hr-person';
-import Briefcase from '../../assets/briefcase';
-import Apartment from '../../assets/apartment';
 import { useAdminSocket } from '../../context/AdminSocketContext';
-import LoanInfoCard from '../../components/LoanInfoCard';
 import ApprovedLoans from '../Loan-Info/ApprovedLoans';
 import Loader from '../../../LoadingIndicator/Loader';
 

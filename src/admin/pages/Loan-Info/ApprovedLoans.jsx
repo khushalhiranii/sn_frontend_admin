@@ -81,7 +81,7 @@ function ApprovedLoans( className ) {
                     </div>
 
                     {/* Display filtered and merged data */}
-                    <div className="w-full grid grid-cols-3 items-center justify-between px-[16px] box-border">
+                    <div className="w-full grid grid-cols-3 items-center justify-between px-[16px] box-border gap-4">
                         {filteredLoans.map((account, index) => (
                             <LoanInfoCard
                                 key={index}

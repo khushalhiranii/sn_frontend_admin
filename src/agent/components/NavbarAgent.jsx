@@ -12,10 +12,18 @@ import Agmng from "../../admin/assets/ag-mng.jsx";
 import Time from "../../admin/assets/time.jsx";
 
 
-const NavLinkItem = ({ to, icon: Icon, label }) => (
+const NavLinkItem = ({ to, icon: Icon, label, onClick }) => (
   <NavLink
     to={to}
-    className={({ isActive }) => isActive ? "navlink active-navlink" : "navlink"}
+    className={({ isActive }) =>
+      isActive ? "navlink active-navlink" : "navlink"
+    }
+    onClick={(e) => {
+      if (onClick) {
+        e.preventDefault(); // Prevent immediate navigation
+        onClick(); // Execute the custom onClick logic
+      }
+    }}
   >
     <Icon />
     {label}
@@ -26,22 +34,30 @@ NavLinkItem.propTypes = {
   to: PropTypes.string.isRequired,
   icon: PropTypes.elementType.isRequired,
   label: PropTypes.string.isRequired,
+  onClick: PropTypes.func, // Make onClick optional
 };
 
 const NavbarAgent = () => {
 //   const { logout } = useAuth();
 
   return (
-    <div className="flex flex-col w-[20%] h-[944px] border-solid border-[#E6E6E6] border-r-[1px] !sticky top-16 left-0 bg-white items-start justify-between pb-12 py-[32px] pr-0 pl-16 gap-[16px] text-left text-[14px] font-medium text-black font-roboto mq450:pl-5 mq450:box-border mq675:pt-5 mq675:pb-5 mq675:box-border">
-      <div className="flex flex-col items-start justify-start w-full gap-[16px] text-left text-[1.125rem] text-black font-roboto mq450:pl-5 mq450:box-border mq675:pt-5 mq675:pb-5 mq675:box-border">
+    <div className="flex flex-col w-[20%] border-solid border-[#E6E6E6] border-r-[1px] !sticky top-16 left-0 bg-white items-start justify-between pb-12 py-[16px] pl-16 gap-[16px] text-left text-[14px] font-medium text-black font-roboto">
+      <div className="flex flex-col items-start justify-start w-[110%] gap-y-[16px] text-left text-[1.125rem] text-black font-roboto">
         <NavLinkItem to="/agent/home" icon={IconHome} label="Home" />
         <NavLinkItem to="/agent/due" icon={OverDue} label="Customer Over Due" />
         <NavLinkItem to="/agent/pending" icon={Pending} label="Pendings" />
         <NavLinkItem to="/agent/history" icon={Time} label="History" />
-        <NavLinkItem to="/agent/profile" icon={Agmng} label="Profile" />
       </div>
-      <div className="flex flex-col items-start justify-start w-full gap-[16px] text-left text-[1.125rem] text-black font-roboto">
-        <NavLinkItem to="/logout" icon={Signout} label="Sign Out" />
+      <div className="flex flex-col items-start justify-start w-[110%] text-left text-[1.125rem] text-black font-roboto">
+      <NavLinkItem
+        to="/agent"
+        icon={Signout}
+        label="Sign Out"
+        onClick={() => {
+          sessionStorage.clear(); // Clear session storage
+          window.location.href = '/agent'; // Navigate manually
+        }}
+      />
       </div>
     </div>
   );

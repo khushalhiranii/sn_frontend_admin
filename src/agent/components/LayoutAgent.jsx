@@ -7,7 +7,7 @@ const LayoutAgent = () => {
   return (
     <div className="flex flex-col">
       <Header />
-      <div className="flex flex-row gap-[16px] pr-[48px] font-roboto">
+      <div className="flex flex-row w-full font-roboto">
         <NavbarAgent/>
         <Outlet/>
           {/* <NavbarAdmin /> */}
