@@ -5,7 +5,7 @@ import InputReg from '../../../DesignSystem/InputReg';
 import RedButton from '../../../DesignSystem/RedButton';
 
 export const Inputbar = () => {
-  const { sendUserData, requestOTP } = useUserData();
+  const { sendUserData, requestOTP, setSignupView } = useUserData();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [dob, setDob] = useState('');
@@ -43,7 +43,8 @@ export const Inputbar = () => {
     try {
       await sendUserData(name, email, dob, phoneno);
       requestOTP();
-      navigate('/register/otp');
+      // navigate('/register/otp');
+      setSignupView('otp')
     } catch (error) {
       setError('User already exists');
     } finally {
@@ -63,7 +64,7 @@ export const Inputbar = () => {
             <img className="h-[4rem] w-[4rem]" alt="" src="/sn.svg" />
             <div className="relative text-[32px] font-semibold">Registration</div>
           </div>
-          {error && <div className="text-red-700 text-sm font-normal">{error}</div>}
+          {error && <div className="text-red-700 text-lg font-normal">{error}</div>}
           <div className="self-stretch flex flex-col gap-5">
             <InputReg
               label="Full Name"

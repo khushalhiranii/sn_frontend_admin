@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { lazy, Suspense, useMemo } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
-import App from './App.jsx';
+
 import './index.css';
 import Layout from './admin/Layout.jsx';
 import Dashboard from './admin/pages/Dashboard/Dashboard.jsx';
@@ -16,8 +16,6 @@ import AgentMngmt from './admin/pages/Agent-Mngmt/AgentMngmt.jsx';
 import { AuthProvider } from './admin/context/AuthContext.jsx';
 import PrivateRoute from './admin/Routes/PrivateRoute.jsx';
 import LoanDetails from './admin/pages/Loan-Request/LoanDetails.jsx';
-import Landing from './user/Landing.jsx';
-import Home from './user/Home/Home.jsx';
 import Schemes from './user/Schemes/Schemes.jsx';
 import { UserDataProvider } from './user/SavingAccount/Registration/context/UserDataContext.jsx';
 import StepContext from './user/SavingAccount/Registration/context/StepContext.jsx';
@@ -74,9 +72,12 @@ import UsersUnderAgent from './admin/pages/Agent-Mngmt/UsersUnderAgent.jsx';
 import AgentUserInfo from './admin/pages/Agent-Mngmt/AgentUserInfo.jsx';
 import { AgentSocketProvider } from './agent/context/AgentSocketContext.jsx';
 import ClientInfoAgent from './agent/pages/ClientInfoAgent.jsx';
+import LoginComponent from './user/SavingAccount/Registration/components/LoginComponent.jsx';
+import SignupComponent from './user/SavingAccount/Registration/components/SignupComponent.jsx';
+import Loader from './LoadingIndicator/Loader.jsx';
 
 
-const RenderSocketProvider = ({ children }) => {
+const RenderSocketProvider = React.memo( ({ children }) => {
   const location = useLocation();
   
   const role = sessionStorage.getItem('role')
@@ -109,7 +110,11 @@ const RenderSocketProvider = ({ children }) => {
   }, [role, location.pathname]); // Recompute whenever role or path changes
 
   return provider;
-};
+});
+
+const Landing = lazy(() => import('./user/Landing.jsx'));
+const Home = lazy(() => import('./user/Home/Home.jsx'));
+const App = lazy(() => import('./App.jsx'))
 
 const AppRouter = () => {
   return(
@@ -117,7 +122,7 @@ const AppRouter = () => {
     <ScrollToTop/>
     <LoadingIndicator/>
     <RenderSocketProvider>
-      
+    <Suspense fallback={<Loader />}>
     <Routes>
     <Route path="/" element={<Landing/>}>
       <Route index element={<Home/>}/>
@@ -140,14 +145,15 @@ const AppRouter = () => {
       
       
     </Route>
-    <Route path='/register' element={<Inputbar/>}/>
-    <Route path='/register/otp' element={<Otp/>}/>
-    <Route path='/register/otpverified' element={<OtpVerified/>}/>
+    <Route path='/register' element={<SignupComponent/>}/>
+    {/* <Route path='/register/otp' element={<Otp/>}/>
+    <Route path='/register/otpverified' element={<OtpVerified/>}/> */}
     <Route path='/register/openAcc' element={<OpenAcc/>}/>
     <Route path='/register/verified' element={<AccountApplied/>}/>
-    <Route path='/login' element={<Login/>}/>
-    <Route path='/login/otp' element={<Otp/>}/>
-    <Route path='/login/otpverified' element={<OtpVerified/>}/>
+    <Route path='/login' element={<LoginComponent/>}/>
+    <Route path='*' element={<Navigate to={"/"}/>}/>
+    {/* <Route path='/login/otp' element={<Otp/>}/> */}
+    {/* <Route path='/login/otpverified' element={<OtpVerified/>}/> */}
     <Route path="/agent" element={<App />} />
     {/* <Route
       path="/admin/*"
@@ -213,7 +219,7 @@ const AppRouter = () => {
       <Route path="*" element={<Navigate to="/admin" replace />} />
     </Route>
     </Routes>
-    
+    </Suspense>
     </RenderSocketProvider>
   </Router>)
 };

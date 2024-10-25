@@ -3,6 +3,7 @@ import { useUserData } from '../context/UserDataContext';
 import { useNavigate } from 'react-router-dom';
 import RedButton from '../../../DesignSystem/RedButton';
 import { useUserSocket } from "../../../context/UserSocketContext";
+import Loader from "../../../../LoadingIndicator/Loader";
 
 
 export const Otp = ({ length = 4 }) => {
@@ -10,8 +11,9 @@ export const Otp = ({ length = 4 }) => {
     const { sendUserIdentifier } = useUserSocket();
     const [otp, setOtp] = useState(new Array(length).fill(""));
     const inputRefs = useRef([]);
-    const { sendOTP, sendLoginOTP } = useUserData();
+    const { sendOTP, sendLoginOTP, setLoginView, requestOTP } = useUserData();
     const [loading, setLoading] = useState(false); // Loading state
+    const [ loader, setLoader ] = useState(false);
     const [errorMessage, setErrorMessage] = useState(''); // Error message state
 	const navigate = useNavigate();
     useEffect(() => {
@@ -74,10 +76,12 @@ export const Otp = ({ length = 4 }) => {
                 sendUserIdentifier(response.data.credentials.Identifier);
             } else {
                 response = await sendOTP(finalOtp);
+                sendUserIdentifier(response.data.credentials.Identifier);
             }
 
             if (response) {
-                navigate('/register/otpverified');
+                // navigate('/register/otpverified');
+                setLoginView('verified')
             }
         } catch (error) {
             console.error('Failed to verify OTP:', error.message);
@@ -86,6 +90,18 @@ export const Otp = ({ length = 4 }) => {
             setLoading(false); // Set loading to false after request completes
         }
     };
+
+    const resend = async () => {
+        setLoader(true)
+        const res = await requestOTP();
+        if(res){
+            setLoader(false)
+            setErrorMessage("OTP sent successfully")
+        }
+    }
+    if(loader){
+        return <Loader/>
+    }
 
     
 
@@ -110,6 +126,7 @@ export const Otp = ({ length = 4 }) => {
                     </div>
                 </div>
                 <div className="flex flex-col justify-center gap-[24px]">
+                    {errorMessage && <div className="text-red-700 text-lg text-center">{errorMessage}</div>}
                     <div className="flex justify-center gap-4">
                         {otp.map((value, index) => (
                             <input
@@ -126,11 +143,11 @@ export const Otp = ({ length = 4 }) => {
                     </div>
                     <div className="flex flex-row text-center justify-center text-base font-normal">
                         <p>Didn’t you receive the OTP?</p>
-                        <button className="bg-white text-foundation-red-normal font-medium hover:text-red-600">
+                        <button className="bg-white text-foundation-red-normal font-medium hover:text-red-600" onClick={resend}>
                             Resend Code
                         </button>
                     </div>
-                    {errorMessage && <div className="text-red-500 text-center">{errorMessage}</div>}
+                    
                 </div>
             </div>
             <div className="self-stretch flex justify-end">
@@ -142,7 +159,9 @@ export const Otp = ({ length = 4 }) => {
                     disabled={loading || finalOtp.length != 4} // Disable button while loading
                 />
             </div>
+            
         </div>
+        <div className="text-sm text-center">* Don't refresh or reload the page.</div>
         </div>
       </main>
     </div>

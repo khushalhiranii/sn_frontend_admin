@@ -19,6 +19,8 @@ export const UserDataProvider = ({ children }) => {
   const [ phoneNumber, setPhoneNumber] = useState(null)
   const [verificationStatus, setVerificationStatus] = useState(false);
   const [otpVerificationStatus, setOtpVerificationStatus] = useState(false);
+  const [ loginView, setLoginView ] = useState('login');
+  const [ signupView, setSignupView ] = useState('signup');
   
   // const navigate = useNavigate();
   // Function to send user data and handle response
@@ -62,6 +64,7 @@ export const UserDataProvider = ({ children }) => {
       });
 
       console.log(response);
+      return response;
     } catch (error) {
       console.error("Error requesting OTP:", error);
     }
@@ -158,7 +161,11 @@ export const UserDataProvider = ({ children }) => {
     requestOTP,
     sendOTP,
     sendLoginOTP,
-    userLogin
+    userLogin,
+    loginView,
+    setLoginView,
+    signupView,
+    setSignupView
   };
 
   return (

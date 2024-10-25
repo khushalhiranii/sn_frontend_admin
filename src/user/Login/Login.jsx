@@ -9,7 +9,7 @@ export const Login = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-  const { userLogin } = useUserData();
+  const { userLogin, setLoginView } = useUserData();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,7 +18,8 @@ export const Login = () => {
     try {
       const response = await userLogin(phone);
       if (response.status === 200) {
-        navigate('/login/otp');
+        // navigate('/login/otp');
+        setLoginView('otp')
       }
     } catch (error) {
       setErrorMessage(error.response?.data?.message || 'Failed to send user data');
