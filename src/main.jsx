@@ -148,7 +148,7 @@ const AppRouter = () => {
     <Route path='/register' element={<SignupComponent/>}/>
     {/* <Route path='/register/otp' element={<Otp/>}/>
     <Route path='/register/otpverified' element={<OtpVerified/>}/> */}
-    <Route path='/register/openAcc' element={<OpenAcc/>}/>
+    {/* <Route path='/register/openAcc' element={<OpenAcc/>}/> */}
     <Route path='/register/verified' element={<AccountApplied/>}/>
     <Route path='/login' element={<LoginComponent/>}/>
     <Route path='*' element={<Navigate to={"/"}/>}/>

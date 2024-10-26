@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import RedButton from '../../../DesignSystem/RedButton';
 import { useNavigate } from 'react-router-dom';
 import { useUserSocket } from '../../../context/UserSocketContext';
+import Loader from '../../../../LoadingIndicator/Loader';
 
 function AccountAction() {
   const navigate = useNavigate();
@@ -32,9 +33,7 @@ function AccountAction() {
 
   if (loading) {
     return (
-      <div className="flex flex-col justify-center items-center mt-[16px] min-h-screen">
-        <div className="spinner-border animate-spin rounded-full h-8 w-8 border-solid border-t-2 border-b-2 border-blue-700"></div>
-      </div>
+     <Loader/>
     );
   }
 
@@ -51,7 +50,7 @@ function AccountAction() {
     </div>);
   }
 
-  if( !user || user?.Verification !== true || account?.Status === "Pending" ){
+  if( account?.Status === "Pending" ){
     return(
       <div className="flex flex-col items-center justify-center pt-4 w-full">
   <div className="flex flex-row items-center bg-white p-6 rounded-md shadow-lg">

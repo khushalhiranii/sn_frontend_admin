@@ -7,6 +7,7 @@ import { multiStepContext } from '../context/StepContext';
 import { useUserSocket } from '../../../context/UserSocketContext';
 import { Navigate, useNavigate } from 'react-router-dom';
 import Loader from '../../../../LoadingIndicator/Loader';
+import { AccountApplied } from './AccountApplied';
 
 function OpenAcc() {
   const { currentStep } = useContext(multiStepContext);
@@ -38,6 +39,8 @@ function OpenAcc() {
         return <SecondStep />;
       case 3:
         return <ThirdStep />;
+      case 4:
+        return <AccountApplied/>;
       default:
         return null;
     }

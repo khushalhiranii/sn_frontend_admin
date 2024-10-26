@@ -30,7 +30,7 @@ const ThirdStep = () => {
   const [panError, setPanError] = useState(''); // PAN validation error
   const [aadharError, setAadharError] = useState(''); // Aadhar validation error
 
-  const { submitData, userData, setUserData } = useContext(multiStepContext);
+  const { submitData, userData, setUserData, setStep } = useContext(multiStepContext);
 
   const submit = async () => {
     try {
@@ -39,7 +39,8 @@ const ThirdStep = () => {
       if (res.status === 200) {
         setApiRes(false);
         setFinalRes(res.response.data.data.message);
-        navigate('/register/verified');
+        // navigate('/register/verified');
+        setStep(4)
       }
     } catch (error) {
       setApiRes(error.response.data.data.message);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import ArrowDown from '../../agent/assets/ArrowDown';
 
 const HeaderNavLink = ({ to, label, className = '', img }) => {
   return (
@@ -12,7 +13,7 @@ const HeaderNavLink = ({ to, label, className = '', img }) => {
       <span className="relative font-medium text-lg inline-block whitespace-nowrap">
         {label}
       </span>
-      {img && <img className='w-[20px] h-[20px]' src='arrow-down.svg'/>}
+      {img && <ArrowDown/>}
     </NavLink>
   );
 };

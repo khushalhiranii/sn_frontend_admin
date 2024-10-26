@@ -41,12 +41,16 @@ export const Inputbar = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await sendUserData(name, email, dob, phoneno);
-      requestOTP();
+      const response = await sendUserData(name, email, dob, phoneno);
+      if(response.status == 200){
+        requestOTP();
       // navigate('/register/otp');
       setSignupView('otp')
+      }
     } catch (error) {
-      setError('User already exists');
+      console.error(error)
+      setError("User already exists")
+      
     } finally {
       setLoading(false);
     }

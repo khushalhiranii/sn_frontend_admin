@@ -70,29 +70,34 @@ export const UserDataProvider = ({ children }) => {
     }
   };
 
-  const userLogin = async(phoneno) => {
+  const userLogin = async (phoneno) => {
+    let response;
+
     try {
-      const response = await axiosInstance.post('/client/classic/Code',{
-        "data": {
-            "Number": phoneno
-        }
-    });
-      // Assuming the response includes a phone number for verification
-      console.log(response)
-      // setPhoneNumber(phoneno);
-      sessionStorage.setItem("Number", phoneno )
-      
-      // Set userData and verificationStatus based on API response
-      // setUserData({ fullname, email, dob, phoneno });
-      setVerificationStatus(true); // Proceed to OTP verification
-      return response;
-      
+        response = await axiosInstance.post('/client/classic/Code', {
+            "data": {
+                "Number": phoneno
+            }
+        });
+
+        // Log the response to see if it contains the expected data
+        console.log(response);
+
+        // Store the phone number in session storage for future verification
+        sessionStorage.setItem("Number", phoneno);
+
+        // Update verification status
+        setVerificationStatus(true);
+        
+        return response; // Return the response for further handling
     } catch (error) {
-      console.error('Error sending user data:', error);
-      // Handle error (e.g., show error message)
-      throw new Error('Failed to send user data');
+        console.error('Error sending user data:', error);
+
+        // Provide meaningful error feedback
+        throw new Error(error.message || 'Failed to send user data');
     }
-  }
+};
+
 
   
 

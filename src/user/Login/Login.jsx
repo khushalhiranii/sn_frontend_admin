@@ -22,7 +22,7 @@ export const Login = () => {
         setLoginView('otp')
       }
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || 'Failed to send user data');
+      setErrorMessage(error.response?.data?.message || "Unstable connection, make sure you're connected to internet.");
     } finally {
       setLoading(false);
     }
@@ -48,7 +48,7 @@ export const Login = () => {
               </h2>
             </div>
             {errorMessage && (
-              <div className="text-red-700 text-mid font font-roboto">{errorMessage}</div>
+              <div className="text-red-700 text-lg font font-roboto">{errorMessage}</div>
             )}
             <form className="self-stretch flex flex-col items-start justify-start gap-6 md:gap-4">
               <InputReg
