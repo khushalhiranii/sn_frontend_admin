@@ -38,7 +38,7 @@ function AccountAction() {
   }
 
   // If the user is not fetched or not verified, navigate to login
-  if (user == "undefined" || user?.Verification !== true || !account ) {
+  if (!user || user?.Verification !== true || !account ) {
     return (
     <div>
       <div className='flex justify-center'>

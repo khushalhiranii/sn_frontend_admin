@@ -215,7 +215,7 @@ const AppRouter = () => {
       <Route path="agmgmt/:agentId/:filter" element={<UsersUnderAgent />} />
       <Route path="agmgmt/:agentId/:filter/:userId/:loanId" element={<AgentUserInfo />} />
       <Route path="agmgmt/addAgent" element={<AddAgent />} />
-      <Route path='AdminInfo' element={<AdminInfo/>} />
+      <Route path='profile' element={<AdminInfo/>} />
       <Route path="*" element={<Navigate to="/admin" replace />} />
     </Route>
     </Routes>

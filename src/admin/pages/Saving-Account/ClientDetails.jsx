@@ -6,6 +6,7 @@ import { getFullUrl } from '../../utils';
 import axiosInstance from '../../../../axios.utils';
 import OutlinedButton from '../../components/OutlinedButton';
 import Loader from '../../../LoadingIndicator/Loader';
+import RedButton from '../../../user/DesignSystem/RedButton';
 
 function ClientDetails() {
   const { userId } = useParams(); // Get the userId from the URL

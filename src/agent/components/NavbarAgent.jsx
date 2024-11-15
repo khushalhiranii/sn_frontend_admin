@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import './navbar.css';
 // import { useAuth } from "../context/AuthContext.jsx";
 import IconHome from "../../admin/assets/home-1.jsx";
@@ -37,8 +37,35 @@ NavLinkItem.propTypes = {
   onClick: PropTypes.func, // Make onClick optional
 };
 
+const ActionItem = ({ icon: Icon, label, onClick, count }) => (
+  <button
+    onClick={onClick}
+    className="flex flex-row flex-nowrap items-center justify-between px-3 py-3 gap-3 rounded-tl-md rounded-bl-md w-[91%] text-inherit no-underline transition-colors duration-300 ease-in-out border-r-0 border-solid border-transparent box-border bg-white hover:text-[rgb(69,69,231)]"
+  >
+    <div className="flex flex-row justify-start gap-[12px] font-roboto font-medium">
+      <Icon />
+      {label}
+    </div>
+    {count && <div >
+      ({count})
+    </div>}
+  </button>
+);
+
+ActionItem.propTypes = {
+  // to: PropTypes.string.isRequired,
+  icon: PropTypes.elementType.isRequired,
+  label: PropTypes.string.isRequired,
+};
+
 const NavbarAgent = () => {
-//   const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    sessionStorage.clear();
+    navigate("/agent");
+  };
+
 
   return (
     <div className="flex flex-col w-[20%] border-solid border-[#E6E6E6] border-r-[1px] !sticky top-16 left-0 bg-white items-start justify-between pb-12 py-[16px] pl-16 gap-[16px] text-left text-[14px] font-medium text-black font-roboto">
@@ -49,15 +76,7 @@ const NavbarAgent = () => {
         <NavLinkItem to="/agent/history" icon={Time} label="History" />
       </div>
       <div className="flex flex-col items-start justify-start w-[110%] text-left text-[1.125rem] text-black font-roboto">
-      <NavLinkItem
-        to="/agent"
-        icon={Signout}
-        label="Sign Out"
-        onClick={() => {
-          sessionStorage.clear(); // Clear session storage
-          window.location.href = '/agent'; // Navigate manually
-        }}
-      />
+      <ActionItem icon={Signout} label="Sign Out" onClick={handleSignOut} />
       </div>
     </div>
   );

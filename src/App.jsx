@@ -119,7 +119,7 @@ const App = ({ className = "" }) => {
 
             <button
               type="button"
-              onClick={() => navigate(`/${role}/dashboard`)}
+              // onClick={() => navigate(`/${role}/dashboard`)}
               className="text-foundation-red-normal bg-white underline"
             >
               Forgot Password?
