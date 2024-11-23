@@ -14,15 +14,15 @@ function ProfileAgent() {
           <div className='flex flex-col gap-4 p-2'>
             <div className='flex flex-row justify-between'>
               <div>Request Assigned</div>
-              <div>{properties.Pending.length + properties.Verified.length  }</div>
+              <div>{properties.Pending?.length + properties.Verified?.length  }</div>
             </div>
             <div className='flex flex-row justify-between'>
               <div>Completed</div>
-              <div>{  properties.Verified.length  }</div>
+              <div>{  properties.Verified?.length  }</div>
             </div>
             <div className='flex flex-row justify-between'>
               <div>Pending</div>
-              <div>{  properties.Pending.length  }</div>
+              <div>{  properties.Pending?.length  }</div>
             </div>
           </div>
         </div>
@@ -31,15 +31,15 @@ function ProfileAgent() {
           <div className='flex flex-col gap-4 p-2'>
             <div className='flex flex-row justify-between'>
               <div>Added Recoveries</div>
-              <div>{activeLoans.length + overdueLoans.length + bufferLoans.length + closedLoans.length }</div>
+              <div>{activeLoans?.length + overdueLoans?.length + bufferLoans?.length + closedLoans?.length }</div>
             </div>
             <div className='flex flex-row justify-between'>
               <div>Completed Recoveries</div>
-              <div>{activeLoans.length + closedLoans.length }</div>
+              <div>{activeLoans?.length + closedLoans?.length }</div>
             </div>
             <div className='flex flex-row justify-between'>
               <div>Pending Recoveries</div>
-              <div>{ overdueLoans.length + bufferLoans.length }</div>
+              <div>{ overdueLoans?.length + bufferLoans?.length }</div>
             </div>
           </div>
         </div>
